@@ -1,4 +1,4 @@
-skills_dir := env_home() / ".agents/skills"
+skills_dir := env('HOME') / ".agents/skills"
 repo_skills := justfile_directory() / "skills"
 
 install:
