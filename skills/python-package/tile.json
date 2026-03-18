@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/python-package",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Scaffolds a new Python package with pyproject.toml, hatchling build system, ruff linting configuration, and --version support via importlib.metadata. Use when starting a new Python package, Python CLI tool, or Python project from scratch. Trigger terms: new Python package, Python scaffold, pyproject.toml, hatchling, ruff, Python CLI, Python project setup, importlib.metadata.",
+  "skills": {
+    "python-package": {
+      "path": "SKILL.md"
+    }
+  }
+}

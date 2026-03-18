@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/write-readme",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Guidelines for writing brief READMEs with a CLI cheatsheet. Omits licensing and contribution sections. Trigger terms: README, write a README, create README, README.md.",
+  "skills": {
+    "write-readme": {
+      "path": "SKILL.md"
+    }
+  }
+}

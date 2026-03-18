@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/view-imgur",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Downloads and views imgur images by fetching them with curl to a local temp file, then reading locally. Required because WebFetch cannot load imgur URLs. Trigger terms: imgur, i.imgur.com, imgur image, imgur link, imgur URL.",
+  "skills": {
+    "view-imgur": {
+      "path": "SKILL.md"
+    }
+  }
+}
