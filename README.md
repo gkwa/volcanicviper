@@ -1,5 +1,11 @@
 # volcanicviper
 
+TLDR: https://github.com/gkwa/volcanicviper
+
+```
+pnpm dlx skills add gkwa/volcanicviper --global
+```
+
 Personal agent skills for Claude Code and compatible AI tools.
 
 Skills encode reusable expertise so AI assistants apply consistent standards without repeated correction.
