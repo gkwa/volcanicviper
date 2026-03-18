@@ -1,4 +1,7 @@
 skills_dir := env('HOME') / ".agents/skills"
+
+default:
+    @just --list
 repo_skills := justfile_directory() / "skills"
 
 install:
