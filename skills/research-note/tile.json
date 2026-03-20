@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/research-note",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Workflow for turning a rough question into a research note: cleans the question, splits multiple questions into separate files, adds an answer and Google search links, and commits each file. Trigger terms: research note, new note, document this question, create a note, note from question.",
+  "skills": {
+    "research-note": {
+      "path": "SKILL.md"
+    }
+  }
+}
