@@ -41,9 +41,10 @@ Example: `lamination fold what builds strength.md`
 
 Structure:
 
-1. The cleaned question — no label, no header, just the question text at the very top of the file
-2. `## Answer` section
-3. `## Search links` section
+1. YAML frontmatter with `tags: [voice-memo-research]`
+2. The cleaned question — no label, no header, just the question text
+3. `## Answer` section
+4. `## Search links` section
 
 Formatting rules:
 
@@ -51,6 +52,15 @@ Formatting rules:
 - No italics, bold, or emphasis anywhere in the file
 - Bullet points for all lists
 - File ends with a trailing newline
+
+Frontmatter format:
+
+```
+---
+tags:
+  - voice-memo-research
+---
+```
 
 ### Step 5: Write the Answer section
 
