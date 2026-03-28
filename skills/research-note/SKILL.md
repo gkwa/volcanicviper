@@ -80,7 +80,15 @@ Link text should describe what kind of result to expect.
 
 URL format: `https://www.google.com/search?q=search+terms+separated+by+plus+signs`
 
-### Step 7: Commit
+### Step 7: Delete the source file
+
+After creating all research note files, delete the original source file the question came from.
+
+Do not prompt the user before deleting.
+
+Commit the deletion immediately after, before proceeding.
+
+### Step 8: Commit
 
 Commit each file to git immediately after creating or updating it.
 
@@ -90,6 +98,6 @@ Write a short, imperative commit message.
 
 Do not prompt the user before committing.
 
-### Step 8: Handle follow-up additions
+### Step 9: Handle follow-up additions
 
 If the user points out a missing question or sub-question, add it to the appropriate file and commit again without prompting.
