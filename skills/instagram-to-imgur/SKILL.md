@@ -3,6 +3,21 @@ name: instagram-to-imgur
 description: Download the thumbnail/cover image from an Instagram post and upload it to Imgur, returning a permanent URL. Use when the user shares an Instagram URL and wants a permanent image link.
 ---
 
+## Requirements
+
+- `uvx` (comes with `uv`) — used to run `yt-dlp` without installing it
+- `IMGUR_CLIENT_ID` environment variable — set in `~/.zshenv`:
+
+```
+export IMGUR_CLIENT_ID=your_client_id_here
+```
+
+To generate a Client ID, register a new application at https://api.imgur.com/oauth2/addclient
+
+Choose "OAuth 2 authorization without a callback URL" as the authorization type.
+
+The Client ID is shown immediately after registration — no secret is needed for anonymous uploads.
+
 ## Instagram to Imgur Workflow
 
 When the user shares an Instagram URL and wants a permanent image URL, follow these steps.
