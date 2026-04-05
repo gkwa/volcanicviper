@@ -32,14 +32,22 @@ Save the output — it is the expiring CDN URL for the cover image.
 
 ### Step 2: Download the image
 
+Generate a random temp filename:
+
 ```
-curl -sL "<thumbnail_url>" -o /tmp/image.jpg
+mktemp /tmp/instagram_XXXXXX.jpg
+```
+
+Use the path it returns for all subsequent steps.
+
+```
+curl -sL "<thumbnail_url>" -o "<tempfile>"
 ```
 
 Verify it is a JPEG:
 
 ```
-file /tmp/image.jpg
+file "<tempfile>"
 ```
 
 If the file is not a JPEG, stop and tell the user what file type was returned.
@@ -57,7 +65,7 @@ export IMGUR_CLIENT_ID=your_client_id_here
 Upload:
 
 ```
-curl -s -X POST -H "Authorization: Client-ID $IMGUR_CLIENT_ID" -F "image=@/tmp/image.jpg" https://api.imgur.com/3/image
+curl -s -X POST -H "Authorization: Client-ID $IMGUR_CLIENT_ID" -F "image=@<tempfile>" https://api.imgur.com/3/image
 ```
 
 ### Step 4: Extract and return the URL
