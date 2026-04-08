@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/txtar",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Present multi-file code changes in txtar format as a single code block. Use when sharing or requesting code that spans multiple files. Trigger terms: txtar, multiple files, file format, code block, file changes.",
+  "skills": {
+    "txtar": {
+      "path": "SKILL.md"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/logging-to-stderr",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Set up logging with verbosity levels via --verbose flags, sending log output to stderr. Use when adding logging to a CLI tool or script. Trigger terms: logging, stderr, verbose flag, log level, --verbose, -v flag.",
+  "skills": {
+    "logging-to-stderr": {
+      "path": "SKILL.md"
+    }
+  }
+}

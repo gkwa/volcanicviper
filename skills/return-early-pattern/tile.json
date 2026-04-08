@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/return-early-pattern",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Apply the return early pattern with guard clauses to reduce nesting and improve readability. Use when refactoring conditional logic or writing new functions with precondition checks. Trigger terms: return early, guard clause, early return, nested if, arrow anti-pattern, precondition check.",
+  "skills": {
+    "return-early-pattern": {
+      "path": "SKILL.md"
+    }
+  }
+}

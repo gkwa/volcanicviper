@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/justfile",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Create a justfile to orchestrate project tasks with standard rules for setup, test, and teardown. Use when setting up task running for a project. Trigger terms: justfile, just, task runner, orchestrate, project tasks.",
+  "skills": {
+    "justfile": {
+      "path": "SKILL.md"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/solid-principles",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Write code following SOLID design principles with good information hiding. Use when writing or reviewing code for architecture, class design, or module organization. Trigger terms: SOLID, single responsibility, open closed, Liskov substitution, interface segregation, dependency inversion, information hiding.",
+  "skills": {
+    "solid-principles": {
+      "path": "SKILL.md"
+    }
+  }
+}

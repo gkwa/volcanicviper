@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/use-vite",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Set up Vite and Vitest as the build and test tools, with vite-plugin-checker for TypeScript checking and ESM configuration. Use when starting or configuring a frontend project. Trigger terms: vite, vitest, build system, vite-plugin-checker, ESM, frontend build.",
+  "skills": {
+    "use-vite": {
+      "path": "SKILL.md"
+    }
+  }
+}

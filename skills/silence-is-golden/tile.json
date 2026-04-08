@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/silence-is-golden",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Follow the Unix rule of silence — output nothing on the happy path. Use when designing CLI tools, scripts, or any program that runs unattended. Trigger terms: silence, quiet, unix rule of silence, no output, happy path output.",
+  "skills": {
+    "silence-is-golden": {
+      "path": "SKILL.md"
+    }
+  }
+}

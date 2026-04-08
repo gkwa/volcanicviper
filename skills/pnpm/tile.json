@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/pnpm",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Use pnpm instead of npm for package management. Use when setting up or working on a JavaScript or TypeScript project. Trigger terms: pnpm, package manager, npm, node packages, pnpm-lock.yaml.",
+  "skills": {
+    "pnpm": {
+      "path": "SKILL.md"
+    }
+  }
+}
