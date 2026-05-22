@@ -1,5 +1,5 @@
 ---
-name: toms-method-check
+name: thesourdoughjourney-method-check
 description: Evaluate whether Tom Cucuzza's two-factor bulk fermentation method (dough temperature plus percentage rise) applies cleanly to a given sourdough recipe, and if it does not, which direction the error swings (over- or under-fermentation) and what target to use instead. Use when given a sourdough recipe and asked whether Tom's method, the percentage-rise method, or the two-factor bulk fermentation method applies, or whether following it would over- or under-ferment.
 ---
 
