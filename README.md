@@ -23,6 +23,7 @@ Skills encode reusable expertise so AI assistants apply consistent standards wit
 - `return-early-pattern` — apply guard clauses and early returns to reduce nesting and improve readability
 - `silence-is-golden` — follow the Unix rule of silence, producing no output on the happy path
 - `solid-principles` — write code following SOLID design principles with small focused files
+- `toms-method-check` — judge whether Tom Cucuzza's two-factor bulk fermentation method fits a sourdough recipe, and which way the error swings if not
 - `tsconfig` — add a tsconfig.json for TypeScript projects using Vite and/or Chrome extensions
 - `use-vite` — set up Vite/Vitest with ESM config and vite-plugin-checker for TypeScript projects
 - `view-imgur` — fetch and view imgur images via curl when WebFetch is blocked

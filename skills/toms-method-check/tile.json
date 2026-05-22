@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/toms-method-check",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Evaluate whether Tom Cucuzza's two-factor bulk fermentation method (dough temperature plus percentage rise) applies to a sourdough recipe, and if not, which way the error swings (over- or under-fermentation) and what target to use instead. Trigger terms: tom's method, tom cucuzza, percentage rise, two-factor method, bulk fermentation method, does tom's method apply, over-ferment, under-ferment.",
+  "skills": {
+    "toms-method-check": {
+      "path": "SKILL.md"
+    }
+  }
+}
