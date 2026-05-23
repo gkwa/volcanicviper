@@ -18,9 +18,41 @@ Read them before answering.
 - /Users/mtm/Documents/Obsidian Vault/When Tom's Percentage Rise Method Does Not Apply, Illustrated by Ciabatta.md for the failure modes and the four-question checklist.
 - /Users/mtm/Documents/Obsidian Vault/tom's method on enriched chocolate sourdough.md for a worked example of the fat-and-inclusions failure mode and how the error direction is derived.
 
-Tom's source PDF has the temperature-to-rise chart and the calibration baseline:
+Tom's source PDF is the original method, with periodic updates and fuller explanation:
 
 https://thesourdoughjourney.com/wp-content/uploads/2024/01/The-The-SECRET-of-Bulk-Fermentation-Measuring-Dough-Temperature-and-Percentage-Rise.pdf
+
+## The chart and baseline
+
+These values are reproduced from Tom's PDF so the skill does not depend on fetching it.
+
+Target percentage rise by dough temperature, assuming a cold retard:
+
+| Dough temperature | Target rise | Approx bulk time |
+| ----------------- | ----------- | ---------------- |
+| 80°F / 27°C       | 30%         | 3-5.5 hours      |
+| 75°F / 24°C       | 50%         | 5-7 hours        |
+| 70°F / 21°C       | 75%         | 8-12 hours       |
+| 65°F / 18°C       | 100%        | 12-18 hours      |
+
+The clock times are illustrative only; cut bulk on the rise, not the time.
+
+Calibration baseline, Tartine Country Bread:
+
+- 90% bread flour and 10% whole wheat flour
+- 75% hydration
+- 20% starter
+- 2% salt
+- about 12.5% protein bread flour, such as King Arthur Bread Flour
+- a 30-minute bench rest between pre-shape and final shape
+- a cold retard at 37-39°F / 4°C for 8-16 hours
+
+Adjusting the target rise for flour:
+
+- High-protein flours show the rise more, so move the target up.
+- Low-protein flours, around 11.5%, show the rise less, so move the target down.
+- Low-gluten flours like einkorn and spelt show the rise less, so move the target down.
+- The chart targets sit at the low end of the range, so an imperfect loaf is more likely underproofed than overproofed; calibrate upward in 5-10% steps.
 
 ## The deciding lens
 
