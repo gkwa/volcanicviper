@@ -6,17 +6,35 @@ description: Download the thumbnail/cover image from an Instagram post and uploa
 ## Requirements
 
 - `uvx` (comes with `uv`) — used to run `yt-dlp` without installing it
-- `IMGUR_CLIENT_ID` environment variable — set in `~/.zshenv`:
+- Imgur Client ID stored in the macOS keychain under service name `imgur-api`
 
-```
-export IMGUR_CLIENT_ID=your_client_id_here
-```
+## Getting a new Imgur Client ID
 
-To generate a Client ID, register a new application at https://api.imgur.com/oauth2/addclient
+Register a new application at https://api.imgur.com/oauth2/addclient
 
 Choose "OAuth 2 authorization without a callback URL" as the authorization type.
 
 The Client ID is shown immediately after registration — no secret is needed for anonymous uploads.
+
+## Installing the Client ID in the keychain
+
+Store the Client ID in the macOS keychain using the service name `imgur-api`:
+
+```
+security add-generic-password -s imgur-api -a "$USER" -w "your_client_id_here"
+```
+
+To verify it was stored correctly:
+
+```
+security find-generic-password -s imgur-api -w
+```
+
+To update an existing entry:
+
+```
+security add-generic-password -U -s imgur-api -a "$USER" -w "your_client_id_here"
+```
 
 ## Instagram to Imgur Workflow
 
@@ -54,18 +72,22 @@ If the file is not a JPEG, stop and tell the user what file type was returned.
 
 ### Step 3: Upload to Imgur
 
-Requires the `IMGUR_CLIENT_ID` environment variable to be set.
-
-If it is not set, stop and tell the user to add it to `~/.zshenv`:
+Fetch the Client ID from the macOS keychain:
 
 ```
-export IMGUR_CLIENT_ID=your_client_id_here
+security find-generic-password -s imgur-api -w
+```
+
+If the command fails, stop and tell the user to add the Client ID to the keychain:
+
+```
+security add-generic-password -s imgur-api -a "$USER" -w "your_client_id_here"
 ```
 
 Upload:
 
 ```
-curl -s -X POST -H "Authorization: Client-ID $IMGUR_CLIENT_ID" -F "image=@<tempfile>" https://api.imgur.com/3/image
+curl -s -X POST -H "Authorization: Client-ID <client_id>" -F "image=@<tempfile>" https://api.imgur.com/3/image
 ```
 
 ### Step 4: Extract and return the URL
