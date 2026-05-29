@@ -13,6 +13,7 @@ Skills encode reusable expertise so AI assistants apply consistent standards wit
 ## Skills
 
 - `chrome-extension-multiple-entry-points` — build Chrome extensions with separate Vite configs per entry point to avoid code-splitting issues
+- `grafana-bake-annotation` — extract annotatable events from a Zephyr bake log, run the Grafana annotation CLI, and write the command into the bake log
 - `instagram-to-imgur` — download an Instagram post thumbnail and upload it to Imgur for a permanent URL
 - `islandiguana` — search the Obsidian vault by YAML front matter using islandiguana and yq expressions
 - `justfile` — create a justfile with standard setup/test/teardown rules to orchestrate project tasks
@@ -28,6 +29,7 @@ Skills encode reusable expertise so AI assistants apply consistent standards wit
 - `use-vite` — set up Vite/Vitest with ESM config and vite-plugin-checker for TypeScript projects
 - `view-imgur` — fetch and view imgur images via curl when WebFetch is blocked
 - `write-readme` — write brief READMEs with a CLI cheatsheet
+- `zephyr` — understand the Zephyr sourdough bake tagging scheme, find bake logs by Zephyr key, and read entries to extract event times
 
 ## Install from GitHub
 
