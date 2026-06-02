@@ -36,7 +36,7 @@ Use `_start` and `_done` suffixes for actions with clear start and end points.
 
 Use `long_bulk_start` (not `bulk_start`) — bulk fermentation technically begins at mix; this label marks the start of the long uninterrupted fermentation phase after stretch and folds are complete.
 
-## Scripts and Token
+## Scripts
 
 Annotation script:
 ```
@@ -48,10 +48,11 @@ Delete annotation script:
 /Users/mtm/pdev/taylormonacelli/diminutivedragon/scripts/clear-annotations.py
 ```
 
-Read the Grafana token at runtime:
-```
-GRAFANA_TOKEN=$(grep grafana_token /Users/mtm/pdev/taylormonacelli/diminutivedragon/terraform/grafana.tfvars | awk -F'"' '{print $2}')
-```
+The scripts fetch the Grafana token automatically from AWS SSM Parameter Store (`/diminutivedragon/grafana_token`, region `us-west-2`).
+
+The SSM parameter was created out of band with the AWS CLI and is not managed by Terraform.
+
+To override the token locally (e.g. for testing), set `GRAFANA_TOKEN` in the environment before running.
 
 Never write the token value into the bake log or any committed file.
 
@@ -62,8 +63,7 @@ Pass all events in a single invocation using repeated `--time` and `--label` pai
 Convert all timestamps to ISO 8601 before passing them.
 
 ```
-GRAFANA_TOKEN=$(grep grafana_token ~/pdev/taylormonacelli/diminutivedragon/terraform/grafana.tfvars | awk -F'"' '{print $2}') \
-  uv run --directory ~/pdev/taylormonacelli/diminutivedragon \
+uv run --directory ~/pdev/taylormonacelli/diminutivedragon \
   scripts/annotate-grafana.py \
   --time 2026-05-28T20:39:00 --label feed_starter \
   --time 2026-05-29T06:31:00 --label starter_peaked
@@ -79,8 +79,7 @@ Do NOT include the output lines (the "Added annotation id=..." lines) in the log
 
 To delete an annotation by id:
 ```
-GRAFANA_TOKEN=$(grep grafana_token ~/pdev/taylormonacelli/diminutivedragon/terraform/grafana.tfvars | awk -F'"' '{print $2}') \
-  uv run --directory ~/pdev/taylormonacelli/diminutivedragon \
+uv run --directory ~/pdev/taylormonacelli/diminutivedragon \
   scripts/clear-annotations.py --id 42
 ```
 
