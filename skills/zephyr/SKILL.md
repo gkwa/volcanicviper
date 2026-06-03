@@ -43,6 +43,19 @@ The event timestamp is the time mentioned inside the body text — this is the a
 
 Always use the event timestamp, not the header timestamp, when extracting bake events.
 
+## Writing References to Zephyr Bakes
+
+Never write a bare Zephyr number (e.g. "Zephyr 13") into any note or table.
+
+A bare number is ambiguous across months — "Zephyr 13" could mean June 13 or July 13 depending on when the reader encounters it.
+
+Always resolve the Zephyr key to a bake log wikilink before writing it into a note:
+
+- Good: `[[bake log 5-13-2026-1]]`
+- Bad: `Zephyr 13`
+
+This applies to table cells, prose references, and any other written context.
+
 ## Workflow
 
 To work with a Zephyr bake log:
@@ -51,3 +64,4 @@ To work with a Zephyr bake log:
 2. Resolve it to a bake log filename using the day number and current date
 3. Read the bake log and extract all "For Zephyr N" entries
 4. Use event timestamps (body text), not header timestamps (H2 headings)
+5. When writing any output that references the bake, use `[[bake log M-D-YYYY-N]]` — never the bare Zephyr number
