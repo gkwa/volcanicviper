@@ -42,9 +42,10 @@ Example: `lamination fold what builds strength.md`
 Structure:
 
 1. YAML frontmatter with `tags: [voice-memo-research]`
-2. The cleaned question — no label, no header, just the question text
-3. `## Answer` section
-4. `## Search links` section
+2. A context block (if the source file contains Obsidian wikilinks) — preserve any `[[wikilinks]]` verbatim before the question text
+3. The cleaned question — no label, no header, just the question text
+4. `## Answer` section
+5. `## Search links` section
 
 Formatting rules:
 
