@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/transcript-cleanup",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Cleans raw transcripts from output/ and writes a timestamped file to cleaned/. Trigger terms: transcript, transcripts, clean up transcripts, process transcripts, tidy transcripts.",
+  "skills": {
+    "transcript-cleanup": {
+      "path": "SKILL.md"
+    }
+  }
+}
