@@ -26,6 +26,9 @@ islandiguana "/Users/mtm/Documents/Obsidian Vault" 'has("filetype")'
 # find files with no author set
 islandiguana "/Users/mtm/Documents/Obsidian Vault" '.author == null'
 
+# find markdown files with no front matter (or front matter but no tags)
+islandiguana "/Users/mtm/Documents/Obsidian Vault" '(.tags // []) | length == 0'
+
 # find files whose title matches a regex (case-insensitive)
 islandiguana "/Users/mtm/Documents/Obsidian Vault" '.title | test("(?i)kubernetes")'
 
