@@ -1,6 +1,6 @@
 ---
 name: islandiguana
-description: Use islandiguana to search the Obsidian vault by YAML front matter using yq expressions. Use when asked to find notes by tag, status, or any front matter field, or when asked to peruse or search the Obsidian vault. Note: Obsidian inline #tags (e.g. #zephyr in note body) are backed by YAML front matter tags — clicking a #tag in Obsidian searches front matter, so islandiguana is the correct tool for finding notes by Obsidian tag.
+description: "Use islandiguana to search the Obsidian vault by YAML front matter using yq expressions. Use when asked to find notes by tag, status, or any front matter field, or when asked to peruse or search the Obsidian vault. Obsidian inline #tags are backed by YAML front matter, so islandiguana is the correct tool for finding notes by Obsidian tag."
 ---
 
 ## Searching the Obsidian Vault with islandiguana
