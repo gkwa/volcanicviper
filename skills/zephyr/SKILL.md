@@ -71,6 +71,58 @@ Always resolve the Zephyr key to a bake log wikilink before writing it into a no
 
 This applies to table cells, prose references, and any other written context.
 
+## event_time Tags
+
+Each Zephyr entry that records a specific bake action gets an inline event_time tag on its own line after the body text:
+
+```
+`event_time: YYYY-MM-DDTHH:MM:00`
+```
+
+Actions that get event_time:
+- Feeding the starter
+- Starter peaked
+- Removing starter from bowl
+- Mixing water with starter
+- Adding tangzhong to dough
+- Bulk ferment start (flour added)
+- Adding salt / dimpling salt
+- Stretch and fold sets
+- Lamination folds
+- Preshape
+- Shape
+- Cold retard start
+- Bake start / bake done
+- Inserting temperature probes
+
+Entries that do NOT get event_time:
+- General notes, reminders, or lessons learned
+- Pure measurements or weight observations with no action
+- Speculative or retrospective commentary
+
+Time resolution:
+- Use the time stated in the entry body when one is given
+- Fall back to the header timestamp only when the body states no time
+- Convert to ISO 8601: `YYYY-MM-DDTHH:MM:00`
+
+Example entry with tag:
+
+```
+## Friday, June 5, 2026 at 9:57 AM
+
+For Zephyr 4-2, the starter peaked at 9:57 AM on June 5th.
+
+`event_time: 2026-06-05T09:57:00`
+```
+
+Example entry without tag (measurement only):
+
+```
+## Friday, June 5, 2026 at 10:59 AM
+
+For Zephyr 4-2, the initial dough volume is 2100 ml.
+```
+
 ## Workflow
 
 To work with a Zephyr bake log:
@@ -80,3 +132,11 @@ To work with a Zephyr bake log:
 3. Read the bake log and extract all "For Zephyr N" entries
 4. Use event timestamps (body text), not header timestamps (H2 headings)
 5. When writing any output that references the bake, use `[[bake log M-D-YYYY-N]]` — never the bare Zephyr number
+
+To add event_time tags to a bake log:
+
+1. Read the target bake log
+2. For each Zephyr entry, decide if it records a specific action (see list above)
+3. If yes, append the event_time tag after the last line of the body
+4. Use the body time when stated; use the header time otherwise
+5. Commit after all tags are added
