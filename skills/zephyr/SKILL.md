@@ -1,6 +1,6 @@
 ---
 name: zephyr
-description: Understand the Zephyr sourdough bake tagging scheme. Use when working with Zephyr bake logs, finding which bake log corresponds to a Zephyr key, or reading Zephyr voice memo entries to extract bake events.
+description: Understand the Zephyr sourdough bake tagging scheme. Use when working with Zephyr bake logs, finding which bake log corresponds to a Zephyr key, reading Zephyr voice memo entries to extract bake events, or routing Zephyr entries from any document to their bake logs.
 ---
 
 ## The Zephyr Scheme
@@ -25,11 +25,41 @@ When multiple bakes start on the same day, a numeric suffix after a hyphen disti
 
 The suffix maps directly to the trailing bake number in the bake log filename.
 
+## Parameters
+
+The skill accepts named parameters with defaults, like Python keyword arguments.
+
+Resolution precedence, highest first:
+
+1. An explicit value stated in the invocation or request
+2. Machine-local configuration
+3. The built-in default
+
+Parameters:
+
+- bake log directory — built-in default `/Users/mtm/Documents/Obsidian Vault/`; machine-local override via the `ZEPHYR_BAKE_LOG_DIR` environment variable; invocation override by naming a directory in the request
+- mode — routing only; `move` or `copy`; default `move`; see ROUTING.md
+- trigger — routing only; on-request by default; see ROUTING.md
+
+Check `ZEPHYR_BAKE_LOG_DIR` with Bash at call time; fall back to the built-in default only when it is unset.
+
+Never assume the current working directory is the bake log directory.
+
 ## Bake Log Naming Convention
 
-Bake logs live in the Obsidian vault at `/Users/mtm/Documents/Obsidian Vault/`.
+This section is the single owner of bake log filename resolution.
+
+All other components, including routing, resolve filenames through these rules rather than restating them.
+
+Bake logs live in the bake log directory (see Parameters).
 
 Naming pattern: `bake log M-D-YYYY-N.md`
+
+N is the bake number for that day, starting at 1.
+
+The suffix is not always `-1`: a second bake started the same day is `-2`, a third is `-3`, and so on.
+
+N maps directly to the Zephyr key suffix — "Zephyr 3-2" resolves to bake number 2.
 
 Examples:
 - `bake log 5-28-2026-1.md` — first bake started May 28, 2026
@@ -159,3 +189,13 @@ To add event_time tags to a bake log:
 3. If yes, append the event_time tag after the last line of the body
 4. Use the body time when stated; use the header time otherwise
 5. Commit after all tags are added
+
+## Routing
+
+Routing delivers Zephyr entries found in any document to their proper bake logs, with deduplication, reverse chronological ordering, and move or copy semantics.
+
+Routing is a separate component so it can be swapped out without changing the core scheme.
+
+The full routing rules live in `ROUTING.md` in this skill directory.
+
+Read `ROUTING.md` whenever asked to route Zephyr entries.
