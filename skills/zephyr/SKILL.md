@@ -58,6 +58,25 @@ The event timestamp is the time mentioned inside the body text — this is the a
 
 Always use the event timestamp, not the header timestamp, when extracting bake events.
 
+## Weight Notation
+
+Voice memos are transcribed by speech-to-text, which spells out units as words or leaves a space between the number and the unit abbreviation.
+
+When writing or editing Zephyr entries, normalize all weight values to compact form:
+
+- No space between number and unit
+- Use `g` not `grams`
+- Use `mL` not `milliliters` or `ml`
+
+Examples:
+
+- "18 grams" → `18g`
+- "562 grams" → `562g`
+- "20 g" → `20g`
+- "2190 milliliters" → `2190mL`
+
+This applies to all weights and volumes anywhere in the entry body — ingredient amounts, dough weights, container tares, and measurements.
+
 ## Writing References to Zephyr Bakes
 
 Never write a bare Zephyr number (e.g. "Zephyr 13") into any note or table.
