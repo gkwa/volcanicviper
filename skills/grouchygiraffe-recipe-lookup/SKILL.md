@@ -69,6 +69,7 @@ Report:
 - The recipe name (from the thumbnail)
 - The author's name and Instagram handle
 - The author's home base URL
+- The original Instagram post URL (from the `url` field in the YAML)
 - The direct recipe URL (on their site, TikTok, or Substack)
 - A summary of the recipe if ingredients were found
 
