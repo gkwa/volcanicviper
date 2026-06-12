@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/grouchygiraffe-recipe-lookup",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Given a grouchygiraffe media file path, find the YAML, read the thumbnail to identify the recipe, locate the author's home base, and return the recipe URL.",
+  "skills": {
+    "grouchygiraffe-recipe-lookup": {
+      "path": "SKILL.md"
+    }
+  }
+}
