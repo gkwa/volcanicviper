@@ -21,6 +21,20 @@ Never route automatically just because a bake log or other document is open.
 
 A request may grant a session-level standing instruction, for example "keep routing entries as we go" — honor it for that session only.
 
+Requests that trigger routing:
+
+- "Route the Zephyr entries in this log"
+- "Route Zephyr entries from bake log 6-10 to their proper logs"
+- "Move the Zephyr 9 entries out of this file"
+- "Clean up the mixed entries in this log"
+
+Requests that do NOT trigger routing (even if they involve Zephyr entries):
+
+- "Update the event times in this log"
+- "Apply Grafana annotations"
+- "Add event_time tags to the Zephyr entries"
+- Opening or reading a bake log for any other purpose
+
 ## Identify
 
 An entry is an H2 timestamp heading plus the body below it, up to the next heading.
