@@ -14,7 +14,7 @@ Skills encode reusable expertise so AI assistants apply consistent standards wit
 
 - `chrome-extension-multiple-entry-points` — build Chrome extensions with separate Vite configs per entry point to avoid code-splitting issues
 - `grafana-bake-annotation` — extract annotatable events from a Zephyr bake log, run the Grafana annotation CLI, and write the command into the bake log
-- `instagram-to-imgur` — download an Instagram post thumbnail and upload it to Imgur for a permanent URL
+- `social-to-imgur` — download a social media post thumbnail (Instagram, Facebook, or any yt-dlp-supported platform) and upload it to Imgur for a permanent URL
 - `islandiguana` — search the Obsidian vault by YAML front matter using islandiguana and yq expressions
 - `justfile` — create a justfile with standard setup/test/teardown rules to orchestrate project tasks
 - `logging-to-stderr` — set up --verbose flag logging that sends output to stderr (stdout for Chrome extensions)
