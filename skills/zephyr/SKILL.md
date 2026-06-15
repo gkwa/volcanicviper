@@ -172,6 +172,35 @@ Example entry without tag (measurement only):
 For Zephyr 4-2, the initial dough volume is 2100 ml.
 ```
 
+## Starter Peak Duration
+
+Each bake log contains a `## Starter peak duration` section with a YAML block:
+
+```yaml
+fed: "[TBD]"
+peaked: "[TBD]"
+duration_to_peak: "[TBD]"
+starter_remaining: "[TBD]"
+```
+
+Fill in each field only when the bake log contains enough information to derive it.
+
+Never guess or carry over values from a previous bake log.
+
+| field | source | fill when |
+| ----- | ------ | --------- |
+| `fed` | event_time of the feed_starter entry | a feeding entry with a known time exists |
+| `peaked` | event_time of the starter peaked entry | a starter peaked entry with a known time exists |
+| `duration_to_peak` | elapsed time from `fed` to `peaked` | both `fed` and `peaked` are known |
+| `starter_remaining` | measurement entry recording leftover starter after use | such a measurement exists in the bake log |
+
+Format rules:
+- `fed` and `peaked`: ISO 8601, `YYYY-MM-DDTHH:MM:00`
+- `duration_to_peak`: `XhYm` (e.g. `11h52m`)
+- `starter_remaining`: compact weight notation (e.g. `1g`)
+
+Leave a field as `"[TBD]"` when the required information is not yet in the bake log.
+
 ## Workflow
 
 To work with a Zephyr bake log:
@@ -189,6 +218,13 @@ To add event_time tags to a bake log:
 3. If yes, append the event_time tag after the last line of the body
 4. Use the body time when stated; use the header time otherwise
 5. Commit after all tags are added
+
+To update the Starter peak duration block:
+
+1. Read the bake log and locate the `## Starter peak duration` section
+2. For each field, check whether the required information exists in the bake log entries
+3. Fill in only the fields that can be derived — leave the rest as `"[TBD]"`
+4. Commit after updating
 
 ## Routing
 
