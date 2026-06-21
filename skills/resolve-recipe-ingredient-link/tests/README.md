@@ -4,6 +4,10 @@ Regression tests for the resolve-recipe-ingredient-link skill, run with promptfo
 
 ## What is tested
 
+There are two eval configs.
+
+promptfooconfig.yaml tests resolution: which note a link should point to.
+
 Each case is a recipe ingredient line containing an unresolved wikilink, plus the note the skill should resolve it to.
 
 The cases cover the skill's three-tier rule:
@@ -11,6 +15,14 @@ The cases cover the skill's three-tier rule:
 - tier 1: a near-exact name match resolves the link (leeks resolves to leek.md)
 - tier 2: a left-side adjective on the line disambiguates (whole black peppercorns resolves to black peppercorn.md, not the literal plural match sichuan peppercorns.md)
 - tier 3: a line with no distinguishing word is genuinely ambiguous and the skill answers ASK
+
+linkform.promptfooconfig.yaml tests link writing: given a displayed word and the resolved note name, which wikilink form to write.
+
+The cases cover the three link-form cases:
+
+- case 1: displayed equals note, plain link (leek with note leek becomes [[leek]])
+- case 2: note is a prefix of displayed, suffix outside the brackets (leeks with note leek becomes [[leek]]s)
+- case 3: stem changes, alias form (leaves with note leaf becomes [[leaf|leaves]])
 
 ## How it stays hermetic
 
@@ -34,6 +46,12 @@ The key lives under the generic-password service name ANTHROPIC_API_KEY.
 ANTHROPIC_API_KEY="$(security find-generic-password -s ANTHROPIC_API_KEY -w)" pnpm dlx promptfoo eval --config promptfooconfig.yaml --no-cache
 ```
 
+Run the link-form config the same way.
+
+```sh
+ANTHROPIC_API_KEY="$(security find-generic-password -s ANTHROPIC_API_KEY -w)" pnpm dlx promptfoo eval --config linkform.promptfooconfig.yaml --no-cache
+```
+
 View the last run in the browser.
 
 ```sh
@@ -41,6 +59,8 @@ pnpm dlx promptfoo view
 ```
 
 ## Sample run
+
+Resolution config.
 
 ```
 Running 4 test cases (up to 4 at a time)...
@@ -52,6 +72,26 @@ Running 4 test cases (up to 4 at a time)...
 
 Total Tokens: 54,133
   Eval: 54,133 (54,105 prompt, 28 completion)
+
+Results:
+  ✓ 4 passed (100%)
+  0 failed (0%)
+  0 errors (0%)
+Duration: 3s (concurrency: 4)
+```
+
+Link-form config.
+
+```
+Running 4 test cases (up to 4 at a time)...
+
+leek    leek    [PASS] [[leek]]
+leeks   leek    [PASS] [[leek]]s
+boxes   box     [PASS] [[box]]es
+leaves  leaf    [PASS] [[leaf|leaves]]
+
+Total Tokens: 5,329
+  Eval: 5,329 (5,291 prompt, 38 completion)
 
 Results:
   ✓ 4 passed (100%)

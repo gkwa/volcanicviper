@@ -31,3 +31,18 @@ def build_prompt(context: typing.Dict[str, typing.Any]) -> str:
         "If the line does not determine a single match, respond with exactly "
         "ASK. Output nothing else."
     )
+
+
+def build_link_prompt(context: typing.Dict[str, typing.Any]) -> str:
+    here = pathlib.Path(__file__).parent
+    skill = _read_skill(here.parent / "SKILL.md")
+    displayed = context["vars"]["displayed"]
+    note = context["vars"]["note"]
+    return (
+        f"{skill}\n\n"
+        "Apply the Writing the resolved link rule.\n\n"
+        f"Displayed word: {displayed}\n"
+        f"Resolved note name: {note}\n\n"
+        "Output contract: respond with ONLY the wikilink markdown to write, "
+        "for example [[leek]]s. Output nothing else."
+    )

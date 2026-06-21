@@ -1,0 +1,44 @@
+description: resolve-recipe-ingredient-link link-form evals
+
+prompts:
+  - file://build_prompt.py:build_link_prompt
+
+providers:
+  - id: anthropic:messages:claude-opus-4-8
+
+defaultTest:
+  options:
+    transform: String(output).trim()
+
+tests:
+  - description: case 1, displayed equals note, plain link
+    vars:
+      displayed: leek
+      note: leek
+    assert:
+      - type: equals
+        value: '[[leek]]'
+
+  - description: case 2, note is a prefix, suffix outside the brackets
+    vars:
+      displayed: leeks
+      note: leek
+    assert:
+      - type: equals
+        value: '[[leek]]s'
+
+  - description: case 2, multi-letter additive suffix outside the brackets
+    vars:
+      displayed: boxes
+      note: box
+    assert:
+      - type: equals
+        value: '[[box]]es'
+
+  - description: case 3, stem changes, alias form
+    vars:
+      displayed: leaves
+      note: leaf
+    assert:
+      - type: equals
+        value: '[[leaf|leaves]]'

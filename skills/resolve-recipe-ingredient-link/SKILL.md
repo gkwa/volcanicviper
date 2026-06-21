@@ -63,6 +63,34 @@ Report the number of candidates considered and the resolution, or the ranked sho
 
 Do not edit the wikilink unless explicitly asked — surface the resolution first.
 
+### Writing the resolved link
+
+When asked to apply the resolution, choose the link form by comparing the displayed word (the original link text, e.g. `leeks`) against the resolved note name (e.g. `leek`).
+
+Prefer keeping the inflection outside the brackets over an alias, so the link target stays clean.
+
+Decide in this order:
+
+Case 1 — the displayed word equals the note name.
+
+Write a plain link with no alias and no suffix.
+
+Example: displayed `leek`, note `leek` becomes `[[leek]]`.
+
+Case 2 — the note name is a prefix of the displayed word.
+
+Keep the note name in the brackets and place the leftover suffix outside.
+
+Example: displayed `leeks`, note `leek` becomes `[[leek]]s`.
+
+Example: displayed `boxes`, note `box` becomes `[[box]]es`.
+
+Case 3 — the note name is not a prefix of the displayed word.
+
+The stem changes, so no suffix can be peeled off; use the alias form.
+
+Example: displayed `leaves`, note `leaf` becomes `[[leaf|leaves]]`.
+
 ### Notes
 
 Always quote the vault path — it contains spaces.
