@@ -18,11 +18,14 @@ The cases cover the skill's three-tier rule:
 
 linkform.promptfooconfig.yaml tests link writing: given a displayed word and the resolved note name, which wikilink form to write.
 
-The cases cover the three link-form cases:
+The cases cover the link-form rule:
 
+- case 0: an adjacent tier-2 disambiguator is absorbed into the link before comparing (whole black [[peppercorns]] with note black peppercorn becomes [[black peppercorn]]s, not the alias [[black peppercorn|peppercorns]])
 - case 1: displayed equals note, plain link (leek with note leek becomes [[leek]])
 - case 2: note is a prefix of displayed, suffix outside the brackets (leeks with note leek becomes [[leek]]s)
 - case 3: stem changes, alias form (leaves with note leaf becomes [[leaf|leaves]])
+
+Case 0 is why build_link_prompt passes the recipe line, not just the displayed word: the absorbed word lives on the line, outside the brackets.
 
 ## How it stays hermetic
 
@@ -83,18 +86,19 @@ Duration: 3s (concurrency: 4)
 Link-form config.
 
 ```
-Running 4 test cases (up to 4 at a time)...
+Running 5 test cases (up to 4 at a time)...
 
-leek    leek    [PASS] [[leek]]
-leeks   leek    [PASS] [[leek]]s
-boxes   box     [PASS] [[box]]es
-leaves  leaf    [PASS] [[leaf|leaves]]
+whole black [[peppercorns]]  peppercorns  black peppercorn  [PASS] [[black peppercorn]]s
+                             leek         leek              [PASS] [[leek]]
+                             leeks        leek              [PASS] [[leek]]s
+                             boxes        box               [PASS] [[box]]es
+                             leaves       leaf              [PASS] [[leaf|leaves]]
 
-Total Tokens: 5,329
-  Eval: 5,329 (5,291 prompt, 38 completion)
+Total Tokens: 8,657
+  Eval: 8,657 (8,606 prompt, 51 completion)
 
 Results:
-  ✓ 4 passed (100%)
+  ✓ 5 passed (100%)
   0 failed (0%)
   0 errors (0%)
 Duration: 3s (concurrency: 4)

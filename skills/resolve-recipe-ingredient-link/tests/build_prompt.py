@@ -36,11 +36,15 @@ def build_prompt(context: typing.Dict[str, typing.Any]) -> str:
 def build_link_prompt(context: typing.Dict[str, typing.Any]) -> str:
     here = pathlib.Path(__file__).parent
     skill = _read_skill(here.parent / "SKILL.md")
-    displayed = context["vars"]["displayed"]
-    note = context["vars"]["note"]
+    variables = context["vars"]
+    displayed = variables["displayed"]
+    note = variables["note"]
+    line = variables.get("line")
+    line_block = f"Recipe ingredient line:\n{line}\n\n" if line else ""
     return (
         f"{skill}\n\n"
         "Apply the Writing the resolved link rule.\n\n"
+        f"{line_block}"
         f"Displayed word: {displayed}\n"
         f"Resolved note name: {note}\n\n"
         "Output contract: respond with ONLY the wikilink markdown to write, "

@@ -71,6 +71,22 @@ Prefer keeping the inflection outside the brackets over an alias, so the link ta
 
 Decide in this order:
 
+Case 0 — absorb an adjacent disambiguator first.
+
+If the resolution used Tier 2 — a descriptive word on the source line, outside the brackets, is what picked the note — and that word sits directly adjacent to the wikilink, pull it inside the brackets before comparing.
+
+Then run the comparison below on the expanded phrase, not on the bare bracket text.
+
+Example: line `2 teaspoons whole black [[peppercorns]]`, note `black peppercorn`.
+
+The Tier 2 disambiguator "black" sits just left of the link, so the displayed phrase expands from `peppercorns` to `black peppercorns`.
+
+The note name is now a prefix of that phrase, so the link is written `[[black peppercorn]]s`, and the adjacent `black` is consumed into it — the line reads `2 teaspoons whole [[black peppercorn]]s`.
+
+This beats stranding the disambiguator as `black [[black peppercorn|peppercorns]]`, which leaves "black" outside the brackets and duplicates the word the note name already carries.
+
+The principle: the word you used to disambiguate in Tier 2 belongs inside the link text, not orphaned beside an alias.
+
 Case 1 — the displayed word equals the note name.
 
 Write a plain link with no alias and no suffix.

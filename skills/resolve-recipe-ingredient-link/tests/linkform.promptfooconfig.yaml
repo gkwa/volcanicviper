@@ -11,6 +11,15 @@ defaultTest:
     transform: String(output).trim()
 
 tests:
+  - description: case 0, adjacent tier-2 disambiguator absorbed into the link
+    vars:
+      line: 2 teaspoons whole black [[peppercorns]]
+      displayed: peppercorns
+      note: black peppercorn
+    assert:
+      - type: equals
+        value: '[[black peppercorn]]s'
+
   - description: case 1, displayed equals note, plain link
     vars:
       displayed: leek
