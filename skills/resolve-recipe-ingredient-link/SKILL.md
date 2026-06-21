@@ -1,6 +1,6 @@
 ---
-name: resolve-wikilink
-description: "Find the correct note to resolve an unresolved Obsidian wikilink. Use when a wikilink like [[leeks]] does not resolve to an existing note and you need to find the best matching note to point it at. Uses islandiguana to enumerate product-tagged candidate notes, then semantically ranks the full list against the link text and its surrounding source line."
+name: resolve-recipe-ingredient-link
+description: "Find the correct note to resolve an unresolved ingredient wikilink in a recipe note. Use when an ingredient wikilink like [[leeks]] in a recipe does not resolve to an existing note and you need to find the best matching product note to point it at. Uses islandiguana to enumerate product-tagged candidate notes, then semantically ranks the full list against the link text and its surrounding recipe ingredient line."
 ---
 
 ## Resolving an unresolved Obsidian wikilink
