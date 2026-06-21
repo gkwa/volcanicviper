@@ -26,17 +26,38 @@ This keeps SKILL.md as the single source of truth while holding the candidate li
 
 ## Running
 
-Set an Anthropic API key, then run promptfoo from this directory.
+The Anthropic API key is read from the macOS Keychain at call time, never from a file or a persisted environment variable.
+
+The key lives under the generic-password service name ANTHROPIC_API_KEY.
 
 ```sh
-export ANTHROPIC_API_KEY=your-key
-pnpm dlx promptfoo eval --config promptfooconfig.yaml
+ANTHROPIC_API_KEY="$(security find-generic-password -s ANTHROPIC_API_KEY -w)" pnpm dlx promptfoo eval --config promptfooconfig.yaml --no-cache
 ```
 
 View the last run in the browser.
 
 ```sh
 pnpm dlx promptfoo view
+```
+
+## Sample run
+
+```
+Running 4 test cases (up to 4 at a time)...
+
+2 large [[leeks]], chopped into 2-inch pieces, cleaned     [PASS] leek.md
+3 [[scallions]], thinly sliced                             [PASS] scallions.md
+2 teaspoons whole black [[peppercorns]]                    [PASS] black peppercorn.md
+[[peppercorns]] to taste                                   [PASS] ASK
+
+Total Tokens: 54,133
+  Eval: 54,133 (54,105 prompt, 28 completion)
+
+Results:
+  ✓ 4 passed (100%)
+  0 failed (0%)
+  0 errors (0%)
+Duration: 3s (concurrency: 4)
 ```
 
 ## Refreshing the fixture
