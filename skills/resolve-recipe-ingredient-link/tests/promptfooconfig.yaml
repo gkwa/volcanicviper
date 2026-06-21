@@ -1,0 +1,40 @@
+description: resolve-recipe-ingredient-link evals
+
+prompts:
+  - file://build_prompt.py:build_prompt
+
+providers:
+  - id: anthropic:messages:claude-opus-4-8
+
+defaultTest:
+  options:
+    transform: String(output).trim()
+
+tests:
+  - description: tier 1 near-exact, singular note resolves plural link
+    vars:
+      line: 2 large [[leeks]], chopped into 2-inch pieces, cleaned
+    assert:
+      - type: equals
+        value: leek.md
+
+  - description: tier 1 exact, plural note resolves plural link
+    vars:
+      line: 3 [[scallions]], thinly sliced
+    assert:
+      - type: equals
+        value: scallions.md
+
+  - description: tier 2, left-side adjective picks black over the literal plural match
+    vars:
+      line: 2 teaspoons whole black [[peppercorns]]
+    assert:
+      - type: equals
+        value: black peppercorn.md
+
+  - description: tier 3, no type given so the link is genuinely ambiguous
+    vars:
+      line: '[[peppercorns]] to taste'
+    assert:
+      - type: equals
+        value: ASK
