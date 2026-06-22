@@ -28,6 +28,8 @@ Collect from the output:
 
 Invoke the `recipe-cleanup` skill using the recipe URL from Step 1.
 
+`recipe-cleanup` writes the ingredient wikilinks and then delegates to the `resolve-recipe-ingredient-link` skill to resolve any link that does not point to an existing product note — so the ingredient links in the note this workflow produces are already resolved by the time Step 3 returns. Do not resolve them separately.
+
 After the recipe file is written, update the `pic` frontmatter field to use the Imgur URL from Step 2 instead of whatever URL was set during cleanup — the Imgur URL is permanent and not subject to CDN expiry.
 
 ### Final report

@@ -55,6 +55,16 @@ Apply the formatting rules below to the recipe content.
   - Example: `1 cup julienned carrots` → `- [x] 1 cup julienned [[carrots]]`
   - Example: `2 teaspoons sesame oil` → `- [x] 2 teaspoons [[sesame oil]]` (not `sesame [[oil]]`)
 - If the ingredient already has a wikilink, leave it as-is
+- After the file is written, resolve every ingredient wikilink that does not point to an existing note — see the "Resolving ingredient wikilinks" section below
+
+**Resolving ingredient wikilinks:**
+- After the cleaned file is written, every ingredient name is wrapped in a `[[wikilink]]` — but many of those will not point to an existing product note in the vault
+- Do not invent or hand-craft a resolution; delegate to the `resolve-recipe-ingredient-link` skill, which is the single canonical resolver
+- For each ingredient wikilink whose target note does not already exist in the vault (resolved by basename, the way Obsidian resolves links), invoke `resolve-recipe-ingredient-link` to find the best matching product note and rewrite the link to its resolved form
+- Pass the resolver the full ingredient line as context, not just the bare bracket text — the descriptive words around the linked noun are what disambiguate the match
+- Enumerate the candidate product notes once and resolve all unresolved links for the recipe against that single list, rather than re-enumerating per ingredient
+- A wikilink that already resolves to an existing note is left untouched
+- If the resolver cannot settle a link from the ingredient line alone, follow its three-tier rule — surface the shortlist and ask the user rather than forcing a wrong match
 
 **Instructions:**
 - Never capitalize the first letter of an instruction line (lowercase start)
@@ -135,3 +145,4 @@ cook until edges begin to set
 7. For file mode: overwrite the file with the cleaned content and confirm success — do not output the full recipe content to the chat
 8. For URL mode: display the formatted recipe in the chat, then immediately write it to a file without asking — derive the filename from the recipe title using spaces (not hyphens) with a `.md` extension; when the creator is known, prefix the filename with the creator name to avoid collisions between recipes with the same dish name (e.g., `Fast Easy Recipes crepes.md`); save to the same directory as other recipe files in the vault
 9. After writing the file, check whether the creator's page exists in the same directory — if not, create a stub page named `<page name>.md` containing just `# <page name>` (using the resolved page name from the frontmatter rules above)
+10. After writing the file, resolve unresolved ingredient wikilinks by delegating to the `resolve-recipe-ingredient-link` skill — see the "Resolving ingredient wikilinks" formatting rule above
