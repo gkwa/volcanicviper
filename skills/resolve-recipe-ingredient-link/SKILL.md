@@ -55,11 +55,162 @@ Tier 3 — ask the user.
 
 If the source line still does not settle the choice (e.g. `[[peppercorns]] to taste` names no type), report the candidates and ask the user to choose.
 
-If no candidate is a plausible resolution at all, say so rather than forcing a wrong match.
+Tier 4 — create a new product note.
+
+If no existing candidate is a plausible resolution at all, do not force a wrong match and do not leave the link dangling.
+
+Create a new product note named after the link text so the wikilink resolves, following the product-note pattern below.
+
+A near-miss substitution does not count as a resolution: `feta cheese` is not `cotija cheese`, and resolving one to the other is wrong even though both are crumbly cheeses.
+
+Prefer a fresh note over a substitution whenever the ingredient is a distinct product.
+
+The new note's filename is the bare link text with the same casing rules as other vault notes (all lowercase, spaces between words), e.g. `[[cotija cheese]]` becomes `cotija cheese.md`.
+
+Use the following template, copying the store-boolean frontmatter and store sections verbatim from any existing product note (e.g. `habanero peppers.md`) so the new note matches the vault's structure exactly.
+
+Set the `tags` to `product` plus a single category tag for the ingredient (e.g. `dairy`, `vegetable`, `spice`).
+
+Include a Google image search link as the product reference, since a fresh note has no purchase page yet.
+
+Omit the `pic` frontmatter field and the hero image unless a verified image URL is available, to avoid a broken link.
+
+```
+---
+albertsons: false
+amazon_com: false
+amazon_fresh: false
+central_co_op: false
+chef_s_store: false
+costco: false
+dong_hing_market: false
+east_african_imports_restaurant: false
+franz_bakery: false
+fred_meyer: false
+grocery_outlet: false
+h_mart: false
+hau_hau_market: false
+home_depot: false
+india_depot_indian_grocery_kitchen_bakery: false
+lam_s_seafood_asian_market: false
+lowe_s: false
+m2m: false
+pacific_supply: false
+pcc: false
+public_storage: false
+qfc: false
+safeway: false
+tags:
+- product
+- <category>
+target: false
+than_son_tofu_and_bakery: false
+trader_joes: false
+uwajimaya: false
+walgreens: false
+walmart: false
+whole_foods: false
+---
+
+<Product Name>
+
+
+Google image search: https://www.google.com/search?q=<product+name>&tbm=isch
+
+## [[Amazon.com]]
+- [x] shopping
+
+## [[Central Co-op]]
+- [x] shopping
+
+## [[Grocery Outlet]]
+- [x] shopping
+
+## [[Chef's Store]]
+- [x] shopping
+
+## [[Hau Hau Market]]
+- [x] shopping
+
+## [[Lam's Seafood Asian Market]]
+- [x] shopping
+
+## [[M2M]]
+- [x] shopping
+
+## [[Pacific Supply]]
+- [x] shopping
+
+## [[PCC]]
+- [x] shopping
+
+## [[QFC]]
+- [x] shopping
+
+## [[Safeway]]
+- [x] shopping
+
+## [[Target]]
+- [x] shopping
+
+## [[Trader Joes]]
+- [x] shopping
+
+## [[Uwajimaya]]
+- [x] shopping
+
+## [[Walgreens]]
+- [x] shopping
+
+## [[Walmart]]
+- [x] shopping
+
+## [[Whole Foods]]
+- [x] shopping
+
+## [[Costco]]
+- [x] shopping
+
+## [[Fred Meyer]]
+- [x] shopping
+
+## [[H Mart]]
+- [x] shopping
+
+## [[Dong Hing Market]]
+- [x] shopping
+
+## [[Amazon Fresh]]
+- [x] shopping
+
+## [[Home Depot]]
+- [x] shopping
+
+## [[Franz Bakery]]
+- [x] shopping
+
+## [[Lowe's]]
+- [x] shopping
+
+## [[Than Son Tofu and Bakery]]
+- [x] shopping
+
+## [[India Depot Indian Grocery, Kitchen & Bakery]]
+- [x] shopping
+
+## [[Albertsons]]
+- [x] shopping
+
+## [[East African Imports & Restaurant]]
+- [x] shopping
+
+## [[Public Storage]]
+- [x] shopping
+```
 
 Step 4 — report.
 
-Report the number of candidates considered and the resolution, or the ranked shortlist when asking the user.
+Report the number of candidates considered and the resolution, the ranked shortlist when asking the user, or the new product note created when no candidate matched.
 
 Do not edit the wikilink unless explicitly asked — surface the resolution first.
 
