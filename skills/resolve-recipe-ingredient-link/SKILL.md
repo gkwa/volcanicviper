@@ -218,7 +218,11 @@ Do not edit the wikilink unless explicitly asked — surface the resolution firs
 
 When asked to apply the resolution, choose the link form by comparing the displayed word (the original link text, e.g. `leeks`) against the resolved note name (e.g. `leek`).
 
-Prefer keeping the inflection outside the brackets over an alias, so the link target stays clean.
+Never use the alias form (`[[note|displayed]]`) in an ingredient link.
+
+When the displayed word and the note name differ, rewrite the recipe text to match the note name and keep a plain link, rather than papering over the mismatch with an alias.
+
+Keeping the inflection outside the brackets is fine; an alias is not.
 
 Decide in this order:
 
@@ -254,9 +258,13 @@ Example: displayed `boxes`, note `box` becomes `[[box]]es`.
 
 Case 3 — the note name is not a prefix of the displayed word.
 
-The stem changes, so no suffix can be peeled off; use the alias form.
+The stem changes, so no suffix can be peeled off. Do not use an alias.
 
-Example: displayed `leaves`, note `leaf` becomes `[[leaf|leaves]]`.
+Instead, rewrite the recipe text to the note's word and use a plain link, adjusting the surrounding wording so the line reads naturally.
+
+Example: displayed `leaves`, note `leaf` becomes `[[leaf]]` — change the line so it reads with "leaf" rather than stranding `[[leaf|leaves]]`.
+
+If rewording the line to the note's word would read awkwardly, prefer creating or choosing a note whose name matches the ingredient as written over falling back to an alias.
 
 ### Notes
 
