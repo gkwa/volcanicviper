@@ -38,7 +38,7 @@ Default values when not supplied:
 
 ## Staging directory
 
-Use `/tmp/jack_staging` as the staging directory.
+Use `/tmp/digikam-media-pack-copy-staging` as the staging directory.
 
 The staging directory is always cleaned up after the move completes.
 
@@ -125,7 +125,7 @@ uv run --no-active /path/to/media_pack_shuffle.py
 
 ## Step 2 — Randomize timestamps in staging
 
-Write the timestamp script to `$CLAUDE_JOB_DIR/tmp/randomize_timestamps.py`, walking `/tmp/jack_staging`.
+Write the timestamp script to `$CLAUDE_JOB_DIR/tmp/randomize_timestamps.py`, walking `/tmp/digikam-media-pack-copy-staging`.
 
 The script must:
 
