@@ -9,11 +9,19 @@ Given a list of DigiKam tag names, a destination directory, and a size limit, th
 
 1. Queries the DigiKam SQLite database for all files carrying any of the specified tags
 2. Builds a shuffled collection using the media pack spec
-3. Clears the destination's file contents without removing the directory itself
-4. rsyncs the selected files preserving directory structure
-5. Randomizes file timestamps, giving each media pack one shared random timestamp
+3. rsyncs the selected files into a staging directory outside the Syncthing watch path
+4. Randomizes timestamps in staging so each file has its final timestamp before it ever enters the watched directory
+5. Clears the destination's file contents without removing the directory itself
+6. Moves files from staging into the destination — Syncthing sees each file exactly once, with its 1950s timestamp already set
+7. Removes the staging directory
 
 Carry all values forward through steps — do not prompt the user between steps unless a step fails.
+
+## Why staging
+
+If files are rsynced directly into the Syncthing-watched destination and then timestamped, Syncthing sees two events per file: the file arriving and then the timestamp being rewritten.
+
+By staging first, all timestamp work happens outside the watched path. The final move into the destination is a single event per file, with the correct timestamp already in place.
 
 ## Inputs
 
@@ -27,6 +35,12 @@ Default values when not supplied:
 
 - Destination directory: `~/Documents/jack`
 - Timestamp range: 1950-01-01 to 1959-12-31
+
+## Staging directory
+
+Use `$CLAUDE_JOB_DIR/tmp/jack_staging` as the staging directory (or `/tmp/jack_staging` if that variable is not set).
+
+The staging directory is always cleaned up after the move completes.
 
 ## DigiKam Database
 
@@ -88,7 +102,7 @@ Add each item (pack or standalone) to the selection if it fits within the remain
 Skip items that would exceed the limit and continue trying smaller items.
 Stop when the full collection has been iterated.
 
-## Step 1 — Query and build the Python script
+## Step 1 — Query and build the copy script
 
 Write the script to `$CLAUDE_JOB_DIR/tmp/media_pack_shuffle.py` (or `/tmp/` if that variable is not set).
 
@@ -101,7 +115,7 @@ The script must:
 - Shuffle packs and standalones together
 - Select files greedily up to the size limit
 - Write paths (relative to `/`) to a temp file
-- Run `rsync --archive --files-from=<list> / <dest>/`
+- Run `rsync --archive --files-from=<list> / <staging>/`
 
 Run with:
 
@@ -109,29 +123,13 @@ Run with:
 uv run --no-active /path/to/media_pack_shuffle.py
 ```
 
-## Step 2 — Clear the destination
+## Step 2 — Randomize timestamps in staging
 
-Never use `rm -rf <dest>` — that destroys the directory itself and any Finder metadata or app settings attached to it.
-
-Instead, remove only the files inside:
-
-```
-find <dest> -type f -delete
-```
-
-Run this before rsync so stale files from a prior run do not remain.
-
-## Step 3 — Run the copy
-
-Run the script from Step 1. It will rsync the selected files to the destination, preserving directory structure so files with identical basenames in different source directories do not collide.
-
-## Step 4 — Randomize timestamps
-
-Write a second script to `$CLAUDE_JOB_DIR/tmp/randomize_timestamps.py`.
+Write the timestamp script to `$CLAUDE_JOB_DIR/tmp/randomize_timestamps.py`.
 
 The script must:
 
-- Walk the destination recursively
+- Walk the staging directory recursively
 - Group media files by their parent directory
 - Apply the same pack classification (1–20 files = pack, >20 = standalones)
 - For each pack: call `random.randint` once and apply that timestamp to all files in the pack via `os.utime`
@@ -144,7 +142,31 @@ Run with:
 uv run --no-active /path/to/randomize_timestamps.py
 ```
 
-## Step 5 — Verify
+## Step 3 — Clear the destination
+
+Never use `rm -rf <dest>` — that destroys the directory itself and any Finder metadata or app settings attached to it.
+
+Instead, remove only the files inside:
+
+```
+find <dest> -type f -delete
+```
+
+## Step 4 — Move staging into destination
+
+```
+rsync --archive <staging>/ <dest>/
+```
+
+Syncthing sees each file arrive once with its 1950s timestamp already set — no second event.
+
+## Step 5 — Remove staging
+
+```
+rm -rf <staging>
+```
+
+## Step 6 — Verify
 
 Run these checks and report the results:
 
