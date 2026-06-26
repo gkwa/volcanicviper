@@ -38,7 +38,7 @@ Default values when not supplied:
 
 ## Staging directory
 
-Use `$CLAUDE_JOB_DIR/tmp/jack_staging` as the staging directory (or `/tmp/jack_staging` if that variable is not set).
+Use `/tmp/jack_staging` as the staging directory.
 
 The staging directory is always cleaned up after the move completes.
 
@@ -104,7 +104,7 @@ Stop when the full collection has been iterated.
 
 ## Step 1 — Query and build the copy script
 
-Write the script to `$CLAUDE_JOB_DIR/tmp/media_pack_shuffle.py` (or `/tmp/` if that variable is not set).
+Write the script to `$CLAUDE_JOB_DIR/tmp/media_pack_shuffle.py`.
 
 The script must:
 
@@ -125,7 +125,7 @@ uv run --no-active /path/to/media_pack_shuffle.py
 
 ## Step 2 — Randomize timestamps in staging
 
-Write the timestamp script to `$CLAUDE_JOB_DIR/tmp/randomize_timestamps.py`.
+Write the timestamp script to `$CLAUDE_JOB_DIR/tmp/randomize_timestamps.py`, walking `/tmp/jack_staging`.
 
 The script must:
 
