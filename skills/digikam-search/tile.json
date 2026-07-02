@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/digikam-search",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Find digikam notes and setup information by searching the Obsidian vault for the digikam tag. Trigger phrases: search my digikam, find digikam media, digikam database, digikam setup.",
+  "skills": {
+    "digikam-search": {
+      "path": "SKILL.md"
+    }
+  }
+}
