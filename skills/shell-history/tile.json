@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/shell-history",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Search shell history using atuin with timestamps and keyword filtering. Trigger terms: shell history, search history, find command, find URL in history, past command.",
+  "skills": {
+    "shell-history": {
+      "path": "SKILL.md"
+    }
+  }
+}
