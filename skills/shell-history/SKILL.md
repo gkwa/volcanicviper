@@ -15,7 +15,12 @@ atuin search --limit <N> --format "{time} {command}"
 
 Default `<N>` is 1000.
 
-If the user specifies a count ("last 500 commands", "search 5000 entries"), use that number instead.
+If the user specifies a count, use that number instead. Examples that set the count:
+
+- "search 100 shell history"
+- "last 500 commands"
+- "search 5000 entries"
+- "check 200 history"
 
 This returns the N most recent shell commands, each prefixed with a timestamp.
 
