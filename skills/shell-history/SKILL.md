@@ -10,18 +10,16 @@ When the user wants to find something from their shell history, use atuin with t
 ### Standard invocation
 
 ```
-atuin search --limit 1000 --format "{time} {command}"
+atuin search --limit <N> --format "{time} {command}"
 ```
 
-This returns the 1000 most recent shell commands, each prefixed with a timestamp.
+Default `<N>` is 1000.
+
+If the user specifies a count ("last 500 commands", "search 5000 entries"), use that number instead.
+
+This returns the N most recent shell commands, each prefixed with a timestamp.
 
 ### Filtering by keyword
-
-Pipe the output through `grep` to narrow results:
-
-```
-atuin search --limit 1000 --format "{time} {command}"
-```
 
 Then grep for the relevant term (URL, tool name, flag, etc.).
 
