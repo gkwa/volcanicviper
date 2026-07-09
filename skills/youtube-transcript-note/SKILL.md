@@ -26,6 +26,10 @@ uv run --no-active --project /Users/mtm/pdev/taylormonacelli/benevolentbadger be
 
 ### Step 2: Clean the transcript
 
+This is a transcription task, NOT a summarization task.
+Every piece of spoken content must appear in the output — do not skip, condense, or summarize any portion of the transcript.
+If the transcript is long, output all of it.
+
 Apply these rules to the plain-text transcript:
 
 - Correct all spelling errors
@@ -43,9 +47,11 @@ Apply these rules to the plain-text transcript:
 
 Read the cleaned transcript and identify 4–7 natural topic breaks.
 
+Every sentence from the cleaned transcript must appear under exactly one section — nothing may be dropped or omitted.
+
 For each section:
 - Write a `##` heading that names the topic (title case, concise)
-- Place the cleaned sentences for that topic under the heading
+- Place ALL cleaned sentences for that topic under the heading
 
 Using the SRT output from step 1, find the `start` time (in seconds) for the first caption that falls under each section.
 Add the video timestamp URL as a bare link on the line immediately after the `##` heading:
