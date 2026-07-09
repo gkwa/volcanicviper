@@ -147,9 +147,35 @@ git commit -m "Add <short topic> note from YouTube transcript"
 
 Run each git command as a separate Bash call (no chaining with &&).
 
+### Step 9: Apply recipe cleanup (cooking/recipe content only)
+
+Assess whether the video content is recipe or cooking-focused by examining any of the following signals:
+
+- The video title contains words like: recipe, sauce, how to make, cooking, bake, roast, stir-fry, marinade, dipping, dumpling, noodle, soup, fry, etc.
+- The channel name is associated with food or cooking
+- The transcript contains ingredient measurements, quantities, or cooking technique vocabulary
+
+If any signal indicates recipe/cooking content, invoke the `recipe-cleanup` skill, passing the path to the vault note just written:
+
+```
+/recipe-cleanup <absolute path to vault note>
+```
+
+The skill will fetch the printable recipe from the YouTube description (if one exists), add structured `### Ingredients` checklists and `### Instructions` blocks, update frontmatter with a `creator` field, and resolve ingredient wikilinks.
+
+After the skill completes, commit the updated file:
+
+```
+git add "<filename>.md"
+git commit -m "Apply recipe cleanup to <short topic> note"
+```
+
+If the content is not recipe or cooking-focused, skip this step entirely — do not invoke `recipe-cleanup`.
+
 ### Final report
 
 After all steps complete, report:
 - The vault note filename
 - The Imgur thumbnail URL
 - The section breakdown with their video timestamps
+- Whether recipe cleanup was applied
