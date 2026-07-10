@@ -41,18 +41,6 @@ pnpm dlx skills add gkwa/volcanicviper --global
 
 Skills install to `~/.agents/skills/` with symlinks in `~/.claude/skills/`.
 
-## Local testing
-
-<!-- symlink skills into ~/.agents/skills/ for local testing -->
-```
-just install
-```
-
-<!-- remove symlinks when done -->
-```
-just uninstall
-```
-
 ## Update
 
 <!-- check for updates -->
