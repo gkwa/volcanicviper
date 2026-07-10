@@ -10,19 +10,18 @@ When the user wants to find something from their shell history, use atuin with t
 ### Standard invocation
 
 ```
-atuin search --limit <N> --format "{time} {command}"
+atuin search --after "<N> days ago" --format "{time} {command}"
 ```
 
-Default `<N>` is 1000.
+Default `<N>` is 1.
 
-If the user specifies a count, use that number instead. Examples that set the count:
+If the user specifies a day count, use that number instead. Examples that set the day count:
 
-- "search 100 shell history"
-- "last 500 commands"
-- "search 5000 entries"
-- "check 200 history"
+- "search last 2 days of shell history"
+- "check 3 days of history"
+- "last two days"
 
-This returns the N most recent shell commands, each prefixed with a timestamp.
+This returns all shell commands from the past N days, each prefixed with a timestamp.
 
 ### Filtering by keyword
 
