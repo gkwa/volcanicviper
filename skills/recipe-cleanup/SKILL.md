@@ -91,14 +91,18 @@ Apply the formatting rules below to the recipe content.
   to pan
   ```
 
-**Mise en place (Prep section):**
-- Extract any prep-type steps from the instructions and place them in a `## Prep` section immediately above `## Instructions`
-- Prep steps are tasks that can be done ahead of time before cooking begins: chopping, dicing, mincing, measuring, soaking, washing, resting dough, etc.
+**Mise en place:**
+- Mise en place — "everything in its place" — is the practice of completing all preparation before cooking begins, so that execution runs uninterrupted
+- The principle: decouple preparation from execution; a cook who is still slicing while the pan is hot will burn both the food and their focus
+- Extract all prep-type steps from the instructions and place them in a `## Mise en Place` section immediately above the first cooking section — rename any existing `## Prep` section to `## Mise en Place`
+- Prep steps include any task that can be completed before heat or timing begins: chopping, dicing, mincing, slicing, peeling, measuring, soaking, washing, resting dough, bringing ingredients to room temperature, preheating, etc.
+- When a recipe has distinct cooking phases (e.g. making a broth, making a sauce, preparing a filling), give each phase its own named section (e.g. `## Broth`, `## Sauce`) rather than collapsing everything into a single `## Instructions` section — this applies the mise en place principle at the phase level, not just the ingredient level
+- Reserve `## Instructions` for final assembly steps only
 - Format each prep step as a plain paragraph (no leading bullet), separated by blank lines — same structure as instructions
 - If a prep step involves multiple constituent items, keep the action as a plain paragraph and list the items as a bullet sub-list beneath it (same comma-expansion rule as instructions)
 - Apply the same instruction formatting rules: lowercase start, no trailing period
-- Remove the extracted steps from the Instructions section — do not duplicate them
-- If a `## Prep` section already exists, merge any newly extracted steps into it
+- Remove extracted steps from the cooking sections — do not duplicate them
+- If a `## Mise en Place` section already exists, merge any newly extracted steps into it
 
 **Dish image:**
 - Find the main hero image for the recipe (e.g., from og:image meta tag or the primary recipe photo)
