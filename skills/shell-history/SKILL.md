@@ -33,6 +33,12 @@ Step 1: capture history to a temp file in the job directory if one is available,
 
 Step 2: grep that file for the keyword.
 
+### Expanding the search window
+
+If nothing useful is found with the default 1-day window, expand incrementally: try 2 days, then 3, and so on — up to 7 days before giving up or asking the user for more context.
+
+Report what window you searched each time so the user knows how far back you looked.
+
 ### When to use this skill
 
 - User says "check my shell history", "look in my history", "find that command I ran"
