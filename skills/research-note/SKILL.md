@@ -46,6 +46,7 @@ Structure:
 3. The cleaned question — no label, no header, just the question text
 4. `## Answer` section
 5. `## Search links` section
+6. `## Original request` section
 
 Formatting rules:
 
@@ -81,7 +82,15 @@ Link text should describe what kind of result to expect.
 
 URL format: `https://www.google.com/search?q=search+terms+separated+by+plus+signs`
 
-### Step 7: Delete the source file
+### Step 7: Write the Original request section
+
+Append a `## Original request` section at the bottom of the note containing the verbatim original content of the source file.
+
+Do not discard any text from the source file, even if it looks like stray wikilinks, copied text, or app-generated messages.
+
+The user may have collected that content intentionally as context or raw material, even if it does not look like a clean question.
+
+### Step 8: Delete the source file
 
 After creating all research note files, delete the original source file the question came from.
 
@@ -89,7 +98,7 @@ Do not prompt the user before deleting.
 
 Commit the deletion immediately after, before proceeding.
 
-### Step 8: Commit
+### Step 9: Commit
 
 Commit each file to git immediately after creating or updating it.
 
@@ -99,6 +108,6 @@ Write a short, imperative commit message.
 
 Do not prompt the user before committing.
 
-### Step 9: Handle follow-up additions
+### Step 10: Handle follow-up additions
 
 If the user points out a missing question or sub-question, add it to the appropriate file and commit again without prompting.
