@@ -91,6 +91,23 @@ In move mode (the default), remove each routed entry from the source document af
 
 In copy mode, leave the source document untouched.
 
+## Delete Empty Source
+
+After move mode removes all routed entries, check whether the source document is now empty.
+
+A document is considered empty for this purpose when it contains no headings and no body content — only whitespace or a trailing newline.
+
+Delete the source file if and only if all of the following are true:
+
+- Mode is move (not copy)
+- At least one entry was actually routed out
+- No non-Zephyr content remains (no headings, body text, frontmatter, or other entries that were present before routing)
+- The file is now empty as a result of routing
+
+Do not delete the file if any non-Zephyr content remains after routing, even if all Zephyr entries were removed.
+
+Do not delete the file if it was already empty before routing began — nothing was routed, so the empty state is not a result of routing.
+
 ## Normalize on Write
 
 Apply weight notation rules as entries land in the target.
@@ -99,4 +116,10 @@ Add event_time tags to entries that record discrete bake actions, per `SKILL.md`
 
 ## Commit
 
-Commit the source document and each modified bake log, one commit per file.
+Commit each modified bake log, one commit per file.
+
+For the source document:
+
+- If it was modified but not deleted, commit it as a separate commit.
+- If it was deleted (empty source, move mode), commit the deletion as a separate commit.
+- If it was untouched (copy mode), skip it.
