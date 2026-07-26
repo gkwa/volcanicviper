@@ -81,11 +81,11 @@ The `## grafana` section is shared.
 
 This skill owns the fenced annotation command blocks.
 
-The top of the section holds two dashboard links, `overall` and `bulk ferment`, owned by `GRAFANA-LINKS.md` in the [[zephyr]] skill.
+The top of the section holds two dashboard links, `overall` and `bulk ferment`, owned by the [[zephyr-grafana-links]] skill.
 
 Leave those links untouched when writing annotation commands — never delete or rewrite them here.
 
-When a bake finishes, the `bake_done` annotation is also the signal that those links need their end time pinned; see `GRAFANA-LINKS.md`.
+When a bake finishes, the `bake_done` annotation is also the signal that those links need their end time pinned; see the [[zephyr-grafana-links]] skill.
 
 ## Correcting Mistakes
 

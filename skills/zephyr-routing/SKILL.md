@@ -1,17 +1,22 @@
-# Routing Zephyr Entries
+---
+name: zephyr-routing
+description: Route Zephyr entries from any document to their proper bake logs, with deduplication, reverse chronological ordering, and move or copy semantics. Use when asked to route Zephyr entries, move entries out of a log to where they belong, or clean up a document holding mixed entries.
+---
+
+## Overview
 
 Routing takes a document containing mixed content and delivers each Zephyr entry to its proper bake log.
 
-This file is the routing component of the zephyr skill.
+This skill is deliberately self-contained so it can be replaced with a different routing implementation without touching the [[zephyr]] skill.
 
-It is deliberately self-contained so it can be replaced with a different routing implementation without touching `SKILL.md`.
+Filename resolution, weight notation, event_time tags, and parameter precedence are owned by the [[zephyr]] skill — routing consumes those rules, it does not restate them.
 
-Filename resolution, weight notation, event_time tags, and parameter precedence are owned by `SKILL.md` — routing consumes those rules, it does not restate them.
+Read the [[zephyr]] skill before routing, for the bake log naming convention and the parameter defaults.
 
 ## Parameters
 
 - mode — `move` or `copy`; default `move`
-- bake log directory — resolved per the Parameters section of `SKILL.md`
+- bake log directory — resolved per the Parameters section of the [[zephyr]] skill
 
 ## Trigger
 
@@ -30,9 +35,10 @@ Requests that trigger routing:
 
 Requests that do NOT trigger routing (even if they involve Zephyr entries):
 
-- "Update the event times in this log"
-- "Apply Grafana annotations"
-- "Add event_time tags to the Zephyr entries"
+- "Update the event times in this log" — that is the [[zephyr]] skill
+- "Add event_time tags to the Zephyr entries" — that is the [[zephyr]] skill
+- "Apply Grafana annotations" — that is the [[grafana-bake-annotation]] skill
+- "Update the Grafana links" — that is the [[zephyr-grafana-links]] skill
 - Opening or reading a bake log for any other purpose
 
 ## Identify
@@ -51,7 +57,7 @@ Choose the most recent date with that day number on or before the header date.
 
 Example: "Zephyr 31" under a June 1 header resolves to May 31, not June 31.
 
-Resolve the key to a filename through the Bake Log Naming Convention in `SKILL.md`.
+Resolve the key to a filename through the Bake Log Naming Convention in the [[zephyr]] skill.
 
 ## Create Missing Targets
 
@@ -71,7 +77,7 @@ Sort by the event time stated in the body; fall back to the header timestamp whe
 
 ## Deduplication
 
-Normalize the entry first (weight notation per `SKILL.md`), then compare.
+Normalize the entry first (weight notation per the [[zephyr]] skill), then compare.
 
 Skip an entry when the target already contains one with the same header timestamp, the same Zephyr key, and the same normalized body.
 
@@ -112,7 +118,7 @@ Do not delete the file if it was already empty before routing began — nothing 
 
 Apply weight notation rules as entries land in the target.
 
-Add event_time tags to entries that record discrete bake actions, per `SKILL.md`.
+Add event_time tags to entries that record discrete bake actions, per the [[zephyr]] skill.
 
 ## Commit
 

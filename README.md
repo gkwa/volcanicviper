@@ -30,7 +30,9 @@ Skills encode reusable expertise so AI assistants apply consistent standards wit
 - `use-vite` — set up Vite/Vitest with ESM config and vite-plugin-checker for TypeScript projects
 - `view-imgur` — fetch and view imgur images via curl when WebFetch is blocked
 - `write-readme` — write brief READMEs with a CLI cheatsheet
-- `zephyr` — understand the Zephyr sourdough bake tagging scheme, find bake logs by Zephyr key, read entries to extract event times, route Zephyr entries from any document to their bake logs, and build the bake log's Grafana dashboard links
+- `zephyr` — the Zephyr sourdough bake tagging scheme: find bake logs by Zephyr key, read entries to extract event times, add event_time tags, and fill the Starter peak duration block
+- `zephyr-grafana-links` — build or refresh the overall and bulk ferment Grafana dashboard links in a bake log
+- `zephyr-routing` — route Zephyr entries from any document to their proper bake logs, deduplicated and in reverse chronological order
 
 ## Install from GitHub
 

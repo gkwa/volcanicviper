@@ -1,6 +1,6 @@
 ---
 name: zephyr
-description: Understand the Zephyr sourdough bake tagging scheme. Use when working with Zephyr bake logs, finding which bake log corresponds to a Zephyr key, reading Zephyr voice memo entries to extract bake events, routing Zephyr entries from any document to their bake logs, or building the Grafana dashboard links for a bake log.
+description: The Zephyr sourdough bake tagging scheme — key syntax, bake log filename resolution, event_time tags, weight notation, and the Starter peak duration block. Use when working with Zephyr bake logs, finding which bake log corresponds to a Zephyr key, reading Zephyr voice memo entries to extract bake events, or adding event_time tags. Also read this skill as the shared core whenever a Zephyr verb skill needs those rules.
 ---
 
 ## The Zephyr Scheme
@@ -38,8 +38,8 @@ Resolution precedence, highest first:
 Parameters:
 
 - bake log directory — built-in default `/Users/mtm/Documents/Obsidian Vault/`; machine-local override via the `ZEPHYR_BAKE_LOG_DIR` environment variable; invocation override by naming a directory in the request
-- mode — routing only; `move` or `copy`; default `move`; see ROUTING.md
-- trigger — routing only; on-request by default; see ROUTING.md
+
+Verb skills declare their own additional parameters and resolve them by this same precedence.
 
 Check `ZEPHYR_BAKE_LOG_DIR` with Bash at call time; fall back to the built-in default only when it is unset.
 
@@ -226,24 +226,22 @@ To update the Starter peak duration block:
 3. Fill in only the fields that can be derived — leave the rest as `"[TBD]"`
 4. Commit after updating
 
-## Routing
+## Components
 
-Routing delivers Zephyr entries found in any document to their proper bake logs, with deduplication, reverse chronological ordering, and move or copy semantics.
+This skill is the shared core: the scheme itself, filename resolution, weight notation, event_time tags, the Starter peak duration block, and parameter precedence.
 
-Routing is a separate component so it can be swapped out without changing the core scheme.
+The verbs that act on a bake log are separate skills, each independently invocable and each swappable without changing the core scheme.
 
-The full routing rules live in `ROUTING.md` in this skill directory.
+| skill | handles |
+| ----- | ------- |
+| [[zephyr-routing]] | delivering Zephyr entries from any document to their proper bake logs |
+| [[zephyr-grafana-links]] | the two dashboard links at the top of the `## grafana` section |
+| [[grafana-bake-annotation]] | the `annotate-grafana.py` command blocks in the `## grafana` section |
 
-Read `ROUTING.md` whenever asked to route Zephyr entries.
+Each verb skill consumes the rules above and does not restate them.
 
-## Grafana Dashboard Links
+Read the matching verb skill when a request calls for that verb, rather than acting from this skill alone.
 
-Grafana links give a bake log two ready-made dashboard views — one spanning the whole bake, one spanning bulk fermentation — each framed with an hour of headroom on either side.
+The `## grafana` section is shared by the last two — links at the top, annotation command blocks below.
 
-Link generation is a separate component so it can be swapped out without changing the core scheme.
-
-The full link rules live in `GRAFANA-LINKS.md` in this skill directory.
-
-Read `GRAFANA-LINKS.md` whenever asked to add, update, or fix the Grafana links in a bake log.
-
-Grafana annotations are a different concern and belong to the `grafana-bake-annotation` skill; both write into the same `## grafana` section, so read `GRAFANA-LINKS.md` before touching that section to see which part each owns.
+Read whichever of those two you are invoking before touching that section, to see which part it owns.

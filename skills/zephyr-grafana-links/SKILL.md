@@ -1,20 +1,25 @@
-# Grafana Dashboard Links
+---
+name: zephyr-grafana-links
+description: Build or refresh the two Grafana dashboard links (overall and bulk ferment) in a Zephyr bake log's grafana section. Use when asked to add, update, or fix the Grafana links in a bake log, or to pin the link end times once a bake has finished.
+---
+
+## Overview
 
 Grafana links give a bake log two ready-made views of the dashboard: one spanning the whole bake, one spanning bulk fermentation.
 
-This file is the dashboard link component of the zephyr skill.
+This skill is deliberately self-contained so it can be replaced with a different link implementation without touching the [[zephyr]] skill.
 
-It is deliberately self-contained so it can be replaced with a different link implementation without touching `SKILL.md`.
+Filename resolution, event_time tags, the Starter peak duration block, and parameter precedence are owned by the [[zephyr]] skill — this skill consumes those rules, it does not restate them.
 
-Filename resolution, event_time tags, the Starter peak duration block, and parameter precedence are owned by `SKILL.md` — this component consumes those rules, it does not restate them.
+Read the [[zephyr]] skill before building links, for the bake log naming convention and the parameter defaults.
 
-Annotations are a different concern entirely and belong to the `grafana-bake-annotation` skill. See Section Ownership below.
+Annotations are a different concern entirely and belong to the [[grafana-bake-annotation]] skill. See Section Ownership below.
 
 ## Parameters
 
 - dashboard base URL — `https://taylormonacelli1.grafana.net/d/tatmmtv/new-dashboard`
 - fixed query parameters — `orgId=1`, `timezone=browser`, `refresh=30m`
-- bake log directory — resolved per the Parameters section of `SKILL.md`
+- bake log directory — resolved per the Parameters section of the [[zephyr]] skill
 
 ## Trigger
 
@@ -30,8 +35,9 @@ Requests that trigger this component:
 
 Requests that do NOT trigger it:
 
-- "Apply Grafana annotations" — that is the `grafana-bake-annotation` skill
-- Reading or routing a bake log for any other purpose
+- "Apply Grafana annotations" — that is the [[grafana-bake-annotation]] skill
+- "Route the Zephyr entries in this log" — that is the [[zephyr-routing]] skill
+- Reading a bake log for any other purpose
 
 ## Framing the Window
 
@@ -102,7 +108,7 @@ bulk ferment
 
 Replace the whole links block on every run, whatever it currently holds — treat it as regenerated output, not as text to patch.
 
-Everything else in the `## grafana` section belongs to the `grafana-bake-annotation` skill, in particular the fenced `annotate-grafana.py` command blocks.
+Everything else in the `## grafana` section belongs to the [[grafana-bake-annotation]] skill, in particular the fenced `annotate-grafana.py` command blocks.
 
 Never delete, reorder, or edit those blocks while updating links.
 
