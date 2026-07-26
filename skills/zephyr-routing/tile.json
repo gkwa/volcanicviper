@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/zephyr-routing",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Route Zephyr entries from any document to their proper bake logs, with deduplication, reverse chronological ordering, and move or copy semantics. Trigger terms: route zephyr entries, route entries, move entries out of a log, clean up mixed entries, zephyr routing.",
+  "skills": {
+    "zephyr-routing": {
+      "path": "SKILL.md"
+    }
+  }
+}

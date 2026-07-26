@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/zephyr",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "The Zephyr sourdough bake tagging scheme: key syntax, bake log filename resolution, event_time tags, weight notation, and the Starter peak duration block. Shared core consumed by the Zephyr verb skills. Trigger terms: zephyr, bake log, zephyr key, event_time tags, starter peak duration.",
+  "skills": {
+    "zephyr": {
+      "path": "SKILL.md"
+    }
+  }
+}

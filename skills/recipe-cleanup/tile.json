@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/recipe-cleanup",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Reformat a recipe note using consistent style rules, or create a new recipe note from a URL. Trigger terms: recipe cleanup, clean up recipe, standardize recipe, format recipe note, new recipe from URL.",
+  "skills": {
+    "recipe-cleanup": {
+      "path": "SKILL.md"
+    }
+  }
+}

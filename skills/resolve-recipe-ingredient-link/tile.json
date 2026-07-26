@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/resolve-recipe-ingredient-link",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Resolve an unresolved ingredient wikilink in a recipe note by enumerating product-tagged candidate notes with islandiguana, then semantically ranking them against the link text and its surrounding ingredient line. Trigger terms: resolve ingredient link, unresolved wikilink, ingredient wikilink, fix recipe link, match product note.",
+  "skills": {
+    "resolve-recipe-ingredient-link": {
+      "path": "SKILL.md"
+    }
+  }
+}

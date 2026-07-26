@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/grouchygiraffe-ingest",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Full grouchygiraffe ingestion workflow: given a media file path or a recipe URL from YouTube, Instagram, or any recipe page, identify the recipe, upload the thumbnail to Imgur, and write a cleaned recipe note to the vault. Trigger terms: grouchygiraffe ingest, ingest recipe, recipe from URL, instagram recipe, youtube recipe.",
+  "skills": {
+    "grouchygiraffe-ingest": {
+      "path": "SKILL.md"
+    }
+  }
+}

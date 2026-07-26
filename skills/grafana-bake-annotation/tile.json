@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/grafana-bake-annotation",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Extract annotatable bake events from a Zephyr bake log, run the Grafana annotation CLI, and record the command in the bake log's grafana section. Trigger terms: grafana annotation, annotate bake, annotate-grafana, clear annotations, bake log grafana section.",
+  "skills": {
+    "grafana-bake-annotation": {
+      "path": "SKILL.md"
+    }
+  }
+}

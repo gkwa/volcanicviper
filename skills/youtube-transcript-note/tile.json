@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/youtube-transcript-note",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Create a structured Obsidian vault note from a YouTube transcript: fetch captions with timestamps, clean and section the text, add a table of contents and per-section video links, upload the thumbnail to Imgur, and commit. Trigger terms: youtube transcript, transcript note, video transcript, captions note, transcribe video.",
+  "skills": {
+    "youtube-transcript-note": {
+      "path": "SKILL.md"
+    }
+  }
+}

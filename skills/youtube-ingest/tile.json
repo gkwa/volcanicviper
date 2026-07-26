@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/youtube-ingest",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Full YouTube video ingestion workflow: fetch the video title, upload the thumbnail to Imgur, create an Obsidian vault note with a hero image, and commit it. Trigger terms: youtube ingest, youtube note, ingest youtube URL, video note, permanent note from video.",
+  "skills": {
+    "youtube-ingest": {
+      "path": "SKILL.md"
+    }
+  }
+}

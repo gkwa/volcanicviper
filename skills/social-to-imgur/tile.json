@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/social-to-imgur",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Download the thumbnail or cover image from a social media post on Instagram, Facebook, or any yt-dlp-supported platform and upload it to Imgur, returning a permanent URL. Trigger terms: social to imgur, upload thumbnail, instagram thumbnail, facebook cover image, permanent image link.",
+  "skills": {
+    "social-to-imgur": {
+      "path": "SKILL.md"
+    }
+  }
+}

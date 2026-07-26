@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/moonlitlynx-food-run",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Tag untagged and undated food-related media in the digikam grouchygiraffe and shamblingshark collections. Trigger terms: moonlitlynx, food tagging pass, tag untagged food files, digikam untagged queue, digikam undated queue.",
+  "skills": {
+    "moonlitlynx-food-run": {
+      "path": "SKILL.md"
+    }
+  }
+}

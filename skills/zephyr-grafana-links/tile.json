@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/zephyr-grafana-links",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Build or refresh the overall and bulk ferment Grafana dashboard links in a Zephyr bake log's grafana section, including pinning the end times once a bake has finished. Trigger terms: grafana links, dashboard links, bake log grafana links, bulk ferment link, pin link end time.",
+  "skills": {
+    "zephyr-grafana-links": {
+      "path": "SKILL.md"
+    }
+  }
+}
