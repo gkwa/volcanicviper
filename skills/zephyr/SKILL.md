@@ -1,6 +1,6 @@
 ---
 name: zephyr
-description: Understand the Zephyr sourdough bake tagging scheme. Use when working with Zephyr bake logs, finding which bake log corresponds to a Zephyr key, reading Zephyr voice memo entries to extract bake events, or routing Zephyr entries from any document to their bake logs.
+description: Understand the Zephyr sourdough bake tagging scheme. Use when working with Zephyr bake logs, finding which bake log corresponds to a Zephyr key, reading Zephyr voice memo entries to extract bake events, routing Zephyr entries from any document to their bake logs, or building the Grafana dashboard links for a bake log.
 ---
 
 ## The Zephyr Scheme
@@ -235,3 +235,15 @@ Routing is a separate component so it can be swapped out without changing the co
 The full routing rules live in `ROUTING.md` in this skill directory.
 
 Read `ROUTING.md` whenever asked to route Zephyr entries.
+
+## Grafana Dashboard Links
+
+Grafana links give a bake log two ready-made dashboard views — one spanning the whole bake, one spanning bulk fermentation — each framed with an hour of headroom on either side.
+
+Link generation is a separate component so it can be swapped out without changing the core scheme.
+
+The full link rules live in `GRAFANA-LINKS.md` in this skill directory.
+
+Read `GRAFANA-LINKS.md` whenever asked to add, update, or fix the Grafana links in a bake log.
+
+Grafana annotations are a different concern and belong to the `grafana-bake-annotation` skill; both write into the same `## grafana` section, so read `GRAFANA-LINKS.md` before touching that section to see which part each owns.

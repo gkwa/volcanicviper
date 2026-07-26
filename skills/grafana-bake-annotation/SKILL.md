@@ -75,6 +75,18 @@ After running the annotation command, write the command into the `## grafana` se
 
 Do NOT include the output lines (the "Added annotation id=..." lines) in the log — command only.
 
+## Section Ownership
+
+The `## grafana` section is shared.
+
+This skill owns the fenced annotation command blocks.
+
+The top of the section holds two dashboard links, `overall` and `bulk ferment`, owned by `GRAFANA-LINKS.md` in the [[zephyr]] skill.
+
+Leave those links untouched when writing annotation commands — never delete or rewrite them here.
+
+When a bake finishes, the `bake_done` annotation is also the signal that those links need their end time pinned; see `GRAFANA-LINKS.md`.
+
 ## Correcting Mistakes
 
 To delete an annotation by id:
