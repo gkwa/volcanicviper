@@ -78,9 +78,26 @@ Add 4–6 Google search links under `## Search links` as a bulleted list.
 
 Each link approaches the question from a different angle.
 
-Link text should describe what kind of result to expect.
+Every entry must be a clickable markdown link, never a bare URL.
 
-URL format: `https://www.google.com/search?q=search+terms+separated+by+plus+signs`
+Format each bullet as `- [descriptive link text](https://www.google.com/search?q=search+terms+separated+by+plus+signs)`.
+
+The link text describes what kind of result to expect, and is never the URL itself.
+
+Search terms in the URL are separated by plus signs.
+
+This is a deliberate exception to the general vault convention that URLs sit bare on their own line for Obsidian to auto-link.
+
+Example:
+
+```
+## Search links
+
+- [clinical term for coughing triggered by swallowing](https://www.google.com/search?q=coughing+while+eating+medical+term+oropharyngeal+dysphagia)
+- [how penetration and aspiration differ](https://www.google.com/search?q=laryngeal+penetration+vs+aspiration+difference)
+```
+
+Before finishing the file, reread the `## Search links` section and confirm every bullet uses the bracket-and-parenthesis form.
 
 ### Step 7: Write the Original request section
 
