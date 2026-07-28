@@ -61,16 +61,12 @@ If verification fails, report the error clearly and do NOT delete any files from
 
 Only if verification passes, delete all the `.txt` files that were processed from `output/` using Bash.
 
-## Step 8: Delete source MP3 files
+## Step 8: Leave the source recordings alone
 
-For each processed `.txt` file, there is a corresponding `.mp3` file with the same base name (e.g., `2026_03_10_10_15_33.txt` → `2026_03_10_10_15_33.mp3`).
+Do not move, delete, or otherwise touch any `.mp3` file.
 
-Create `/tmp/audio_completed` if it does not exist. Search for each MP3 using `find` in both `/tmp/audio` and `~/ASR`. Run one `find` command per file:
+The transcriber deletes each recording itself, in Python, the moment it has verified that recording's transcript is on disk.
 
-```
-find /tmp/audio ~/ASR -name 'YYYY_MM_DD_HH_MM_SS.mp3' 2>/dev/null
-```
-
-Move every path returned into `/tmp/audio_completed`. This is safe because verification passed in step 6 before reaching this step. The files will be cleaned up automatically on reboot.
+That step used to live here, and it silently failed for months because matching a recording back to its transcript by filename is guesswork, and guesswork is the wrong thing to put in charge of deleting someone's voice memos.
 
 Report how many files were processed and the path to the output file.
