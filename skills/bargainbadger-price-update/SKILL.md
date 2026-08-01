@@ -7,9 +7,11 @@ description: Turn one minimoths crawl session into a dated prices table appended
 
 A crawl captures one product term across every store in one session.
 
-This skill turns that session into a dated prices table in the product's vault note, and answers the question that prompted it.
+This skill turns that session into a dated prices section in the product's vault note.
 
-The usual request is for the best price, so the answer is the deliverable and the table is the record of how it was reached.
+The updated note is the deliverable.
+
+Even when the request is phrased as a question about the best price, the job is to record the prices, not to pick a winner.
 
 The product is a parameter, so the same steps run for whatever the session searched.
 
@@ -61,19 +63,20 @@ Requests that do NOT trigger it:
 4. Pull the session's rows and narrow them to the product, reporting how many were captured, kept, and dropped.
 5. Extract the schema's fields from those rows, in batches, into a scratch file outside the vault.
 6. Compute every derived price in code, never by hand.
-7. Render the table and insert it above the newest existing prices section, leaving older sections untouched.
+7. Render the table into a prices section, inserted above the newest existing one and leaving older sections untouched, or created fresh when the note has none.
 8. Commit the note, and delete the scratch file.
-9. State the answer in the conversation — the cheapest option, its store, its package price, and its normalized price — with the runners-up and anything that would change the ranking.
-
-Writing the table is not finishing the job when the user asked a question.
 
 Each step's rules come from the specification.
 
-Where the specification is silent, match what the note already does, and report the choice as a gap rather than adopting it quietly.
+That includes the table itself — which columns it carries, what each one holds, and how the rows are ordered are the specification's to define, not this file's.
+
+Where the specification is silent, match the most recent prices section already in the note, and report the choice as a gap in the specification rather than adopting it quietly.
+
+An inherited format is a stopgap until the specification defines it.
 
 ## Non-goals
 
 - Deciding schema questions, which belong in the vault notes and their change log.
 - Updating the store boolean fields in the note front matter.
-- Recommending which product to buy, as distinct from reporting which is cheapest, which step 9 requires.
+- Recommending which product to buy, or which store to buy it from.
 - Running the crawl, which the user does before invoking this skill.
