@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/bargainbadger-price-update",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Turn one minimoths crawl session into a dated prices table appended to a product note in the Obsidian vault, sorted cheapest first. Trigger terms: update prices, prices section, best price, price table, minimoths session, bargainbadger.",
+  "skills": {
+    "bargainbadger-price-update": {
+      "path": "SKILL.md"
+    }
+  }
+}
