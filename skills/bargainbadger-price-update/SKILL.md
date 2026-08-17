@@ -37,7 +37,11 @@ This file is a workflow, not a reference.
 
 It states no facts about the data, the database, or the schema, and it must not acquire any.
 
-When something needed is missing from the vault, add it to the vault rather than to this file.
+When a fact about the data, the schema, or the table is missing from the vault, add it to the vault rather than to this file.
+
+The layout of the write-up is the exception, and it belongs here.
+
+How the finished section is arranged on the page says nothing about groceries, so the rules in "Section layout" below are this file's own and are not a gap in the vault specification.
 
 ## Trigger
 
@@ -63,16 +67,48 @@ Requests that do NOT trigger it:
 4. Pull the session's rows and narrow them to the product, reporting how many were captured, kept, and dropped.
 5. Extract the schema's fields from those rows, in batches, into a scratch file outside the vault.
 6. Compute every derived price in code, never by hand.
-7. Render the table into a prices section, inserted above the newest existing one and leaving older sections untouched, or created fresh when the note has none.
+7. Render the table into a prices section arranged as "Section layout" below requires, inserted above the newest existing one and leaving older sections untouched, or created fresh when the note has none.
 8. Commit the note, and delete the scratch file.
 
-Each step's rules come from the specification.
+Each step's rules come from the specification, apart from the section layout in step 7, which comes from this file.
 
 That includes the table itself — which columns it carries, what each one holds, and how the rows are ordered are the specification's to define, not this file's.
 
 Where the specification is silent, match the most recent prices section already in the note, and report the choice as a gap in the specification rather than adopting it quietly.
 
 An inherited format is a stopgap until the specification defines it.
+
+## Section layout
+
+The reasoning behind a table is worth writing down, and it must never stand between the reader and the table.
+
+So the explanation goes below the table, under headings, where it can be folded and reached from the note's table of contents instead of scrolled past.
+
+A prices section is arranged in this order:
+
+- A short header directly under the dated heading, carrying the run id and the number of stores, the counts of rows captured and kept and dropped, what this section's scope is, and the headline findings.
+- The table.
+- `### scope and column decisions`, holding the calls this section made about its own shape.
+- `### extraction notes`, holding the per-row method detail.
+- `### excluded from the tables`, holding the drop accounting.
+
+The header is the only prose above the table, and it stays short enough to read without scrolling.
+
+Anything that outgrows a few paragraphs there belongs in one of the subsections instead, so a long narrowing story is summarised above the table and told in full below it.
+
+`### scope and column decisions` covers narrowing the crawl term to the product, which variants the table holds and which were sent to another note, and any vocabulary a column was normalised to.
+
+`### extraction notes` covers what happened row by row: checksum arbitration, quantities that were back-computed or taken from a url slug, unit and dimension calls, escalations to `html`, and the same listing named differently across stores.
+
+`### excluded from the tables` names the listings that produced no row and why, linking each one, and groups them where a single reason covers many.
+
+Omit any of the three subsections that would have nothing in it, and never leave a heading standing empty.
+
+When one product needs more than one table, because it is sold in two dimensions that cannot be ranked against each other, give each table its own `###` heading naming its basis and put the three subsections after the last table.
+
+These subsection names are already in use in the vault, so match them exactly rather than inventing new ones.
+
+Older sections carry variants of these names, and those are not to be copied forward.
 
 ## Non-goals
 
