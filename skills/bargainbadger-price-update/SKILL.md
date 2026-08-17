@@ -82,33 +82,29 @@ An inherited format is a stopgap until the specification defines it.
 
 The reasoning behind a table is worth writing down, and it must never stand between the reader and the table.
 
-So the explanation goes below the table, under headings, where it can be folded and reached from the note's table of contents instead of scrolled past.
+So a prices section holds exactly two subsections, one for the table and one for the reasoning, and the reasoning comes second.
+
+Both carry a `###` heading, because a block with no heading cannot be folded, cannot be linked to, and does not appear in the note's table of contents, which leaves the reader nothing to jump to.
 
 A prices section is arranged in this order:
 
 - A short header directly under the dated heading, carrying the run id and the number of stores, the counts of rows captured and kept and dropped, what this section's scope is, and the headline findings.
-- The table.
-- `### scope and column decisions`, holding the calls this section made about its own shape.
-- `### extraction notes`, holding the per-row method detail.
-- `### excluded from the tables`, holding the drop accounting.
+- A subsection holding the table, named for the basis the table is priced and ranked on, so `### priced by weight` or `### priced by volume`.
+- `### notes`, holding everything that explains how the table was built.
 
 The header is the only prose above the table, and it stays short enough to read without scrolling.
 
-Anything that outgrows a few paragraphs there belongs in one of the subsections instead, so a long narrowing story is summarised above the table and told in full below it.
+Anything that outgrows a few paragraphs there belongs in `### notes` instead, so a long narrowing story is summarised above the table and told in full below it.
 
-`### scope and column decisions` covers narrowing the crawl term to the product, which variants the table holds and which were sent to another note, and any vocabulary a column was normalised to.
+`### notes` takes all of it: narrowing the crawl term to the product, which variants the table holds and which were sent to another note, any vocabulary a column was normalised to, what happened row by row, and which listings produced no row and why.
 
-`### extraction notes` covers what happened row by row: checksum arbitration, quantities that were back-computed or taken from a url slug, unit and dimension calls, escalations to `html`, and the same listing named differently across stores.
+Do not divide that subsection further, because a reader who has decided to skip the reasoning gains nothing from it being filed into categories.
 
-`### excluded from the tables` names the listings that produced no row and why, linking each one, and groups them where a single reason covers many.
+Order it and group it with lead-in sentences and bullet lists instead, keeping the listings that produced no row last, and link each one named.
 
-Omit any of the three subsections that would have nothing in it, and never leave a heading standing empty.
+When one product needs more than one table, because it is sold in two dimensions that cannot be ranked against each other, each table takes its own heading and `### notes` follows the last one.
 
-When one product needs more than one table, because it is sold in two dimensions that cannot be ranked against each other, give each table its own `###` heading naming its basis and put the three subsections after the last table.
-
-These subsection names are already in use in the vault, so match them exactly rather than inventing new ones.
-
-Older sections carry variants of these names, and those are not to be copied forward.
+Older sections in the vault carry a spread of other subsection names, and those are not to be copied forward.
 
 ## Non-goals
 
