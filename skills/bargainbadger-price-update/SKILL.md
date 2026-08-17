@@ -82,16 +82,14 @@ An inherited format is a stopgap until the specification defines it.
 
 The reasoning behind a table is worth writing down, and it must never stand between the reader and the table.
 
-So a prices section holds exactly two subsections, one for the table and one for the reasoning, and the reasoning comes second.
+So a prices section is the table followed by one subsection:
 
-Both carry a `###` heading, because a block with no heading cannot be folded, cannot be linked to, and does not appear in the note's table of contents, which leaves the reader nothing to jump to.
-
-A prices section is arranged in this order:
-
-- A subsection holding the table, named for the basis the table is priced and ranked on, so `### priced by weight` or `### priced by volume`.
+- The table, directly under the dated heading, with nothing in between.
 - `### notes`, holding every word of prose the section has.
 
-The dated heading itself carries no prose, so nothing stands between it and the table but the table's own heading.
+The table gets no heading of its own, because the dated heading is already its heading.
+
+That is the whole point of the arrangement: jumping to the dated heading from the note's table of contents lands on the numbers, which is what is wanted most often, and the reasoning is one heading further down for the times it is not.
 
 Resist putting a summary above the table, however short: a reader who wants the numbers is already looking at them, and one who wants the story will open `### notes`.
 
@@ -101,7 +99,7 @@ Do not divide that subsection further, because a reader who has decided to skip 
 
 Order it and group it with lead-in sentences and bullet lists instead, keeping the listings that produced no row last, and link each one named.
 
-When one product needs more than one table, because it is sold in two dimensions that cannot be ranked against each other, each table takes its own heading and `### notes` follows the last one.
+When one product needs more than one table, because it is sold in two dimensions that cannot be ranked against each other, the tables cannot both sit bare under the dated heading, so each takes a `###` heading naming its basis, as in `### priced by weight` and `### priced by volume`, and `### notes` follows the last one.
 
 Older sections in the vault carry a spread of other subsection names, and those are not to be copied forward.
 
