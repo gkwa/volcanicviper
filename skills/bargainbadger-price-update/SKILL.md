@@ -88,15 +88,14 @@ Both carry a `###` heading, because a block with no heading cannot be folded, ca
 
 A prices section is arranged in this order:
 
-- A short header directly under the dated heading, carrying the run id and the number of stores, the counts of rows captured and kept and dropped, what this section's scope is, and the headline findings.
 - A subsection holding the table, named for the basis the table is priced and ranked on, so `### priced by weight` or `### priced by volume`.
-- `### notes`, holding everything that explains how the table was built.
+- `### notes`, holding every word of prose the section has.
 
-The header is the only prose above the table, and it stays short enough to read without scrolling.
+The dated heading itself carries no prose, so nothing stands between it and the table but the table's own heading.
 
-Anything that outgrows a few paragraphs there belongs in `### notes` instead, so a long narrowing story is summarised above the table and told in full below it.
+Resist putting a summary above the table, however short: a reader who wants the numbers is already looking at them, and one who wants the story will open `### notes`.
 
-`### notes` takes all of it: narrowing the crawl term to the product, which variants the table holds and which were sent to another note, any vocabulary a column was normalised to, what happened row by row, and which listings produced no row and why.
+`### notes` takes all of it, opening with the run id and the number of stores, this section's scope, and the counts of rows captured and kept and dropped, then the headline findings, then how the table was built: narrowing the crawl term to the product, which variants the table holds and which were sent to another note, any vocabulary a column was normalised to, what happened row by row, and which listings produced no row and why.
 
 Do not divide that subsection further, because a reader who has decided to skip the reasoning gains nothing from it being filed into categories.
 
