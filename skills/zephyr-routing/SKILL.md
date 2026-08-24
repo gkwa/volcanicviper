@@ -99,20 +99,32 @@ In copy mode, leave the source document untouched.
 
 ## Delete Empty Source
 
-After move mode removes all routed entries, check whether the source document is now empty.
+Emptiness deletes the source document, not routing.
 
-A document is considered empty for this purpose when it contains no headings and no body content — only whitespace or a trailing newline.
+Routing is one of the things that can empty it, and it is not the only one.
 
-Delete the source file if and only if all of the following are true:
+The check runs once, at the very end of the request, after every step that draws entries out of the source — including steps this skill does not own.
 
-- Mode is move (not copy)
-- At least one entry was actually routed out
-- No non-Zephyr content remains (no headings, body text, frontmatter, or other entries that were present before routing)
-- The file is now empty as a result of routing
+A request commonly pairs routing with a follow-on step, such as moving the entries that did not route into some other document.
 
-Do not delete the file if any non-Zephyr content remains after routing, even if all Zephyr entries were removed.
+Those entries left the source too, so the check waits for that step to finish before it looks.
 
-Do not delete the file if it was already empty before routing began — nothing was routed, so the empty state is not a result of routing.
+A document is empty when it holds no headings and no body content — only whitespace or a trailing newline.
+
+Delete the source file when both of these are true:
+
+- Mode is move, not copy
+- The document is empty at the end of the request
+
+Which step emptied it does not matter, and neither does whether this skill routed anything at all.
+
+A source that routed nothing and was drained entirely by a follow-on step is deleted.
+
+A source that was already empty when the request began is deleted.
+
+Keep the file whenever any content remains.
+
+A single heading, a line of body text, or frontmatter is enough to keep it, even when every Zephyr entry routed out.
 
 ## Normalize on Write
 
