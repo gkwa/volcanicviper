@@ -270,3 +270,23 @@ Two verbs are never included, and each stays a separate ask:
 This is the only request that fans out across skills.
 
 Every other request names its own verb and follows the Components table above.
+
+## Where Measurements Go
+
+Anything measured during a bake — tangzhong weights, dough volumes, temperatures, yields — belongs in the dated entries under the `## bake log` section, newest first.
+
+The scaffold sections above it, such as the prophylactic buffer check, tangzhong adaptation, baker's math, and steps, describe the recipe and its formulas.
+
+The scaffold is the plan and gets carried forward into the next bake log, while the dated entries are the observations from this one bake. Mixing measurements into the scaffold makes the plan unusable as a template.
+
+When asked to tabulate or record numbers observed during a bake, add a new dated entry at the top of the entry list with the current timestamp, and leave the scaffold alone.
+
+A scaffold section may cite a previous bake's outcome in prose to justify a formula choice, but never accumulates this bake's raw measurements.
+
+## Levain Rounding
+
+Always round up when a levain calculation produces a fractional gram. Never leave 46.5g; write 47g.
+
+Scales cannot measure fractions of a gram, so a fractional value is meaningless in practice.
+
+Show the rounding explicitly with ceiling notation in the math, as in `x = ⌈(278 − 19) / 2⌉ = ⌈129.5⌉ = 130g`, and use the rounded value in prose build amounts too.

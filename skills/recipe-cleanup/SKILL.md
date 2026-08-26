@@ -150,3 +150,17 @@ cook until edges begin to set
 8. For URL mode: display the formatted recipe in the chat, then immediately write it to a file without asking — derive the filename from the recipe title using spaces (not hyphens) with a `.md` extension; when the creator is known, prefix the filename with the creator name to avoid collisions between recipes with the same dish name (e.g., `Fast Easy Recipes crepes.md`); save to the same directory as other recipe files in the vault
 9. After writing the file, check whether the creator's page exists in the same directory — if not, create a stub page named `<page name>.md` containing just `# <page name>` (using the resolved page name from the frontmatter rules above)
 10. After writing the file, resolve unresolved ingredient wikilinks by delegating to the `resolve-recipe-ingredient-link` skill — see the "Resolving ingredient wikilinks" formatting rule above
+
+## Creator Namespace
+
+Derive a creator's namespace from their handle or personal domain, collapsed to lowercase letters and digits only.
+
+Use that single token in all three places: the `creator` frontmatter wikilink, the `tags` entry, and the stub page filename.
+
+Instagram handle `chef.sam.black` becomes `chefsamblack` everywhere — `[[chefsamblack]]`, tag `chefsamblack`, file `chefsamblack.md`. Personal domain `halfbakedharvest.com` becomes `halfbakedharvest`.
+
+Tags cannot contain dots, spaces, or other separators, and real names collide, so the collapsed handle gives a unique separator-free namespace that works as tag, wikilink, and filename at once.
+
+Fall back to a real name, also collapsed, only when no handle or domain exists.
+
+Existing vault precedent: `pantrymama`, `thesaltymarshmallow`, `ediblealchemyacademy`, `allrecipes`.

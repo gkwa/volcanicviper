@@ -109,3 +109,23 @@ Older sections in the vault carry a spread of other subsection names, and those 
 - Updating the store boolean fields in the note front matter.
 - Recommending which product to buy, or which store to buy it from.
 - Running the crawl, which the user does before invoking this skill.
+
+## Exclude Single-Serve Pods
+
+Single-serve coffee pods — Keurig, K-Cup, Nespresso, and any other one-cup capsule — never appear in a prices section.
+
+Drop them at the narrowing step and price them nowhere. A pod is a single-use plastic cup thrown away per cup and a bag is not, so the format is out of scope whatever it costs.
+
+This is a standing preference about what the user will buy, not a schema rule.
+
+When a crawl returns both bags and pods, table only the bags. Record in the section's `### notes` that pods were excluded on the standing preference, give the count, and name any store that drops out of the table entirely because it stocks the product only in pods.
+
+## Schema Changes
+
+The authoritative convention lives in the intro of the vault note "bargainbadger change log.md", which the hub note "bargainbadger.md" links to. Read it there before making any schema change.
+
+Every schema change gets a dated entry naming the motivating products, quoting the captured listing text inline with an explanation of what in it forced the change, and giving the productUrl.
+
+Write that evidence in the same edit as the schema change, never as a follow-up.
+
+Never include database row ids or capture timestamps. The database is wiped regularly, so ids, site, and capturedAt are worthless — only the quoted listing text and the productUrl survive.

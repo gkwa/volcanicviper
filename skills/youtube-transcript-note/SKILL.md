@@ -1,6 +1,6 @@
 ---
 name: youtube-transcript-note
-description: Create a structured Obsidian vault note from a YouTube video transcript — fetches captions with timestamps, cleans the text, divides into sections, adds a TOC and per-section video links, uploads the thumbnail to Imgur, and commits. Use when the user shares a YouTube URL and wants a full transcript note in the vault.
+description: Create a structured Obsidian vault note from a YouTube video transcript — fetches captions with timestamps, cleans the text, divides into sections, adds a TOC and per-section video links, takes the thumbnail URL directly, and commits. Use when the user shares a YouTube URL and wants a full transcript note in the vault.
 ---
 
 ## YouTube Transcript Note Workflow
@@ -76,12 +76,13 @@ At the top of the body (before the first `##` section), add a table of contents 
 - [[#Section three]]
 ```
 
-### Step 5: Upload hero image to Imgur
+### Step 5: Take the thumbnail URL directly
 
-Invoke the `social-to-imgur` skill using the YouTube URL to get a permanent Imgur URL for the thumbnail.
+YouTube already hosts the thumbnail at a stable URL, so do not run the `social-to-imgur` skill here.
 
-Collect from the output:
-- The permanent Imgur URL (e.g. `https://i.imgur.com/xxxxxxx.jpeg`)
+Build the URL from the video id: `https://i.ytimg.com/vi/<VIDEO_ID>/maxresdefault.jpg`
+
+The Imgur round trip adds nothing for YouTube and runs into the egress-IP 429. Instagram and other platforms with expiring CDN URLs still need the upload.
 
 ### Step 6: Derive the vault filename
 
@@ -102,10 +103,10 @@ Write the note to `/Users/mtm/Documents/Obsidian Vault/<filename>.md` with this 
 ---
 tags:
   - <relevant-tag>
-pic: <imgur_url>
+pic: https://i.ytimg.com/vi/<VIDEO_ID>/maxresdefault.jpg
 ---
 
-![<filename without .md>](<imgur_url>)
+![<filename without .md>](https://i.ytimg.com/vi/<VIDEO_ID>/maxresdefault.jpg)
 
 https://youtu.be/<VIDEO_ID>
 
@@ -176,6 +177,6 @@ If the content is not recipe or cooking-focused, skip this step entirely — do 
 
 After all steps complete, report:
 - The vault note filename
-- The Imgur thumbnail URL
+- The i.ytimg.com thumbnail URL
 - The section breakdown with their video timestamps
 - Whether recipe cleanup was applied

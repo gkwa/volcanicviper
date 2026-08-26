@@ -132,3 +132,15 @@ After all three steps complete, report:
 - The original Instagram post URL
 - The shortcode, and — when the input was a loose image — how it was resolved (exact digest match, or visual confirmation against a candidate caption search)
 - Any sibling posts carrying the same recipe
+
+## Check for an Existing Note First
+
+Before writing the target note, check whether it already exists, and read it if so.
+
+Many older notes are stubs holding only a hero image and caption, but their `pic` already points at a permanent Imgur URL from an earlier run.
+
+Overwriting the stub silently destroys that URL, and re-uploading the same image spends the shared Imgur quota that is already the bottleneck.
+
+Before the write, check for `<name>.md` and run `git log -- <path>`. If a prior version exists, recover its `pic` value and reuse it rather than running the upload, and carry forward any caption or notes the stub held.
+
+Concurrent writers make this urgent: another process can commit an overwritten file before the mistake is noticed.

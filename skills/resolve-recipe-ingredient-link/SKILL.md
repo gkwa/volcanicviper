@@ -224,6 +224,12 @@ When the displayed word and the note name differ, rewrite the recipe text to mat
 
 Keeping the inflection outside the brackets is fine; an alias is not.
 
+This extends to heading links, not just ingredient links.
+
+For a link to a heading in the same note, use the alias-free relative form `[[#Heading]]` rather than `[[note#Heading|Display]]`.
+
+The rule is firm: never introduce an alias, even when an AskUserQuestion option text proposes one.
+
 Decide in this order:
 
 Case 0 — absorb an adjacent disambiguator first.

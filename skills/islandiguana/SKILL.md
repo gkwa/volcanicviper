@@ -91,3 +91,17 @@ Always quote the vault path — it contains spaces.
 
 Use yq expression syntax for queries.
 The expression is always the last positional argument (after the optional directory).
+
+## Combining with ripgrep
+
+When searching by topic, combine ripgrep for freeform text with islandiguana for a front matter tag filter, so tags act as a pruning layer.
+
+Notes often mention a topic tangentially — a product note may carry a `## [[Chef's Store]]` section — which pollutes a text-only search. Tags indicate the note's purpose, so filtering by tag removes that noise.
+
+To find notes mentioning something in text but NOT tagged `product`:
+
+```sh
+rg -l -i "search term" "/Users/mtm/Documents/Obsidian Vault" | islandiguana '(.tags // []) | map(. == "product") | any | not'
+```
+
+Always default missing tags to an empty array first. Bare `not (.tags[] == "product")` fails on files whose tags are null or absent, so use the `(.tags // []) | map | any | not` idiom whenever excluding a tag.

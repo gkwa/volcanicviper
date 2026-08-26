@@ -1,6 +1,6 @@
 ---
 name: youtube-ingest
-description: Full YouTube video ingestion workflow — given a YouTube URL, fetch the video title, upload the thumbnail to Imgur, create a note in the Obsidian vault with a hero image, and commit it. Use when the user shares a YouTube URL and wants a permanent note in the vault.
+description: Full YouTube video ingestion workflow — given a YouTube URL, fetch the video title, take the thumbnail URL directly, create a note in the Obsidian vault with a hero image, and commit it. Use when the user shares a YouTube URL and wants a permanent note in the vault.
 ---
 
 ## YouTube Ingest Workflow
@@ -22,12 +22,15 @@ Collect from the output:
 Also fetch the page to identify the channel name and a one-sentence summary of the topic.
 Use WebFetch on the canonical YouTube watch URL with a prompt asking for title, channel, and topic.
 
-### Step 2: social-to-imgur
+### Step 2: Take the thumbnail URL directly
 
-Invoke the `social-to-imgur` skill using the YouTube URL.
+YouTube already hosts the thumbnail at a stable URL, so do not run the `social-to-imgur` skill here.
 
-Collect from the output:
-- The permanent Imgur URL for the thumbnail image
+Build the URL from the video id: `https://i.ytimg.com/vi/<VIDEO_ID>/maxresdefault.jpg`
+
+Use that for both `pic:` and the hero image.
+
+The Imgur round trip adds nothing for YouTube and runs into the egress-IP 429. Instagram and other platforms with expiring CDN URLs still need the upload.
 
 ### Step 3: Derive the vault filename
 
@@ -47,7 +50,7 @@ Write the note to `/Users/mtm/Documents/Obsidian Vault/<filename>.md` with this 
 ```
 <youtube_url>
 
-![hero](<imgur_url>)
+![hero](https://i.ytimg.com/vi/<VIDEO_ID>/maxresdefault.jpg)
 ```
 
 No frontmatter is needed unless the user asks for it.
@@ -58,7 +61,7 @@ Stage and commit the new file:
 
 ```
 git add "<filename>.md"
-git commit -m "Add <short topic> note with YouTube link and Imgur hero image"
+git commit -m "Add <short topic> note with YouTube link and hero image"
 ```
 
 Run each git command as a separate Bash call (no chaining with &&).
@@ -67,5 +70,5 @@ Run each git command as a separate Bash call (no chaining with &&).
 
 After all steps complete, report:
 - The vault note filename
-- The Imgur thumbnail URL
+- The i.ytimg.com thumbnail URL
 - The original YouTube URL
