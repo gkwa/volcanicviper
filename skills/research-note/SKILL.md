@@ -28,6 +28,8 @@ Rules:
 - Fix grammar, spelling, and punctuation
 - Use plain, direct language — cut filler words
 - Each sentence of the question is its own paragraph, separated by a blank line
+- Define scope — narrow a question too broad to answer usefully, widen one too narrow to stand alone
+- Separate the parts clearly when the question has more than one
 - Do not answer the question during this step
 
 Preserve the motivating context rather than reducing the question to an abstract one.
@@ -35,6 +37,8 @@ Preserve the motivating context rather than reducing the question to an abstract
 Keep named examples, specific tools, proposed workflows, and stated constraints.
 
 The goal is clarity and portability, not brevity at the cost of the concrete detail that makes the note useful months later.
+
+These rewriting rules are duplicated in the question-cleanup command, at /Users/mtm/.claude/commands/question-cleanup.md, which is generated from the chezmoi template command-question-cleanup. This skill keeps its own copy because it installs onto machines with no copy of that commands directory. Change both together.
 
 ### Step 2: Count distinct questions
 
