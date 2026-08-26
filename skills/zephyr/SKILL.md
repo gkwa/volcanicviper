@@ -245,3 +245,28 @@ Read the matching verb skill when a request calls for that verb, rather than act
 The `## grafana` section is shared by the last two — links at the top, annotation command blocks below.
 
 Read whichever of those two you are invoking before touching that section, to see which part it owns.
+
+## Applying Zephyr to a Bake Log
+
+"Apply zephyr", or "apply the zephyr skill to this bake log", is a compound request.
+
+It covers the bake log's whole standard state, not only the rules this skill owns.
+
+Run these in order:
+
+1. event_time tags on every entry that records a discrete bake action — this skill
+2. the `## Starter peak duration` block — this skill
+3. the two links at the top of the `## grafana` section — the [[zephyr-grafana-links]] skill
+
+Step 3 runs even though the request never names the links.
+
+That is what makes the request compound: naming the core skill is enough to reach the link component.
+
+Two verbs are never included, and each stays a separate ask:
+
+- [[grafana-bake-annotation]] — the `annotate-grafana.py` command blocks in the `## grafana` section
+- [[zephyr-routing]] — delivering entries from one document to another
+
+This is the only request that fans out across skills.
+
+Every other request names its own verb and follows the Components table above.

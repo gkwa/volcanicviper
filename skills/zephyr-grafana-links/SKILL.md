@@ -32,6 +32,7 @@ Requests that trigger this component:
 - "Update the grafana links in this log"
 - "Add the grafana links to bake log 7-20"
 - "The bake is done, fix the grafana links"
+- "Apply zephyr to bake log 7-20" — the compound request defined in the [[zephyr]] skill
 
 Requests that do NOT trigger it:
 
