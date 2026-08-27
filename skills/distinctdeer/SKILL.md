@@ -9,18 +9,18 @@ distinctdeer owns the pool of project names and hands out an unused one.
 
 Treat it as the sole authority on names, and let it record the claim itself.
 
+It runs straight from GitHub, so no local checkout is involved and nothing on disk needs to be kept in sync.
+
 ## Base directory
 
-Projects live as siblings under one root, `PDEV_ROOT`, which defaults to `$HOME/pdev/taylormonacelli`.
+New projects live under one root, `PDEV_ROOT`, which defaults to `$HOME/pdev/taylormonacelli`.
 
-distinctdeer is itself checked out at `$PDEV_ROOT/distinctdeer`, so a new project lands beside it.
-
-Shell state does not persist between tool calls, so each command below expands the root inline rather than relying on an exported variable.
+Shell state does not persist between tool calls, so the command below expands the root inline rather than relying on an exported variable.
 
 ## Claim a name
 
 ```
-uv run --no-active --project "${PDEV_ROOT:-$HOME/pdev/taylormonacelli}/distinctdeer" distinctdeer use --out json rand
+uv tool run --from git+https://github.com/gkwa/distinctdeer distinctdeer use --out json rand
 ```
 
 This prints `{"name": "<name>"}` and marks the name used in one step.
@@ -43,11 +43,11 @@ Scaffolding what goes inside it belongs to the language-specific skills.
 
 ## Reference
 
+`--from` belongs to `uv tool run`, and `uv run` rejects it while suggesting `--frozen`.
+
 `--out` belongs to the `use` subcommand and comes before `rand`.
 
 `use --out json rand` works, while `use rand --out json` exits with an unrecognized-arguments error.
-
-`--project` alone is enough, because distinctdeer has no working-directory dependence, so `--directory` is unneeded.
 
 distinctdeer copies the claimed name to the clipboard, replacing whatever was there.
 
