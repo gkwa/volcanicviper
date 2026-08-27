@@ -13,6 +13,7 @@ Skills encode reusable expertise so AI assistants apply consistent standards wit
 ## Skills
 
 - `chrome-extension-multiple-entry-points` — build Chrome extensions with separate Vite configs per entry point to avoid code-splitting issues
+- `distinctdeer` — claim an unused project name and create an empty git repo for it under the project root
 - `grafana-bake-annotation` — extract annotatable events from a Zephyr bake log, run the Grafana annotation CLI, and write the command into the bake log
 - `social-to-imgur` — download a social media post thumbnail (Instagram, Facebook, or any yt-dlp-supported platform) and upload it to Imgur for a permanent URL
 - `islandiguana` — search the Obsidian vault by YAML front matter using islandiguana and yq expressions
@@ -29,6 +30,22 @@ Skills encode reusable expertise so AI assistants apply consistent standards wit
 - `zephyr` — the Zephyr sourdough bake tagging scheme: find bake logs by Zephyr key, read entries to extract event times, add event_time tags, and fill the Starter peak duration block
 - `zephyr-grafana-links` — build or refresh the overall and bulk ferment Grafana dashboard links in a bake log
 - `zephyr-routing` — route Zephyr entries from any document to their proper bake logs, deduplicated and in reverse chronological order
+
+## Triggering a skill
+
+A skill fires on its `description` frontmatter, which is the only part loaded into the agent's context.
+
+The phrasings below are examples of what reaches `distinctdeer`, not a list the agent consults:
+
+- Let's create a new project
+- Start a new project
+- Set up a fresh project directory
+- I need a name for a new project
+- Claim a project name
+- Give me a project name and a repo for it
+- Make a new repo under the project root
+
+Any wording that names starting a project, needing a project name, or creating a project directory reaches it.
 
 ## Install from GitHub
 
