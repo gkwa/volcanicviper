@@ -1,6 +1,6 @@
 ---
 name: stay-awake
-description: "Keep this Mac awake for a stated period with miserlymouse, replacing whatever assertion is already running without letting the machine sleep during the handover. Use when asked to keep the machine running or awake for longer, to stop it sleeping for a while, or to check how much longer it will stay awake."
+description: "Keep this Mac awake for a stated period using miserlymouse, replacing whatever timed assertion is already running without letting the machine sleep during the handover, and without disturbing an assertion held on behalf of a running job. Use when asked to keep the machine or laptop running, awake, or alive for another hour or two, to keep it from sleeping or going to sleep for a while, to stay awake until some clock time, or to check how much longer the machine will stay awake."
 ---
 
 ## Staying awake
@@ -25,7 +25,15 @@ So the new end time is always the moment of the request plus the span asked for,
 
 This shortens as readily as it extends, and asking for `20m` while an eight-hour assertion is up correctly brings the end time forward.
 
-## What is running right now
+The one thing it never shortens is an assertion held on behalf of a running job, which is covered below.
+
+## Two shapes of miserlymouse run
+
+Everything in this skill turns on telling these apart, so classify before acting.
+
+A timed run was given only a duration, and it is the kind this skill starts and replaces.
+
+A wrapping run was given a command to run as well, as in `miserlymouse 30m make build`, and this skill never touches one.
 
 The supervisor processes are the ones whose argv contains `bin/miserlymouse`:
 
@@ -33,35 +41,65 @@ The supervisor processes are the ones whose argv contains `bin/miserlymouse`:
 pgrep -f bin/miserlymouse
 ```
 
-Each supervisor owns exactly one assertion, found by parent:
+Ask each supervisor for its direct child, then ask what that child actually is:
 
 ```sh
-pgrep -P 22088 caffeinate
+pgrep -P 22088
 ```
-
-That assertion carries the schedule in its own arguments:
 
 ```sh
-ps -o lstart=,etime=,command= -p 22089
+ps -o comm= -p 22089
 ```
 
-The end time is the `lstart` value plus the seconds given to `-t`, and the time remaining is those seconds minus `etime`.
+A direct child named `caffeinate` means a timed run, and that child is the assertion this skill may replace.
 
-## Only miserlymouse's own assertions are in scope
+A direct child named anything else means a wrapping run, where the child is the job itself and the assertion is a grandchild beneath it.
 
-A `caffeinate` that is not a child of a miserlymouse supervisor belongs to some other tool.
+## Why a wrapping run is off limits
 
-Never kill one of those, and do not mention them.
+`caffeinate` forks a child to hold the assertion and then execs the job over its own process, so the job keeps the PID the supervisor spawned and the assertion sits underneath the job rather than beside it.
 
-The parent check above is what draws that line, so always reach the assertion through `pgrep -P`, never by searching for `caffeinate` across the whole process table.
+When a job is wrapped, `caffeinate` ignores `-t` entirely, so the assertion lasts exactly as long as the job and has no scheduled end time to compare a request against.
+
+Killing that assertion does not stop the job, it only strips the job of the thing keeping the machine awake, and the job then runs on toward a machine that is free to sleep.
+
+Because the assertion is a grandchild, `pgrep -P` from the supervisor does not reach it, which is the safeguard, and it must stay that way.
+
+Never search for `caffeinate` by name across the process table and kill what comes back, because that reaches straight past this safeguard and into a running job's assertion.
+
+## Only a timed run's assertion is ever killed
+
+Reach every assertion by `pgrep -P` from a supervisor that classified as a timed run.
+
+A `caffeinate` that no such walk arrives at belongs to a wrapping run or to some other tool entirely, and it is not this skill's to end.
 
 ## Answering how much longer
 
-Read the running assertion as described above and report the end time and the time remaining.
+A question about how long the machine stays awake is answered from the whole picture, and it starts and kills nothing.
 
-Start nothing and kill nothing, because this is a question rather than a request.
+List every assertion on the machine:
 
-If no supervisor is running, say the machine is free to sleep whenever it likes.
+```sh
+pgrep -l caffeinate
+```
+
+Then take each one in turn:
+
+```sh
+ps -o pid=,ppid=,lstart=,command= -p 22089
+```
+
+Walk each one up by parent to see whether it belongs to a miserlymouse supervisor, directly for a timed run or through the job for a wrapping run.
+
+For a timed run, the end time is the `lstart` value plus the seconds given to `-t`, and the time remaining is those seconds minus `etime`.
+
+For a wrapping run, say the assertion lasts as long as the job and name the job, because there is no end time to give.
+
+For anything else, name it as another tool's assertion and leave it at that.
+
+Report the latest end time among them as the answer, and say plainly if a job or a foreign assertion is what carries the machine past the timed run.
+
+If nothing is holding an assertion, say the machine is free to sleep whenever it likes.
 
 ## Starting or replacing
 
@@ -69,7 +107,9 @@ The order of these steps is the whole point of the skill.
 
 A new assertion has to be live before the old one dies, or the machine is briefly free to sleep in the gap.
 
-Step one, record the assertion PIDs that exist now, which may be none.
+Step one, classify every supervisor as above, and record the assertion PIDs of the timed runs only.
+
+Wrapping runs are recorded too, but as things to report rather than things to kill.
 
 Step two, start the new one detached, so it outlives this session:
 
@@ -93,15 +133,17 @@ If it never appears, stop and report the failure, leaving the old assertion unto
 
 The machine stays awake on the old schedule in that case, which is the safe outcome.
 
-Step five, and only now, kill each assertion PID recorded in step one:
+Step five, and only now, kill each timed assertion PID recorded in step one:
 
 ```sh
 kill 22089
 ```
 
-Step six, confirm that `pgrep -f bin/miserlymouse` reports the new supervisor and nothing else.
+Step six, confirm that the new supervisor is present and that no timed supervisor other than it survives.
 
-Report the new end time.
+Any wrapping run recorded in step one is expected to still be there, and its survival is success rather than failure.
+
+Report the new end time, and add that a job is holding its own assertion whenever one is, since the machine will then stay awake until the later of the two.
 
 ## Kill the assertion, never the supervisor
 
