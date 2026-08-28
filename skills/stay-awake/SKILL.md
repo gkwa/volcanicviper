@@ -163,6 +163,20 @@ nohup uv run --no-active --project /Users/mtm/pdev/taylormonacelli/miserlymouse 
 
 Pass the time through to miserlymouse rather than converting it to a duration, because it already resolves a time to its next occurrence.
 
+## Warnings before the end
+
+miserlymouse pushes an ntfy warning to the phone as the end of an assertion approaches, unasked, so no flag for it belongs in the command this skill runs.
+
+The offsets and the topic are documented in /Users/mtm/pdev/taylormonacelli/miserlymouse/README.md, so read that rather than restating them.
+
+Never pass `--no-notify`, because the warning exists precisely to reach someone who is not watching the terminal.
+
+A replacement takes the old warning schedule down with the assertion it belonged to, which is correct, since a warning about an end time that no longer applies is worse than no warning.
+
+Report the new end time as always, and leave the warnings unmentioned unless asked, since they need nothing from the user beyond a subscription already in place.
+
+A wrapping run pushes nothing at all, having no scheduled end to count down to, which is one more reason it is never a substitute for a timed run.
+
 ## Reference
 
 `nohup` and the trailing `&` are both required, and the process reparents to PID 1 and survives the session ending.
