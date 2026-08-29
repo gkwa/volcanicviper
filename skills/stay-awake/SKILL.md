@@ -109,7 +109,13 @@ Say "Saturday at 12:40 AM", never "00:40:04" and never "2026-08-29T00:40:04".
 
 Write the meridiem as AM or PM, and never spell it out as "in the morning", "at night", or any similar phrase.
 
-Give the span remaining alongside the clock time, as in "30 minutes from now, at Saturday 12:40 AM", so the answer needs no arithmetic to be useful.
+Give the span remaining alongside the clock time, as in "30m from now, at Saturday 12:40 AM", so the answer needs no arithmetic to be useful.
+
+Write that span compactly, as hours and minutes squashed against their units, `2h30m` or `30m`, rather than spelling out "30 minutes" or "two and a half hours".
+
+That is the same duration grammar miserlymouse accepts as input, so a span read back out of a report can be handed straight to the tool.
+
+Drop a component that is zero rather than padding it, so ninety minutes is `1h30m` and one hundred twenty minutes is `2h`.
 
 Measure that span from the moment of the report rather than from the moment the assertion started, since those differ once a few tool calls have gone by.
 
