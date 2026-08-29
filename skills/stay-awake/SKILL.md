@@ -105,7 +105,13 @@ If nothing is holding an assertion, say the machine is free to sleep whenever it
 
 Every end time reported to the user is a friendly day and clock phrase rather than a timestamp.
 
-Say "Saturday at 12:15 in the morning", never "00:15:04" and never "2026-08-29T00:15:04".
+Say "Saturday at 12:40 AM", never "00:40:04" and never "2026-08-29T00:40:04".
+
+Write the meridiem as AM or PM, and never spell it out as "in the morning", "at night", or any similar phrase.
+
+Give the span remaining alongside the clock time, as in "30 minutes from now, at Saturday 12:40 AM", so the answer needs no arithmetic to be useful.
+
+Measure that span from the moment of the report rather than from the moment the assertion started, since those differ once a few tool calls have gone by.
 
 Drop the seconds, since no one schedules a laptop to the second.
 
