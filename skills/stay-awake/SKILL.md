@@ -97,9 +97,21 @@ For a wrapping run, say the assertion lasts as long as the job and name the job,
 
 For anything else, name it as another tool's assertion and leave it at that.
 
-Report the latest end time among them as the answer, and say plainly if a job or a foreign assertion is what carries the machine past the timed run.
+Report the latest end time among them as the answer, phrased as the section on speaking an end time requires, and say plainly if a job or a foreign assertion is what carries the machine past the timed run.
 
 If nothing is holding an assertion, say the machine is free to sleep whenever it likes.
+
+## How an end time is spoken
+
+Every end time reported to the user is a friendly day and clock phrase rather than a timestamp.
+
+Say "Saturday at 12:15 in the morning", never "00:15:04" and never "2026-08-29T00:15:04".
+
+Drop the seconds, since no one schedules a laptop to the second.
+
+Name the day of the week whenever the end time falls outside the current day, which a late night request usually does.
+
+The ISO 8601 form that `--json --dry-run` prints is an input to this translation, not something to hand over as is.
 
 ## Starting or replacing
 
@@ -143,7 +155,7 @@ Step six, confirm that the new supervisor is present and that no timed superviso
 
 Any wrapping run recorded in step one is expected to still be there, and its survival is success rather than failure.
 
-Report the new end time, and add that a job is holding its own assertion whenever one is, since the machine will then stay awake until the later of the two.
+Report the new end time in the spoken form above, and add that a job is holding its own assertion whenever one is, since the machine will then stay awake until the later of the two.
 
 ## Kill the assertion, never the supervisor
 
