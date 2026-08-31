@@ -43,7 +43,9 @@ Requests that do NOT trigger routing (even if they involve Zephyr entries):
 
 ## Identify
 
-An entry is an H2 timestamp heading plus the body below it, up to the next heading.
+An entry is a timestamp heading plus the body below it, up to the next heading.
+
+Source documents deliver entries at H2, while entries already filed inside a bake log's `## bake log` section sit at H3.
 
 A Zephyr entry is one whose body contains a key of the form "For Zephyr N" or "For Zephyr N-M".
 
@@ -63,13 +65,15 @@ Resolve the key to a filename through the Bake Log Naming Convention in the [[ze
 
 If the resolved bake log does not exist, create it.
 
-Scaffold minimally: a `## bake log` section holding the routed entries, nothing more.
+Scaffold minimally: a `## bake log` section holding the routed entries at H3, nothing more.
 
 Do not generate a recipe layout — recipe scaffolding is its own deliberate step.
 
 ## Insert
 
-Routed entries go under the `## bake log` section of the target.
+Routed entries go under the `## bake log` section of the target, demoted from H2 to H3 so they nest inside that section rather than sitting beside it.
+
+Demote any sub-heading inside an entry body by one level to match, so it stays a child of its entry.
 
 Keep all Zephyr entries in that section in reverse chronological order — newest first.
 

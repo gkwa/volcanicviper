@@ -82,11 +82,21 @@ Each Zephyr entry in the bake log follows this pattern:
 For Zephyr N, [event description] at [time] on [date].
 ```
 
-The header timestamp (the H2 heading above the entry) is when the memo was recorded.
+The header timestamp (the timestamp heading above the entry) is when the memo was recorded.
 
 The event timestamp is the time mentioned inside the body text — this is the actual time the bake action occurred.
 
 Always use the event timestamp, not the header timestamp, when extracting bake events.
+
+## Entry Heading Level
+
+Inside a bake log, entries are H3 headings nested under the `## bake log` section.
+
+Voice memo exports deliver entries at H2, so demote each one to H3 when routing it into a bake log.
+
+Sub-headings inside an entry body start at H4, so they stay children of the entry instead of becoming its peers.
+
+Older bake logs whose entries predate the `## bake log` section keep those entries at H2, because there is no section in those files to nest under.
 
 ## Weight Notation
 
@@ -157,7 +167,7 @@ Time resolution:
 Example entry with tag:
 
 ```
-## Friday, June 5, 2026 at 9:57 AM
+### Friday, June 5, 2026 at 9:57 AM
 
 For Zephyr 4-2, the starter peaked at 9:57 AM on June 5th.
 
@@ -167,7 +177,7 @@ For Zephyr 4-2, the starter peaked at 9:57 AM on June 5th.
 Example entry without tag (measurement only):
 
 ```
-## Friday, June 5, 2026 at 10:59 AM
+### Friday, June 5, 2026 at 10:59 AM
 
 For Zephyr 4-2, the initial dough volume is 2100 ml.
 ```
@@ -208,7 +218,7 @@ To work with a Zephyr bake log:
 1. Identify the Zephyr key (e.g. "Zephyr 28" or "Zephyr 3-2")
 2. Resolve it to a bake log filename using the day number, optional bake-number suffix, and current date
 3. Read the bake log and extract all "For Zephyr N" entries
-4. Use event timestamps (body text), not header timestamps (H2 headings)
+4. Use event timestamps (body text), not header timestamps (the timestamp headings)
 5. When writing any output that references the bake, use `[[bake log M-D-YYYY-N]]` — never the bare Zephyr number
 
 To add event_time tags to a bake log:
