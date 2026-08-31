@@ -25,6 +25,26 @@ When multiple bakes start on the same day, a numeric suffix after a hyphen disti
 
 The suffix maps directly to the trailing bake number in the bake log filename.
 
+## Absence of the Sentinel
+
+The sentinel is a filter, not a requirement.
+
+Most text carries no Zephyr key, and text without one is simply not addressed to this scheme.
+
+A pass that finds no sentinel has succeeded — it did exactly what it was asked to do.
+
+Say nothing about it.
+
+Do not explain that no key was found, do not enumerate the entries that lacked one, do not restate the rule that entries without a key are never modified, and do not present the absence as a finding, a deviation, or an anomaly.
+
+Report only what changed.
+
+When a run changes nothing, one short line saying so is the entire report.
+
+This holds for every verb skill in the scheme.
+
+A skill that runs and finds nothing to do is in its normal state, not an exceptional one.
+
 ## Parameters
 
 The skill accepts named parameters with defaults, like Python keyword arguments.

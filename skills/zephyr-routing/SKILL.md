@@ -51,6 +51,8 @@ A Zephyr entry is one whose body contains a key of the form "For Zephyr N" or "F
 
 Entries without a Zephyr key are never touched, moved, or modified.
 
+Their absence is not a finding, and a document holding none of them is an ordinary document, not a problem to report — see Absence of the Sentinel in the [[zephyr]] skill.
+
 ## Resolve
 
 Resolve each key against the entry's header date, not today's date.
