@@ -39,7 +39,7 @@ Do not explain that no key was found, do not enumerate the entries that lacked o
 
 Report only what changed.
 
-When a run changes nothing, one short line saying so is the entire report.
+When a run changes nothing, emit nothing — no summary, no confirmation, no line announcing that there was nothing to do.
 
 This holds for every verb skill in the scheme.
 
