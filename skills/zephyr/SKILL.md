@@ -33,6 +33,12 @@ Most text carries no Zephyr key, and text without one is simply not addressed to
 
 A pass that finds no sentinel has succeeded — it did exactly what it was asked to do.
 
+Finding nothing to act on is not a failure.
+
+The instruction is conditional: if the text holds Zephyr entries, act on them, and if it holds none, the condition simply did not fire.
+
+A false condition is not an error, so never report the run as failed, and never exit non-zero on account of a miss.
+
 Say nothing about it.
 
 Do not explain that no key was found, do not enumerate the entries that lacked one, do not restate the rule that entries without a key are never modified, and do not present the absence as a finding, a deviation, or an anomaly.
