@@ -101,6 +101,22 @@ Report the latest end time among them as the answer, phrased as the section on s
 
 If nothing is holding an assertion, say the machine is free to sleep whenever it likes.
 
+## The reply is one line
+
+The whole reply is the span and the end time, and nothing else.
+
+"1h from now, at Tuesday 1:30 AM" is a complete answer to a request to stay awake longer.
+
+Say nothing about supervisors, assertions, PIDs, or which step of the procedure is underway, because the steps are how the answer is reached rather than part of it.
+
+Do not narrate between tool calls, since a running commentary on classification and handover is the same verbosity spread across more messages.
+
+Do not explain that the request replaced an existing assertion rather than adding to it, because that is how the tool always behaves and saying so every time teaches nothing.
+
+Do not report the absence of other assertions, since the one line already accounts for the whole machine.
+
+A second line is warranted only when something changes the answer, meaning a wrapping run or a foreign assertion carries the machine past the stated end time, or the new assertion failed to start and the old schedule still stands.
+
 ## How an end time is spoken
 
 Every end time reported to the user is a friendly day and clock phrase rather than a timestamp.
