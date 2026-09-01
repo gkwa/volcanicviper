@@ -15,6 +15,16 @@ uv run --no-active --project /Users/mtm/pdev/taylormonacelli/miserlymouse miserl
 
 The duration and clock-time grammars are documented in /Users/mtm/pdev/taylormonacelli/miserlymouse/README.md, so read that rather than guessing at a format.
 
+## The default span is two hours
+
+A request that names no span, such as a bare "stay awake", means `2h`.
+
+Start it the same way any other request is started, since the default is a duration like any other and carries no special handling.
+
+Nothing in miserlymouse supplies this, as the tool requires a duration and has no default of its own, so the default lives here and nowhere else.
+
+Do not mention the default in the reply, because the one line already says how long the machine stays awake.
+
 ## Requests are a replacement, never an addition
 
 "Keep this machine running for two hours longer" means the machine should be awake until two hours from now.
