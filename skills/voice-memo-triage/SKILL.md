@@ -1,6 +1,6 @@
 ---
 name: voice-memo-triage
-description: Triage the newest entries in the aggregate voice memo file, turn the ones that are questions into research notes, and remove those entries from the aggregate. Takes a count of entries to consider. Use when asked to look at the most recent N voice memos, research the ones that are questions, or drain the aggregate voice memo file.
+description: Triage the newest entries in an aggregate voice memo file, turn the ones that are questions into research notes, and remove those entries from the aggregate. Takes the path to the aggregate file and a count of entries to consider. Use when asked to look at the most recent N voice memos, research the ones that are questions, or drain an aggregate voice memo file.
 ---
 
 ## Overview
@@ -17,22 +17,46 @@ Nothing is ever discarded — every removed entry survives verbatim inside its r
 
 ## Parameters
 
+- aggregate — absolute path to the aggregate file to drain; default `/Users/mtm/Documents/Obsidian Vault/claude aggregate voice memos.md`
 - count — how many of the newest entries to consider; default 10
-- aggregate file — default `/Users/mtm/Documents/Obsidian Vault/claude aggregate voice memos.md`
 - scratch directory — `$CLAUDE_JOB_DIR/tmp` when that variable is set, otherwise `mktemp -d`
 
-Never write scratch files into the vault, because git tracks everything there.
+Bind the parameters once, at the top of the run, and refer to them by variable everywhere after:
+
+```sh
+AGGREGATE="/Users/mtm/Documents/Obsidian Vault/claude aggregate voice memos.md"
+```
+
+```sh
+VAULT="$(dirname "$AGGREGATE")"
+```
+
+```sh
+SCRATCH="${CLAUDE_JOB_DIR:-$(mktemp -d)}/tmp"
+```
+
+The vault is derived rather than given, because the aggregate file sits at the vault root, and the research notes belong beside it.
+
+Deriving it is what lets a different aggregate file be triaged into its own vault without the path being restated in eight places, so never hardcode a vault path once `AGGREGATE` is bound.
+
+The two files whose rules the workflow agents must read are then `/Users/mtm/pdev/taylormonacelli/volcanicviper/skills/research-note/SKILL.md`, which is fixed, and `$VAULT/CLAUDE.md`, which is not.
+
+Never write scratch files under `$VAULT`, because git tracks everything there.
 
 ## Step 1: Back up and index
 
-Copy the aggregate file to the scratch directory as `aggregate.orig.md`.
+Copy `$AGGREGATE` to the scratch directory as `aggregate.orig.md`.
+
+```sh
+cp "$AGGREGATE" "$SCRATCH/aggregate.orig.md"
+```
 
 That copy is the reference for the byte accounting in Step 6, so take it before anything is edited.
 
 Index the entries:
 
 ```sh
-grep -n '^## ' "/Users/mtm/Documents/Obsidian Vault/claude aggregate voice memos.md" | head -<count+1>
+grep -n '^## ' "$AGGREGATE" | head -<count+1>
 ```
 
 Entry K spans from its own header line through the line before the next header line.
@@ -60,7 +84,7 @@ State the classification of all N entries to the user in one block before runnin
 Write each research entry to its own file in the scratch directory using the line ranges from Step 1:
 
 ```sh
-sed -n '4,33p' "/Users/mtm/Documents/Obsidian Vault/claude aggregate voice memos.md" > "$SCRATCH/entries/01-notebooklm.md"
+sed -n '4,33p' "$AGGREGATE" > "$SCRATCH/entries/01-notebooklm.md"
 ```
 
 Confirm each extracted file starts with its `## ` header line, so an off-by-one in the ranges is caught here rather than after the aggregate has been edited.
@@ -75,13 +99,17 @@ The first stage researches and writes the note.
 
 The second stage audits the written note against the format rules and repairs it in place.
 
-Give every agent in the first stage the shared preamble telling it to read `/Users/mtm/pdev/taylormonacelli/volcanicviper/skills/research-note/SKILL.md` and the vault's own `CLAUDE.md`, then follow them, with these deviations:
+Give every agent in the first stage the shared preamble telling it to read `/Users/mtm/pdev/taylormonacelli/volcanicviper/skills/research-note/SKILL.md` and `$VAULT/CLAUDE.md`, then follow them, with these deviations:
 
-- The source is a section of an aggregate file, not a standalone file, so Step 3 of that skill does not apply — create a new file directly rather than renaming a source
+- The source is a section of an aggregate file, not a standalone file, so Step 3 of that skill does not apply — create a new file directly under `$VAULT` rather than renaming a source
 - The agent runs no `git add` and no `git commit`, because the orchestrator commits centrally and background writers share the vault repo
-- The agent never touches the aggregate file
+- The agent never touches `$AGGREGATE`
 - The `## Original request` section carries the memo byte for byte, emphasis included, which overrides the vault's no-emphasis rule for that one section
 - The only edit permitted inside that verbatim block is demoting the memo's own `## ` lines to `### `, so they do not read as siblings of the note's own sections
+
+Interpolate the resolved absolute paths into those prompts rather than writing the variable names into them, because a subagent gets a fresh shell that never saw `AGGREGATE`, `VAULT` or `SCRATCH`, and an unexpanded `$VAULT` reaches it as literal text it cannot resolve.
+
+In a workflow script that means binding them as script constants at the top and building each prompt with template interpolation.
 
 Give each agent a paragraph of research direction specific to its memo, naming the concrete things to look into, rather than handing it the raw memo and hoping.
 
@@ -111,11 +139,15 @@ A mismatch means a range was wrong, and the aggregate must not be replaced until
 
 Then confirm each entry's text reached its note, checking the extracted file against the note's `## Original request` section rather than trusting the agent's report.
 
-Only after both checks pass, copy `aggregate.new.md` over the aggregate file.
+Only after both checks pass, install the new file:
+
+```sh
+cp "$SCRATCH/aggregate.new.md" "$AGGREGATE"
+```
 
 ## Step 7: Commit
 
-Commit each new research note individually, then the aggregate edit, each with its own pathspec:
+Commit each new research note individually, then the aggregate edit, each with its own pathspec, from `$VAULT`:
 
 ```sh
 git commit -- "note name.md"
