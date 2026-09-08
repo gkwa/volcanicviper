@@ -26,6 +26,7 @@ Skills encode reusable expertise so AI assistants apply consistent standards wit
 - `tsconfig` — add a tsconfig.json for TypeScript projects using Vite and/or Chrome extensions
 - `use-vite` — set up Vite/Vitest with ESM config and vite-plugin-checker for TypeScript projects
 - `view-imgur` — fetch and view imgur images via curl when WebFetch is blocked
+- `voice-memo-triage` — take the newest N entries in the aggregate voice memo file, turn the ones that are questions into research notes, and remove exactly those entries with byte accounting proving nothing was lost
 - `write-readme` — write brief READMEs with a CLI cheatsheet
 - `zephyr` — the Zephyr sourdough bake tagging scheme: find bake logs by Zephyr key, read entries to extract event times, add event_time tags, and fill the Starter peak duration block
 - `zephyr-grafana-links` — build or refresh the overall and bulk ferment Grafana dashboard links in a bake log

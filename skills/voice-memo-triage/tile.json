@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/voice-memo-triage",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Triage the newest entries in the aggregate voice memo file, turn the ones that are questions into research notes, and remove those entries from the aggregate. Trigger terms: most recent voice memos, research the voice memos, drain the aggregate voice memo file, triage voice memos, aggregate voice memos.",
+  "skills": {
+    "voice-memo-triage": {
+      "path": "SKILL.md"
+    }
+  }
+}
