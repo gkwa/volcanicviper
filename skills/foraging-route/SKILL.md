@@ -1,6 +1,6 @@
 ---
 name: foraging-route
-description: Solve the shortest walking route from the user's current location through every mapped fruit tree in the vault, and return a map link plus a Google Maps walking link. Use when the user gives coordinates, a Google Maps link, or an address and asks for the route, order, or shortest walk to the apple or plum trees.
+description: Solve the shortest walking route from the user's current location through every mapped fruit tree in the vault, and return a map link plus a Google Maps walking link. Use when the user names where they are, by cross street, address, place, tree, map link or coordinates, and asks for the route, order, or shortest walk to the apple or plum trees.
 ---
 
 ## Overview
@@ -19,16 +19,106 @@ Saving a route into a note happens only when the user asks for that separately.
 
 Turn whatever the user gave into a single `latitude, longitude` pair in decimal degrees.
 
-- Decimal pair such as `47.6204, -122.3112`: use it as given, latitude first.
-- Degrees, minutes, seconds such as `47°37'13.4"N 122°18'40.2"W`: convert with degrees + minutes/60 + seconds/3600, and make S latitudes and W longitudes negative.
-- Full Google Maps place URL: take the place pin from `!3d<lat>!4d<lon>`, because the `@<lat>,<lon>` segment is only the map's viewport centre and can sit a block away.
-- Google Maps URL with no `!3d`/`!4d`: fall back to `@<lat>,<lon>` or a `query=<lat>,<lon>` parameter.
-- Short link such as `maps.app.goo.gl/...`: expand it first with `curl --silent --location --output /dev/null --write-out '%{url_effective}' <url>`, then parse the expanded URL as above.
-- Street address or place name: geocode it with Nominatim at `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=<address>`, stripping any suite or unit number first because Nominatim fails on them.
+The user is usually speaking into a phone, so the input is most often a cross street or an address, and dictation may spell numbers as words.
+
+Before classifying, rewrite spelled-out ordinals and numbers as digits, so "twenty-fourth and Madison" becomes "24th and Madison".
+
+Classify the input as the first type below that matches, because the earlier types are unambiguous and the later ones are loose.
+
+Only the start is ever looked up, since every tree already carries its coordinates in the note, so a run spends at most one lookup here.
+
+### Google Maps short link
+
+A `maps.app.goo.gl/...` or `goo.gl/maps/...` URL.
+
+Expand it with `curl --silent --location --output /dev/null --write-out '%{url_effective}' <url>`, then resolve the expanded URL as a full Google Maps link.
+
+### Google Maps full link
+
+A URL whose host contains `google.` and whose path starts with `/maps`.
+
+Take the place pin from `!3d<lat>!4d<lon>`, because the `@<lat>,<lon>` segment is only the map's viewport centre and can sit a block away.
+
+Without `!3d`/`!4d`, fall back to `@<lat>,<lon>`, then to a `query=<lat>,<lon>` parameter.
+
+### OpenStreetMap link
+
+A URL on `openstreetmap.org`, resolved from its `mlat` and `mlon` parameters.
+
+### Degrees, minutes, seconds
+
+Text with a `°` sign, or with minute and second marks beside N, S, E or W, such as `47°37'13.4"N 122°18'40.2"W`.
+
+Convert each half with degrees + minutes/60 + seconds/3600, and make S latitudes and W longitudes negative.
+
+### Decimal pair
+
+Two signed decimals such as `47.6204, -122.3112`, taken latitude first.
+
+A first number near -122 means the pair arrived longitude first, so swap it.
+
+### Tree from the note
+
+Text naming one of the note's `## ` tree headings, such as "I'm at the East Pine tree" or "at the 16th Avenue tree".
+
+Use that section's coordinate line, which costs no lookup.
+
+This check comes before addresses and cross streets, because a tree heading reads like a street name.
+
+### Street address
+
+A house number followed by a street name, such as "2801 East Madison".
+
+Strip any suite, unit or apartment number, append `, Seattle, WA`, and geocode with one Nominatim request:
+
+```
+curl --silent --max-time 20 --get --user-agent "foraging-route (taylormonacelli@gmail.com)" --data-urlencode "q=<address>, Seattle, WA" --data-urlencode "format=json" --data-urlencode "limit=1" https://nominatim.openstreetmap.org/search
+```
+
+### Cross street
+
+Two street names joined by "and", "&", "at" or "corner of", with no house number, such as "24th and Madison".
+
+Nominatim cannot resolve this, because "and" returns nothing and "&" only matches bus stops named after corners, often the wrong one.
+
+Resolve it with one Overpass request for the node the two streets share inside Seattle, matching each street on its core name so the user can leave off the direction and street type:
+
+```
+[out:json][timeout:25];
+area["name"="Seattle"]["boundary"="administrative"]->.city;
+way(area.city)["highway"]["name"~"(^| )24th( |$)",i]->.a;
+way(area.city)["highway"]["name"~"(^| )Madison( |$)",i]->.b;
+node(w.a)(w.b);
+out;
+```
+
+Send it with `curl --silent --max-time 40 --user-agent "foraging-route (taylormonacelli@gmail.com)" --data-urlencode data@<query file> https://overpass-api.de/api/interpreter`, writing the query file to `$CLAUDE_JOB_DIR/tmp`.
+
+Nodes within 150ft of each other are one corner, so average them.
+
+Distinct corners mean the core names were ambiguous, as with "24th Avenue East" and "24th Avenue South", so take the corner nearest the mean position of the trees and name the full street names in the report.
+
+An empty result means the two streets do not meet on the map, so tell the user and ask for a nearby address rather than sending further queries.
+
+### Place name
+
+Any other text that names somewhere, such as "Macrina Bakery".
+
+Geocode it with one Nominatim request bounded to Seattle, adding `--data-urlencode "viewbox=-122.46,47.73,-122.22,47.48" --data-urlencode "bounded=1" --data-urlencode "limit=5"` to the address request, and when several places match take the one nearest the mean position of the trees and name it in the report.
+
+### No location
+
+Text that identifies no place, such as "route me to the trees".
+
+Ask the user for a cross street or address, because the skill cannot read the phone's position.
+
+### Every type
+
+Send each lookup once, and on an HTTP 429 wait 30s and retry once before telling the user the lookup service is busy.
 
 Round every coordinate to 6 decimal places, about 4in of precision, and use that same rounded value in the request and in both links.
 
-The step is done when one decimal pair is in hand together with which part of the user's input it came from.
+The step is done when one decimal pair is in hand together with its input type and which part of the user's input it came from.
 
 ## Step 2: Read the stops from the note
 
@@ -98,7 +188,7 @@ Give the total time rounded to the nearest minute and written compactly like `1h
 
 Report in this order, one sentence per paragraph:
 
-- the resolved start and which part of the input it came from
+- the resolved start, its input type, and which part of the input it came from, with the full street or place name when a cross street or place name was matched
 - the number of stops read from the note
 - the total distance and time, and the stop the walk ends at
 - any point snapped more than 15m
