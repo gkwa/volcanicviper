@@ -23,6 +23,7 @@ Skills encode reusable expertise so AI assistants apply consistent standards wit
 - `research-note` — create a cleaned research note from a rough question with an answer and search links
 - `thesourdoughjourney-method-check` — judge whether Tom Cucuzza's two-factor bulk fermentation method (from The Sourdough Journey) fits a sourdough recipe, and which way the error swings if not
 - `transcript-cleanup` — clean up raw transcripts from output/ and write to a timestamped file in cleaned/
+- `transcribe-voice-memos` — run the valorousverdin pipeline end to end: transcribe the waiting recordings, route the Zephyr and Fulcrum entries into the vault, and leave the cleaned transcripts on the clipboard
 - `tsconfig` — add a tsconfig.json for TypeScript projects using Vite and/or Chrome extensions
 - `use-vite` — set up Vite/Vitest with ESM config and vite-plugin-checker for TypeScript projects
 - `view-imgur` — fetch and view imgur images via curl when WebFetch is blocked
