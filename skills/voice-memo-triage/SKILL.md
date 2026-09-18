@@ -1,6 +1,6 @@
 ---
 name: voice-memo-triage
-description: Triage the newest entries in an aggregate voice memo file, turn the ones that are questions into research notes, and remove those entries from the aggregate. Takes the path to the aggregate file and a count of entries to consider. Use when asked to look at the most recent N voice memos, research the ones that are questions, or drain an aggregate voice memo file.
+description: Triage entries in an aggregate voice memo file, turn the ones that are questions into research notes, and remove those entries from the aggregate. Takes the path to the aggregate file, and either a count of newest entries or the entries one transcription run just added. Use when asked to look at the most recent N voice memos, research the ones that are questions, drain an aggregate voice memo file, or triage the memos that were just transcribed.
 ---
 
 ## Overview
@@ -11,14 +11,15 @@ Some of those memos are questions or things that need to be discovered, and thos
 
 The rest are reminders, shopping notes, transcripts of conversations and ambient chatter, and those stay in the aggregate.
 
-This skill takes the newest N entries, splits them into those two piles, researches the first pile with a workflow, and removes exactly those entries from the aggregate.
+This skill takes a window of entries, splits them into those two piles, researches the first pile with a workflow, and removes exactly those entries from the aggregate.
 
 Nothing is ever discarded — every removed entry survives verbatim inside its research note's `## Original request` section, and the removal is verified by byte accounting before the commit.
 
 ## Parameters
 
 - aggregate — absolute path to the aggregate file to drain; default `/Users/mtm/Documents/Obsidian Vault/claude aggregate voice memos.md`
-- count — how many of the newest entries to consider; default 10
+- scope — which entries to consider, either a count of the newest entries or one transcription run; default a count
+- count — how many of the newest entries to consider under a count scope; default 10
 - scratch directory — `$CLAUDE_JOB_DIR/tmp` when that variable is set, otherwise `mktemp -d`
 
 Bind the parameters once, at the top of the run, and refer to them by variable everywhere after:
@@ -43,6 +44,42 @@ The two files whose rules the workflow agents must read are then `/Users/mtm/pde
 
 Never write scratch files under `$VAULT`, because git tracks everything there.
 
+## Which entries are in scope
+
+Two things can define the window, and the wording of the request says which.
+
+A count means the newest N entries in the aggregate, and that is the default at 10.
+
+A run scope means the entries one transcription run just added, which is what "triage them" means when it follows a transcription in the same breath.
+
+Never resolve a run scope into a count, because a run that added four entries and a run that added forty both read as "them", and the newest ten is wrong in each case.
+
+### Resolving a run scope
+
+The transcription run records where every memo went, so the set is read rather than guessed.
+
+Take the newest run directory:
+
+```sh
+ls -dt /Users/mtm/.local/share/valorousverdin/runs/*/ | head -1
+```
+
+Then take the memos that reached the aggregate:
+
+```sh
+grep '"outcome": "leftover"' /Users/mtm/.local/share/valorousverdin/runs/2026-09-18T11-36-49/audit.jsonl
+```
+
+Each matching line carries a `heading`, and those headings are the entries in scope.
+
+A memo whose outcome is `routed` is not in scope, because a router already filed it in the vault and it never reached the aggregate at all.
+
+Match those headings against the aggregate's own `## ` lines rather than taking the top N, because the leftovers are prepended and any other writer that prepends in between shifts the window without saying so.
+
+A heading the audit names that no longer appears in the aggregate was triaged already, so drop it from the set and say so rather than failing.
+
+A run whose audit has no `leftover` lines routed everything, so there is nothing to triage and the reply is one line.
+
 ## Step 1: Back up and index
 
 Copy `$AGGREGATE` to the scratch directory as `aggregate.orig.md`.
@@ -53,19 +90,21 @@ cp "$AGGREGATE" "$SCRATCH/aggregate.orig.md"
 
 That copy is the reference for the byte accounting in Step 6, so take it before anything is edited.
 
-Index the entries:
+Index every entry:
 
 ```sh
-grep -n '^## ' "$AGGREGATE" | head -<count+1>
+grep -n '^## ' "$AGGREGATE"
 ```
 
-Entry K spans from its own header line through the line before the next header line.
+Entry K spans from its own header line through the line before the next header line, so the entry after the last one in scope is what gives that one an end boundary.
 
-Ask for one extra header so the last entry in the window has an end boundary.
+Under a count scope the window is the first N of those headings.
+
+Under a run scope it is the headings the audit named, wherever in the list they turn up.
 
 ## Step 2: Read the window
 
-Read all N entries in full before deciding anything about any of them.
+Read every entry in scope in full before deciding anything about any of them.
 
 A memo can open as chatter and close on a question, so a header-only skim misclassifies.
 
@@ -77,7 +116,7 @@ An entry stays in the aggregate when it is a reminder to do a thing, a transcrip
 
 Judgment calls that fall between the two are batched and asked in a single round at the end, never one at a time mid-run.
 
-State the classification of all N entries to the user in one block before running the workflow, so a misread is caught before notes get written.
+State the classification of every entry in scope to the user in one block before running the workflow, so a misread is caught before notes get written.
 
 ## Step 4: Extract the research entries verbatim
 
@@ -162,3 +201,5 @@ Do not prompt before committing.
 Say which entries became notes, naming each note file, and which entries stayed in the aggregate and why.
 
 Give the byte accounting result as the evidence that nothing was lost.
+
+Name the scope that was used, because "the newest 10" and "the 4 this run added" leave different memos unexamined, and only the person who asked can tell whether the remainder matters.

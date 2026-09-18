@@ -94,6 +94,8 @@ That file is the report, already reduced to state, and it carries no memo bodies
 cat /Users/mtm/.local/share/valorousverdin/runs/2026-09-18T11-36-49/audit.jsonl
 ```
 
+It is also the handoff to `voice-memo-triage`, whose run scope is the `leftover` headings in this run, so a request that transcribes and then triages needs nothing carried between the two beyond this directory.
+
 Read the router logs only when `audit.jsonl` shows an outcome that needs explaining, because those logs quote memo bodies back and reading one puts the content in front of you at the moment you are trying not to repeat it.
 
 Even then, report what the router decided and why, never the body it decided about.
