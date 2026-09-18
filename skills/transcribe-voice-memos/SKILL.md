@@ -76,11 +76,41 @@ Do not rerun the script to clear a failure, because the recordings whose transcr
 
 ## Reporting
 
-Give the count transcribed, then one line per entry naming its heading and the absolute path of the file a router put it in.
+The reply says whether the pipeline finished and what it did with the entries, and nothing about what the entries said.
 
-Name the entries that went to the aggregate note as well, since those are the ones no router recognised and the ones most likely to be misfiled.
+Someone who dictated the memos already knows their contents, and the cleaned text is on the clipboard and in `original.md`, so a summary of it returns them something they already have while leaving the one thing they asked about unanswered.
 
-Do not reproduce the transcript bodies, because they are already on the clipboard and in `original.md`.
+Never summarise, paraphrase, quote or characterise a memo, and never list the subjects the memos covered.
+
+A memo's own date-time heading is state rather than content, so naming one is correct where it identifies which entry went where.
+
+## Build the report from audit.jsonl
+
+`audit.jsonl` in the run directory holds one object per memo, carrying its heading, its outcome, the router that took it, and the absolute paths it was written to.
+
+That file is the report, already reduced to state, and it carries no memo bodies at all:
+
+```sh
+cat /Users/mtm/.local/share/valorousverdin/runs/2026-09-18T11-36-49/audit.jsonl
+```
+
+Read the router logs only when `audit.jsonl` shows an outcome that needs explaining, because those logs quote memo bodies back and reading one puts the content in front of you at the moment you are trying not to repeat it.
+
+Even then, report what the router decided and why, never the body it decided about.
+
+## The shape of a finished run
+
+State the outcome as counts by disposition, then one line per entry only where an entry went somewhere a count does not identify:
+
+```
+Pipeline finished. 1 recording transcribed, 0 entries routed, 1 entry to the aggregate note.
+```
+
+Say plainly that it finished, since that is the question being asked.
+
+Name each destination file by absolute path where a router took something, because which bake log or feed log received an entry is the part that cannot be checked at a glance.
+
+Report duplicates skipped and existing entries replaced as counts, since those are the outcomes that silently lose work.
 
 Do not restate the run directory path unless something in it needs reading, and do not narrate the stages while they run.
 
