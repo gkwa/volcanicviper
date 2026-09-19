@@ -73,8 +73,9 @@ Structure:
 2. A context block (if the source file contains Obsidian wikilinks) — preserve any `[[wikilinks]]` verbatim before the question text
 3. The cleaned question — no label, no header, just the question text
 4. `## Source` section, when a URL was provided
-5. One `##` section per topic, each holding its own answer and search links
-6. `## Original request` section
+5. `## Short answer` section, when the note ends up with more than one topic section
+6. One `##` section per topic, each holding its own answer and search links
+7. `## Original request` section
 
 Formatting rules:
 
@@ -117,6 +118,28 @@ Never collect every link into a single `## Search links` block at the end of the
 Per-section links let any one section grow later without spawning a new document that links back to this one.
 
 A note that genuinely covers a single angle has a single section, which is fine.
+
+That single section is already the answer, so a note shaped that way needs nothing above it.
+
+### Step 6a: Lead a multi-section note with a short answer
+
+Count the topic sections once they are written.
+
+When there is more than one, add a `## Short answer` section above them, directly below the question.
+
+A note with six sections otherwise forces the reader through all six to find out what the answer was, which is the opposite of what the note is for.
+
+Open it with the finding in a single sentence, including the part that contradicts the question's own assumption when there is one.
+
+Then give one bullet per topic section, each carrying that section's conclusion and naming the section it came from, so the bullet doubles as a pointer to where the support lives.
+
+Close with the practical upshot, and with any caveat that would change how far the reader should trust the rest.
+
+Keep it to the length someone can take in without scrolling.
+
+The short answer carries no search links of its own, because every claim in it belongs to a section below that already has them.
+
+It introduces no fact that is not established in a section below, since it is a way into the note rather than a place to put findings.
 
 ### Step 7: Format the search links
 
@@ -184,3 +207,7 @@ A header rather than a loose paragraph gives the question room to grow when more
 Commit after each such addition, following Step 10.
 
 The same applies when the user points out a missing question or sub-question — add it to the appropriate file and commit without prompting.
+
+An addition can take a note from one topic section to two, so re-check the count after adding one and apply Step 6a.
+
+Where the note already has a `## Short answer`, extend it with a bullet for the new section rather than leaving it describing a note that has since grown.
