@@ -176,6 +176,32 @@ Do not discard any text from the source file, even if it looks like stray wikili
 
 The user may have collected that content intentionally as context or raw material, even if it does not look like a clean question.
 
+Verbatim governs the words, not the line breaks, so lay the prose out in the user's one-sentence-per-paragraph style:
+
+- Keep every word exactly as written, with no grammar fixes, rewording, or trimming
+- Start a new paragraph at each sentence boundary, separated by a blank line
+- Leave non-prose lines such as wikilinks, URLs, and pasted blocks as they are
+
+The section exists so the user can compare the cleaned question against what they actually asked, which only works if the wording is untouched.
+
+A dictated source arrives as one dense block, and copying its line breaks as well produces a wall of text.
+
+Before:
+
+```
+One question I have is: why would I need RAG if I have Claude Code? When I ask it questions it seems to do the same thing. Let's make a new document for this.
+```
+
+After:
+
+```
+One question I have is: why would I need RAG if I have Claude Code?
+
+When I ask it questions it seems to do the same thing.
+
+Let's make a new document for this.
+```
+
 ### Step 9: Delete the source file only when splitting
 
 A single research note needs no deletion, because Step 3 renamed the source into the note.
