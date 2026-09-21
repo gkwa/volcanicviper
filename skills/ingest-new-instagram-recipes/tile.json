@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/ingest-new-instagram-recipes",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Ingest new Instagram recipe posts from starlitseal's urls.db into the vault, skipping shortcodes that already have a note, via a multi-agent grouchygiraffe-ingest workflow. Trigger terms: new insta recipes, urls.db, ingest instagram recipes.",
+  "skills": {
+    "ingest-new-instagram-recipes": {
+      "path": "SKILL.md"
+    }
+  }
+}
