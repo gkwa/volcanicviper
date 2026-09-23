@@ -1,6 +1,6 @@
 ---
 name: shopping-list-add
-description: "Add a product to the shopping list for a store by setting that store's front matter boolean to true in the product note in the Obsidian vault, creating the product note first when none exists. Use when asked to add something to the shopping list, put an item on the list for a store, or mark a product to buy at Trader Joe's, Costco, PCC, or any other store."
+description: "Add a product to the shopping list for a store by setting that store's front matter boolean to true in the product note in the Obsidian vault, creating the product note first when none exists. With no store named, it goes on the amazon_fresh catch-all list. Use when asked to add something to the shopping list, with or without a store, put an item on the list for a store, or mark a product to buy at Trader Joe's, Costco, PCC, or any other store."
 ---
 
 ## Adding a product to a store's shopping list
@@ -37,6 +37,12 @@ Before writing, check that no note with the same name exists with different capi
 
 Match the store the user named to one of the keys already in the note's front matter.
 
+When the user names no store, use `amazon_fresh`.
+
+Amazon Fresh has closed, so its key serves as the catch-all list for items not yet assigned to a store.
+
+Do not ask which store in that case.
+
 The keys are snake_case forms of the store note names with punctuation dropped, for example `trader_joes` for Trader Joe's, `lam_s_seafood_asian_market` for Lam's Seafood Asian Market, and `amazon_com` for Amazon.com.
 
 Change only that key from `false` to `true`, leaving every other line as it is.
@@ -58,5 +64,7 @@ For a newly created note, run `git add "<product>.md"` first.
 ### Step 5 — report
 
 Name the note that was changed or created, and the key that was set.
+
+When the store defaulted to `amazon_fresh`, say that it went on the no-store list.
 
 When a variant note was passed over in favor of the general note, say so in one line, so the user can redirect.
