@@ -30,7 +30,15 @@ Having no numeric key, Fulcrum cannot lean on a number to separate a real entry 
 Two conditions must both hold:
 
 - "For Fulcrum" opens the sentence
-- That same sentence states a feeding
+- That same sentence states a fact about the starter's upkeep
+
+Upkeep covers a feeding, but also a discard, a starter or jar weight, the amount kept for the next feed or bake, a planned ratio, or a probe placement.
+
+Shapes that DO trigger:
+
+- "For Fulcrum, we fed the starter 25g of arachnophobia blend along with 25g of water."
+- "For Fulcrum, we have 29g of starter remaining for the next bake."
+- "For Fulcrum, the gross starter jar weight is 478g."
 
 Shapes that do NOT trigger:
 
@@ -112,6 +120,7 @@ Record only what the memo states:
 - the water weight
 - the starter weight carried forward, when stated
 - the jar or container, when stated
+- any other upkeep fact the memo states, such as a discard, a weight, or the starter kept for the next bake
 
 Never infer an unstated amount from a previous feed.
 
