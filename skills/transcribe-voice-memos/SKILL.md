@@ -30,7 +30,11 @@ uv run --no-active --project /Users/mtm/pdev/taylormonacelli/valorousverdin valo
 
 That prints a bare number and touches nothing.
 
-Run it first even when the request was to transcribe, because a zero means the reply is one line and no further tool call is needed.
+Run it first even when the request was to transcribe, because a zero means no run is needed.
+
+The count leaves out any recording the pipeline skipped for being over the size limit, so a zero does not mean the inbox is empty.
+
+Check for skipped recordings after every count and every run, as described under the section on recordings skipped for size, before deciding that nothing is waiting.
 
 The script makes the same check itself and exits zero without a word, so a run against an empty queue is harmless rather than wrong.
 
@@ -74,6 +78,52 @@ Say which stage failed, naming the last file the run directory contains, and lea
 
 Do not rerun the script to clear a failure, because the recordings whose transcripts already landed have been deleted, and the half-finished run directory is the only thing that explains what happened.
 
+## A recording skipped for size
+
+The pipeline refuses any recording larger than the limit, which defaults to 25MB and is set by the `MAX_FILE_SIZE_MB` environment variable.
+
+It refuses silently.
+
+The only trace is a warning line in /Users/mtm/.local/share/valorousverdin/valorousverdin.log, while the count, the script output, `audit.jsonl` and the exit code all look like a clean run.
+
+The recording stays in the S3 inbox, is skipped again on every later invocation, and is never transcribed.
+
+After every count and every run, read the warnings that invocation wrote:
+
+```sh
+grep -o -E "^[0-9-]+ [0-9:]+ WARNING valorousverdin\.s3_source: Skipping [^ ]+: file too large \([^)]*\)" /Users/mtm/.local/share/valorousverdin/valorousverdin.log
+```
+
+The log repeats each warning on every invocation, so keep only the lines stamped at or after the moment this invocation started, and list each recording once.
+
+A recording is skipped when its warning appears in this invocation, whatever the count said.
+
+The reply must say so before anything else, ahead of the count and ahead of the outcome of the run.
+
+For each skipped recording, name its inbox key, its size and the limit, and say that it was not transcribed.
+
+Say that it will be skipped again on every run until it is dealt with.
+
+Do not word this as a footnote or fold it into a sentence about the run finishing.
+
+A run that finished with a skipped recording did not drain the queue, and the reply says that too.
+
+Never answer nothing waiting while a skipped recording exists.
+
+Offer the way forward without taking it:
+
+```sh
+MAX_FILE_SIZE_MB=37 /Users/mtm/pdev/taylormonacelli/valorousverdin/scripts/voice-memos.sh
+```
+
+Set the number above the recording's size in MB, and raise it for that one run only, never in a config or a profile.
+
+The limit applies to every recording in the run, so a larger value also admits any other oversized recording waiting in the inbox.
+
+Run it only after the user has agreed to the new limit.
+
+A recording's duration is not in the log, only its size, so say what is known and do not guess a length.
+
 ## Reporting
 
 The reply says whether the pipeline finished and what it did with the entries, and nothing about what the entries said.
@@ -116,4 +166,6 @@ Report duplicates skipped and existing entries replaced as counts, since those a
 
 Do not restate the run directory path unless something in it needs reading, and do not narrate the stages while they run.
 
-Nothing waiting is a one-line reply, and nothing else.
+Nothing waiting and nothing skipped is a one-line reply, and nothing else.
+
+A skipped recording is never nothing, so the reply then leads with the skipped recording, as described above.
