@@ -5,7 +5,9 @@ description: Solve the shortest walking route from the user's current location t
 
 ## Overview
 
-The stops live in the vault note `/Users/mtm/Documents/Obsidian Vault/apples and plums near us.md`, which is the single source of truth for which trees exist.
+The stops live in the vault folder `/Users/mtm/Documents/Obsidian Vault/apples and plums near us`, one note per tree, which is the single source of truth for which trees exist.
+
+The note `/Users/mtm/Documents/Obsidian Vault/apples and plums near us.md` is the hub that embeds those notes as a base and holds the route write-up, and it is not a stop list.
 
 The route is an open-path travelling salesman problem: start at the user, visit every stop once, and end wherever is shortest.
 
@@ -59,9 +61,9 @@ A first number near -122 means the pair arrived longitude first, so swap it.
 
 ### Tree from the note
 
-Text naming one of the note's `## ` tree headings, such as "I'm at the East Pine tree" or "at the 16th Avenue tree".
+Text naming one of the tree notes in the folder, such as "I'm at the East Pine tree" or "at the 16th Avenue tree".
 
-Use that section's coordinate line, which costs no lookup.
+Use that note's `latitude` and `longitude` properties, which costs no lookup.
 
 This check comes before addresses and cross streets, because a tree heading reads like a street name.
 
@@ -120,15 +122,15 @@ Round every coordinate to 6 decimal places, about 4in of precision, and use that
 
 The step is done when one decimal pair is in hand together with its input type and which part of the user's input it came from.
 
-## Step 2: Read the stops from the note
+## Step 2: Read the stops from the notes
 
-Every `## ` section of the note whose body contains a bare line of the form `<lat>, <lon>` is one stop, named by its heading, and when a section holds more than one such line the first one is the stop.
+Every `.md` file in the folder `/Users/mtm/Documents/Obsidian Vault/apples and plums near us` is one stop, named by its file name without the extension, with its position in the `latitude` and `longitude` front matter properties.
 
-Sections without such a line, such as Contents, Map, Distances and Best route, are not stops.
+Files in the folder without both properties are not stops.
 
-Read the note fresh on every run, because trees get added.
+Read the folder fresh on every run, because trees get added.
 
-The step is done when every stop has a heading and a decimal pair.
+The step is done when every stop has a name and a decimal pair.
 
 OSRM caps a trip at 100 coordinates, so more than 99 stops has to be reported to the user rather than silently truncated.
 
@@ -189,7 +191,7 @@ Give the total time rounded to the nearest minute and written compactly like `1h
 Report in this order, one sentence per paragraph:
 
 - the resolved start, its input type, and which part of the input it came from, with the full street or place name when a cross street or place name was matched
-- the number of stops read from the note
+- the number of stops read from the folder
 - the total distance and time, and the stop the walk ends at
 - any point snapped more than 15m
 - the table of the order
@@ -200,7 +202,7 @@ The legs are rounded one by one, so when they sum to 0.01mi more or less than th
 
 | stop | tree | leg |
 | --- | --- | --- |
-| 1 | <heading> | <miles> |
+| 1 | <note name> | <miles> |
 | total | | <miles> |
 
 Put the map link and the Google Maps link bare on their own lines below the table.
