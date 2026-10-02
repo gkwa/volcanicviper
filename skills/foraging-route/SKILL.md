@@ -5,9 +5,11 @@ description: Solve the shortest walking route from the user's current location t
 
 ## Overview
 
-The stops live in the vault folder `/Users/mtm/Documents/Obsidian Vault/apples and plums near us`, one note per tree, which is the single source of truth for which trees exist.
+The stops live in vault notes, one note per tree, which are the single source of truth for which trees exist.
 
-The note `/Users/mtm/Documents/Obsidian Vault/apples and plums near us.md` is the hub that embeds those notes as a base and holds the route write-up, and it is not a stop list.
+Each tree note sits in the vault root at `/Users/mtm/Documents/Obsidian Vault` and carries `[[apples and plums near us]]` in its `part_of` front matter property.
+
+The note `/Users/mtm/Documents/Obsidian Vault/apples and plums near us.md` is the hub that embeds those notes as a base and holds the route write-up, and it is not a stop.
 
 The route is an open-path travelling salesman problem: start at the user, visit every stop once, and end wherever is shortest.
 
@@ -61,7 +63,7 @@ A first number near -122 means the pair arrived longitude first, so swap it.
 
 ### Tree from the note
 
-Text naming one of the tree notes in the folder, such as "I'm at the East Pine tree" or "at the 16th Avenue tree".
+Text naming one of the tree notes, such as "I'm at the East Pine tree" or "at the 16th Avenue tree".
 
 Use that note's `latitude` and `longitude` properties, which costs no lookup.
 
@@ -124,11 +126,13 @@ The step is done when one decimal pair is in hand together with its input type a
 
 ## Step 2: Read the stops from the notes
 
-Every `.md` file in the folder `/Users/mtm/Documents/Obsidian Vault/apples and plums near us` is one stop, named by its file name without the extension, with its position in the `latitude` and `longitude` front matter properties.
+Every `.md` file in `/Users/mtm/Documents/Obsidian Vault` whose `part_of` front matter property contains `[[apples and plums near us]]` is one stop, named by its file name without the extension, with its position in the `latitude` and `longitude` front matter properties.
 
-Files in the folder without both properties are not stops.
+Find them by listing the files in the vault root that mention `[[apples and plums near us]]` and keeping those with the `part_of` property, which leaves out the hub note itself and any other note that only links to it.
 
-Read the folder fresh on every run, because trees get added.
+Files without both position properties are not stops.
+
+Read the notes fresh on every run, because trees get added.
 
 The step is done when every stop has a name and a decimal pair.
 
@@ -191,7 +195,7 @@ Give the total time rounded to the nearest minute and written compactly like `1h
 Report in this order, one sentence per paragraph:
 
 - the resolved start, its input type, and which part of the input it came from, with the full street or place name when a cross street or place name was matched
-- the number of stops read from the folder
+- the number of stops read from the notes
 - the total distance and time, and the stop the walk ends at
 - any point snapped more than 15m
 - the table of the order
