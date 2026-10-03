@@ -122,6 +122,18 @@ Numbers at 1,000 and above carry a comma, and units are squashed against the num
 
 Print nothing else on success, no preamble and no summary.
 
+## Asking with a provisional line
+
+When the skill must ask a question and the result line can already be computed on the assumed answer, print the line first and the question under it.
+
+Prefix the line with `Provisional:` so it is clear the line is not final until the user answers.
+
+Provisional: Zephyr 2; 6h17m elapsed; 4h49m remaining at 8:44 PM; 1,000mL → 1,705mL; 40% of 70.5% rise; 70.9°F avg
+
+Run anyway? The last probe reading is 7m old.
+
+When the question cannot be answered without the user, such as a missing input, print only the question.
+
 ## Errors
 
 Any error or missing input stops the run.
