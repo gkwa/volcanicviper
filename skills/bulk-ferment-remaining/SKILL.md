@@ -1,6 +1,6 @@
 ---
 name: bulk-ferment-remaining
-description: "Report the time remaining until the expected bulk fermentation finish for a Zephyr bake, as one terse line, by reading the bake log and running chargingcheetah and ferment.py. Use when asked how long is left on bulk, when the bulk will be done, how the bulk ferment is going, or to measure the ferment for a Zephyr key."
+description: "Report the bulk fermentation status of a Zephyr bake as one terse line, by reading the bake log and running chargingcheetah and ferment.py. The line carries elapsed time, time remaining and the expected finish time, the initial and target dough volume, the estimated and target rise, and the average dough temperature. Use when asked about any one of those for a Zephyr key, such as how long is left on bulk, when the bulk will be done, how long it has been, what volume or rise to expect, how far along the rise is, what the dough temperature is, or how the bulk ferment is going."
 ---
 
 ## Bulk ferment remaining
@@ -10,6 +10,8 @@ This skill answers one question: how long until the bulk ferment is expected to 
 It reads the start time and the initial dough volume from the Zephyr bake log, rebuilds the temperature parquet with chargingcheetah, and runs ferment.py.
 
 It prints one line on success and says nothing else.
+
+The line is the same whichever field the user asked about, whether time remaining, expected volume, rise or temperature, so a question about one field is answered by the whole line and never by a reworded subset.
 
 Read the zephyr skill first for the key scheme, the bake log filenames, and the event_time tags.
 
