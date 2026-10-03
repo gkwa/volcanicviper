@@ -33,6 +33,71 @@ Both are read from the bake log, as described below.
 
 If a required input is missing, state exactly which one and ask for it, then continue once the user answers.
 
+## Usage examples
+
+Every example below runs the same skill and prints the same one line, whichever field the question names.
+
+Slash command with the key:
+
+- `/bulk-ferment-remaining 2`
+- `/bulk-ferment-remaining zephyr 2`
+- `/bulk-ferment-remaining Zephyr 3-2`
+- `/bulk-ferment-remaining 2 probe 1`
+- `/bulk-ferment-remaining 2 probes 1 2`
+
+Slash command with no key asks which Zephyr key to use:
+
+- `/bulk-ferment-remaining`
+
+Time remaining and finish time:
+
+- "What's the time left on zephyr 2"
+- "How much time left on zephyr 2"
+- "How long is left on bulk for zephyr 2"
+- "When will zephyr 2 bulk be done"
+- "What time does zephyr 3-2 finish bulk"
+
+Elapsed time:
+
+- "How long has zephyr 2 been in bulk"
+- "How far into bulk is zephyr 2"
+
+Volume:
+
+- "What volume should zephyr 2 reach"
+- "What's the target volume for zephyr 2"
+- "What was the initial volume on zephyr 2"
+
+Rise:
+
+- "How far along is the rise on zephyr 2"
+- "What's the expected rise for zephyr 2"
+- "Has zephyr 2 hit its target rise"
+
+Temperature:
+
+- "What's the dough temperature on zephyr 2"
+- "What's the average temp for zephyr 2 bulk"
+
+General status:
+
+- "How's the bulk ferment going on zephyr 2"
+- "Bulk status for zephyr 2"
+- "Check zephyr 2"
+
+Probe override in a sentence:
+
+- "Time left on zephyr 2 using probe 1"
+- "Time left on zephyr 2 using probes 1 and 2"
+
+Prompts a run can end in:
+
+- A question with no key, such as "How long is left on bulk", asks which Zephyr key.
+- A key more than 3 days from today, such as "zephyr 28", asks whether to run anyway.
+- A last probe reading older than 5 minutes asks whether to run anyway.
+- A log with no bulk start entry, or no measured volume, asks for the missing value.
+- A log with several bulk start entries, or several measured volumes, lists them and asks which.
+
 ## Resolving the key to a bake log
 
 Bake logs are named `bake log M-D-YYYY-N.md` and live in /Users/mtm/Documents/Obsidian Vault.
