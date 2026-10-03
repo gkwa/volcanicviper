@@ -65,7 +65,7 @@ If several entries do, stop, list them with their times, and ask which.
 
 Find the entry in the log that records a measured initial dough volume.
 
-Show the value to the user and ask them to confirm it, even when exactly one entry is found.
+If exactly one entry is found, use its value without asking, because the output line shows the volume and a wrong value is visible there.
 
 If no entry records one, stop and ask the user for the volume in mL.
 
