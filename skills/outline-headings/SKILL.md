@@ -31,8 +31,17 @@ Text outside any section:
 
 - Every line of body text sits under a heading.
 - Text between the front matter and the first heading has no Outline entry, so it gets a heading.
-- Give it a short heading that is contextually correct for what the text is.
-- Use the content to choose the heading: an image plus links to a video and a recipe page become `## Video and recipe`, not `## Source`.
+- Give it a short heading that names the subject or problem of the note, not the genre of the text.
+- A reader scanning the sidebar should learn what the note is about without seeing the filename.
+- Take the subject from the filename and the opening sentences.
+- Avoid a genre word as the whole heading, such as `Question`, `Introduction`, `Overview`, `Summary`, `Background`, or `Notes`, because it fits every note and says nothing.
+- Aim for two to five words, so the heading is specific and still fits on one line.
+- Specificity comes from choosing the right words, not from adding more of them.
+- Check the result: if the heading would suit most notes in the vault, rewrite it.
+- Examples of the swap, generic heading first:
+  - `## Question` becomes `## Unwanted tags on scan`.
+  - `## Source` becomes `## Video and recipe`.
+  - `## Overview` becomes `## Sourdough starter feeding`.
 - If the short heading is too terse to explain the section, add a sentence directly under it.
 - Never add a heading above the front matter.
 
@@ -41,7 +50,7 @@ First section:
 - The first section holds the reason to open the note, such as the motivating question or the abstract.
 - If the note carries an abstract, pitch, or summary of the subject lower down, move it up to become the first section, directly after any section created for text outside any section.
 - Move whole paragraphs only, and keep their wording.
-- Give the moved text a short heading, such as `## Author's pitch`.
+- Give the moved text a short heading that names what it pitches, such as `## Why bake in a Dutch oven`, not `## Pitch`.
 - If a note has no motivating text, do not invent any.
 
 Dated and repeated entries:
