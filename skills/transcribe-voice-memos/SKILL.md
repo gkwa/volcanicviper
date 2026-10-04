@@ -1,8 +1,24 @@
 ---
 name: transcribe-voice-memos
-description: "Run the full valorousverdin voice memo pipeline — transcribe the recordings waiting in the ASR queue, route the Zephyr and Fulcrum entries into the vault, file whatever no router took in the aggregate note, and leave the cleaned transcripts on the clipboard. Use when asked to transcribe voice memos, process or drain the memo queue, run the voice memo pipeline, or check how many memos are waiting."
+description: "Run the full valorousverdin voice memo pipeline — transcribe the recordings waiting in the ASR queue, route the Zephyr and Fulcrum entries into the vault, file whatever no router took in the aggregate note, and leave the cleaned transcripts on the clipboard. Use when asked to transcribe voice memos, process or drain the memo queue, run the voice memo pipeline, or check how many memos are waiting. The short phrases drain memos and run memos also invoke this skill and mean transcribe and then triage."
 allowed-tools: Bash
 ---
+
+## Short phrases
+
+The phrases "drain memos" and "run memos" are each a complete request, so nothing else needs to be said.
+
+Either one means transcribe the queue and then triage what it added, in one go.
+
+Run the pipeline as described below, and when it finishes, invoke the voice-memo-triage skill with a run scope, using the run directory this run created.
+
+Do not ask whether to triage, because the phrase already asked for it.
+
+The phrases "transcribe memos" and "process memos" mean the pipeline only, with no triage.
+
+A question such as "how many memos" is a count only and starts nothing.
+
+If the run's audit has no `leftover` lines, there is nothing to triage, so say so in one line and do not invoke voice-memo-triage.
 
 ## One script runs the whole thing
 
