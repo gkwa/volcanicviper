@@ -1,6 +1,6 @@
 ---
 name: outline-headings
-description: Reformat a vault note so every line sits under a short heading that Obsidian Outline can jump to. Removes any table-of-contents block, adds headings for text outside any section, shortens long headings that nothing links to, nests dated entries, and moves the abstract to the first section. Use when asked to fix the outline of a note, make a note outline-friendly, or remove the TOC from a note.
+description: Reformat a vault note so every line sits under a short heading that Obsidian Outline (the outline sidebar, outline mode) can jump to. Removes any table-of-contents block, adds headings for text outside any section, shortens long headings that nothing links to, nests dated entries, and moves the abstract or motivating question to the first section so it is easy to jump to. Use when given a note and asked to fix its outline, make it outline-friendly or easier to navigate in the sidebar, get it ready for outline mode, remove its TOC, shorten headings that wrap, put everything under a section, or apply the outline policy or outline pass to it.
 ---
 
 ## Outline Headings
