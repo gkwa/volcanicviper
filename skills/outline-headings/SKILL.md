@@ -31,6 +31,11 @@ Text outside any section:
 
 - Every line of body text sits under a heading.
 - Text between the front matter and the first heading has no Outline entry, so it gets a heading.
+- Look for distinct topics in that text before choosing a heading, such as separate links, a note link, and loose scribbles.
+- Give each distinct topic its own heading, in the original order, and do not reorder or merge text to fit a heading.
+- One heading is right only when the text is a single topic.
+- A daily note's opening block is usually several topics, so expect several headings there.
+- When the purpose of an item is unknown, name it by what it is, such as `First secret link`, and do not guess a purpose.
 - Give it a short heading that names the subject or problem of the note, not the genre of the text.
 - A reader scanning the sidebar should learn what the note is about without seeing the filename.
 - Take the subject from the filename and the opening sentences.
