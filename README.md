@@ -53,11 +53,53 @@ Any wording that names starting a project, needing a project name, or creating a
 The phrasings below are examples of what reaches `outline-headings`, each naming a note by its absolute path:
 
 - Run outline-headings on /Users/mtm/Documents/Obsidian Vault/your kitchen lab easy sourdough crepes.md
+- Use the outline-headings skill on this note
+- Outline-headings this note
 - Fix the outline of this note
+- Fix the outline of /Users/mtm/Documents/Obsidian Vault/your kitchen lab easy sourdough crepes.md
+- Clean up the outline for this note
 - Make this note outline-friendly
+- Make this note work with Obsidian Outline
+- Make this note easier to navigate in the outline sidebar
+- Get this note ready for outline mode
+- I rely on Obsidian Outline now, update this note for it
 - Remove the TOC from this note
+- Remove the table of contents from this note
+- Delete the table-of-contents block in this note
+- I don't need the TOC in this note anymore
+- This note still has a TOC, get rid of it
+- Strip the table of contents and fix the headings
 - Shorten the headings in this note
+- The headings in this note wrap in the sidebar, shorten them
+- Make the section headings in this note shorter
+- Tighten up the headings in this note
+- Rename the long headings in this note if nothing links to them
 - Put everything in this note under a section
+- Make sure everything in this note is within a section
+- This note has text above the first heading, give it a section
+- Add a heading for the stuff at the top of this note
+- Find text that is not in any section and give it a heading
+- Give the intro of this note a heading
+- Move the abstract to the top of this note
+- Put the abstract in the first section
+- Make the first section the reason I would read this note
+- Let me jump to the abstract from the outline
+- Let me jump to the motivating question from the outline
+- Nest the dated entries in this note under one heading
+- Put the cook log entries under a single parent heading
+- Group the dated sections in this note under one section
+- Fix the heading levels in this note so the log collapses
+- Reformat this note for the outline
+- Reformat the headings in this note
+- Restructure this note so the outline works
+- Do the outline pass on this note
+- Run the outline pass on every note I name
+- Apply the outline policy to this note
+- Check this note against the outline rules
+- Which headings in this note can be shortened without breaking links
+- Check whether anything links to the headings in this note, then shorten them
+- Do the outline cleanup on the note I have open
+- Do the outline cleanup on the note I just edited
 
 Any wording that names the Outline sidebar, a table of contents to remove, or text sitting outside a section reaches it.
 
