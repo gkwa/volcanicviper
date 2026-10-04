@@ -18,6 +18,7 @@ Skills encode reusable expertise so AI assistants apply consistent standards wit
 - `social-to-imgur` — download a social media post thumbnail (Instagram, Facebook, or any yt-dlp-supported platform) and upload it to Imgur for a permanent URL
 - `islandiguana` — search the Obsidian vault by YAML front matter using islandiguana and yq expressions
 - `justfile` — create a justfile with standard setup/test/teardown rules to orchestrate project tasks
+- `outline-headings` — reformat a vault note so every line sits under a short heading for Obsidian Outline: remove the TOC, head orphan text, move the abstract first, nest dated entries, and shorten long headings nothing links to
 - `pnpm` — use pnpm instead of npm for package management
 - `python-package` — scaffold a new Python package with pyproject.toml, hatchling, ruff, and --version support
 - `research-note` — create a cleaned research note from a rough question with an answer and search links
@@ -48,6 +49,17 @@ The phrasings below are examples of what reaches `distinctdeer`, not a list the 
 - Make a new repo under the project root
 
 Any wording that names starting a project, needing a project name, or creating a project directory reaches it.
+
+The phrasings below are examples of what reaches `outline-headings`, each naming a note by its absolute path:
+
+- Run outline-headings on /Users/mtm/Documents/Obsidian Vault/your kitchen lab easy sourdough crepes.md
+- Fix the outline of this note
+- Make this note outline-friendly
+- Remove the TOC from this note
+- Shorten the headings in this note
+- Put everything in this note under a section
+
+Any wording that names the Outline sidebar, a table of contents to remove, or text sitting outside a section reaches it.
 
 ## Install from GitHub
 
