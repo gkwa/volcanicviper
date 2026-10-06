@@ -158,6 +158,56 @@ For probes `1 2`, pass `--probe 1 2` to the first command.
 
 The JSON carries `elapsed_minutes`, `estimated_rise_pct`, `target_rise_pct`, `avg_temp_f`, `last_temp_age_minutes`, and under `meta`, `reference_duration_minutes`, `reference_offset_minutes`, and `reference_offset_direction`.
 
+## Run history
+
+Every successful run appends one line to a JSONL file, so repeated runs on the same bake can be compared.
+
+The directory comes from the environment variable `BULK_FERMENT_HISTORY_DIR`, defaulting to `/Users/mtm/Library/Logs/bulk-ferment`.
+
+Read the variable in its own Bash call with `printenv BULK_FERMENT_HISTORY_DIR`, and use the default when it prints nothing.
+
+The file is `zephyr-KEY.jsonl` in that directory, where KEY is the Zephyr key, such as `zephyr-5.jsonl` or `zephyr-3-2.jsonl`.
+
+Create the directory with `mkdir --parents` before the first write.
+
+Append with a single `printf '%s\n' 'LINE' >> FILE` call, with the absolute path to the file.
+
+The line is one compact JSON object with these keys:
+
+- `run_at`, the local time of the run as `YYYY-MM-DDTHH:MM:SS`
+- `zephyr`, the key as given
+- `start`, the bulk start as START
+- `initial_volume_ml`, the confirmed initial volume
+- everything the `ferment.py` JSON returned, copied verbatim
+
+The history is written silently, and nothing about it is printed on success.
+
+Do not append when the run stopped on an error, a missing input, or a declined stale-reading prompt.
+
+Do append a run the user approved with "run anyway".
+
+Nothing prunes the directory, and at roughly 300 bytes a run it stays small.
+
+### Showing the history
+
+Print the history table only when the user asks for it, such as "show the history", "table of runs", "how has the estimate changed", or "is it linear".
+
+Print the normal line first, then the table under it.
+
+Read the file for that key, keep the runs with the same `start`, and print one row per run in run order.
+
+Columns, in order: run time, remaining, elapsed, rise, temperature, and the pace since the previous row.
+
+The pace is the drop in `reference_offset_minutes` divided by the wall-clock minutes between the two `run_at` values, such as 0.97.
+
+A pace near 1.00 means the remaining estimate is shrinking in step with real time, above it means the dough is running warm and the finish is being pulled in, and below it means the dough is running cool.
+
+The first row has no pace and leaves that cell blank.
+
+The table ends with a total row, plain text, leaving a cell blank when a column has no meaningful sum.
+
+If the file has no earlier run for this start, say so in one line instead of printing a one-row table.
+
 ## Stale readings
 
 If `last_temp_age_minutes` is more than 5, ask whether to run anyway and state the age, such as "The last probe reading is 7m old. Run anyway?"
@@ -198,7 +248,7 @@ Put the day name before the target clock time only when the target falls on a di
 
 Numbers at 1,000 and above carry a comma, and units are squashed against the number, as in 1,711mL and 71°F.
 
-Print nothing else on success, no preamble and no summary.
+Print nothing else on success, no preamble and no summary, except the history table when the user asks for it, as described under Run history.
 
 ## Asking with a provisional line
 
