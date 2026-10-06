@@ -41,20 +41,24 @@ Docker cannot mount /Users/mtm/Downloads, so render into the scratch directory a
 
 ## Collect the frames
 
-List the recent photos with fd, writing to a file in the scratch directory.
+List the photos from the feed time onward, writing to a file in the scratch directory.
 
 ```sh
-fd . /Users/mtm/dcim2 --changed-after "FEED_SPACED" --type file --extension jpg --absolute-path --exclude .thumbnails --exclude .stversions --exclude .dtrash > SCRATCH/fd-list.txt
+uv run --no-active --script /Users/mtm/pdev/taylormonacelli/volcanicviper/skills/starter-peak-from-photos/list_frames.py --start FEED > SCRATCH/frames-list.txt
 ```
 
-FEED_SPACED is the feed time as `YYYY-MM-DD HH:MM:SS`, because fd rejects the `T` form.
+FEED is the feed time as `YYYY-MM-DDTHH:MM:SS`.
 
-The search window comes from the feed time, never from a fixed number of days, so a feed of any age is found.
+The script reads the time from each filename, never from file dates and never from a fixed number of days, so a feed of any age is found.
+
+It accepts `--end` with the same format, to stop at a later time such as when the starter was used, and `--frame-dir` to read another folder.
+
+It prints nothing when no photo falls in the window.
 
 Generate the ffmpeg script and manifest with the wackywolffish tool, using the feed time as the start.
 
 ```sh
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/wackywolffish /Users/mtm/pdev/taylormonacelli/wackywolffish/gen_ffmpeg_script.py SCRATCH/fd-list.txt --sort-by timestamp --start FEED --script-output SCRATCH/run_ffmpeg.sh
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/wackywolffish /Users/mtm/pdev/taylormonacelli/wackywolffish/gen_ffmpeg_script.py SCRATCH/frames-list.txt --sort-by timestamp --start FEED --script-output SCRATCH/run_ffmpeg.sh
 ```
 
 FEED is the feed time as `YYYY-MM-DDTHH:MM:SS`.
