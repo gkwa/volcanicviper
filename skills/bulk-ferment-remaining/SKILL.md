@@ -166,17 +166,17 @@ At 5 or under, continue without asking.
 
 ## Output
 
-On success print exactly one plain line, with no code fence so it wraps, and fields separated by a semicolon and a space.
+On success print exactly one plain line, with no code fence so it wraps, and the Zephyr key followed by a colon, because the fields describe the state of that bake. The fields after the colon are separated by a semicolon and a space.
 
 ```
-Zephyr 2; 5h04m elapsed; 6h09m remaining at 8:51 PM; 1,000mL → 1,711mL; 32% of 72% rise; 71°F avg
+Zephyr 2: 6h09m remaining at 8:51 PM; 5h04m elapsed; 1,000mL → 1,711mL; 32% of 72% rise; 71°F avg
 ```
 
 The fields, in order:
 
-- the Zephyr key as given
-- `elapsed_minutes` as a span, such as 5h04m, or 42m under an hour
+- the Zephyr key as given, followed by a colon
 - `reference_offset_minutes` as the remaining span, then the target clock time, which is the start plus `reference_duration_minutes`
+- `elapsed_minutes` as a span, such as 5h04m, or 42m under an hour
 - the confirmed initial volume, an arrow, and the target volume, which is `(1 + target_rise_pct / 100)` times the initial volume rounded to whole mL
 - `estimated_rise_pct` of `target_rise_pct`, each rounded up to a whole percent, followed by the word rise
 - `avg_temp_f` rounded up to a whole degree, followed by avg
@@ -206,7 +206,7 @@ When the skill must ask a question and the result line can already be computed o
 
 Prefix the line with `Provisional:` so it is clear the line is not final until the user answers.
 
-Provisional: Zephyr 2; 6h17m elapsed; 4h49m remaining at 8:44 PM; 1,000mL → 1,705mL; 40% of 71% rise; 71°F avg
+Provisional: Zephyr 2: 4h49m remaining at 8:44 PM; 6h17m elapsed; 1,000mL → 1,705mL; 40% of 71% rise; 71°F avg
 
 Run anyway? The last probe reading is 7m old.
 
