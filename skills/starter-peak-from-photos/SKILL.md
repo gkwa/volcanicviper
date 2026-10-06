@@ -44,8 +44,12 @@ Docker cannot mount /Users/mtm/Downloads, so render into the scratch directory a
 List the recent photos with fd, writing to a file in the scratch directory.
 
 ```sh
-fd . /Users/mtm/dcim2 --changed-within 2d --type file --extension jpg --absolute-path --exclude .thumbnails --exclude .stversions --exclude .dtrash > SCRATCH/fd-list.txt
+fd . /Users/mtm/dcim2 --changed-after "FEED_SPACED" --type file --extension jpg --absolute-path --exclude .thumbnails --exclude .stversions --exclude .dtrash > SCRATCH/fd-list.txt
 ```
+
+FEED_SPACED is the feed time as `YYYY-MM-DD HH:MM:SS`, because fd rejects the `T` form.
+
+The search window comes from the feed time, never from a fixed number of days, so a feed of any age is found.
 
 Generate the ffmpeg script and manifest with the wackywolffish tool, using the feed time as the start.
 
