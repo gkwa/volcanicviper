@@ -169,7 +169,7 @@ At 5 or under, continue without asking.
 On success print exactly one plain line, with no code fence so it wraps, and fields separated by a semicolon and a space.
 
 ```
-Zephyr 2; 5h04m elapsed; 6h09m remaining at 8:51 PM; 1,000mL → 1,711mL; 32% of 71.1% rise; 70.8°F avg
+Zephyr 2; 5h04m elapsed; 6h09m remaining at 8:51 PM; 1,000mL → 1,711mL; 32% of 72% rise; 71°F avg
 ```
 
 The fields, in order:
@@ -178,14 +178,25 @@ The fields, in order:
 - `elapsed_minutes` as a span, such as 5h04m, or 42m under an hour
 - `reference_offset_minutes` as the remaining span, then the target clock time, which is the start plus `reference_duration_minutes`
 - the confirmed initial volume, an arrow, and the target volume, which is `(1 + target_rise_pct / 100)` times the initial volume rounded to whole mL
-- `estimated_rise_pct` of `target_rise_pct`, followed by the word rise
-- `avg_temp_f` followed by avg
+- `estimated_rise_pct` of `target_rise_pct`, each rounded up to a whole percent, followed by the word rise
+- `avg_temp_f` rounded up to a whole degree, followed by avg
+
+Round the rise percentages and the temperature up with the ceiling function, and never show a decimal for them.
+
+```
+⌈67.2%⌉ = 68%
+⌈71.6°F⌉ = 72°F
+```
+
+The rounding is for display only.
+
+Compute the target volume from the unrounded `target_rise_pct`, not from the rounded figure shown in the line.
 
 Clock times are 12-hour with AM or PM.
 
 Put the day name before the target clock time only when the target falls on a different day than today.
 
-Numbers at 1,000 and above carry a comma, and units are squashed against the number, as in 1,711mL and 70.8°F.
+Numbers at 1,000 and above carry a comma, and units are squashed against the number, as in 1,711mL and 71°F.
 
 Print nothing else on success, no preamble and no summary.
 
@@ -195,7 +206,7 @@ When the skill must ask a question and the result line can already be computed o
 
 Prefix the line with `Provisional:` so it is clear the line is not final until the user answers.
 
-Provisional: Zephyr 2; 6h17m elapsed; 4h49m remaining at 8:44 PM; 1,000mL → 1,705mL; 40% of 70.5% rise; 70.9°F avg
+Provisional: Zephyr 2; 6h17m elapsed; 4h49m remaining at 8:44 PM; 1,000mL → 1,705mL; 40% of 71% rise; 71°F avg
 
 Run anyway? The last probe reading is 7m old.
 
