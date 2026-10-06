@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/starter-peak-from-photos",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Estimate when a sourdough starter peaked from the time-lapse photos in dcim2, measured from the feed time in the Zephyr bake log, and report the peak time, the duration from the feed, the plateau and how long ago it was. Trigger terms: starter peak, detect peak from images, when did the starter peak, starter peak from photos, time-lapse peak.",
+  "skills": {
+    "starter-peak-from-photos": {
+      "path": "SKILL.md"
+    }
+  }
+}
