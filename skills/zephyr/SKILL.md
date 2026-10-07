@@ -114,6 +114,28 @@ The event timestamp is the time mentioned inside the body text — this is the a
 
 Always use the event timestamp, not the header timestamp, when extracting bake events.
 
+## Transcription Errors
+
+Entries come from speech-to-text, so a word is sometimes wrong in a way the surrounding text makes plain.
+
+Fix a word only when the context settles it, and leave it as dictated when it does not.
+
+The evidence must be in the same bake log, such as its steps, its other entries, or the measurement the entry reports.
+
+Example: "the initial dial volume is 1100mL" becomes "the initial dough volume is 1100mL", because the log's own steps say to record the initial dough volume, a volume reading has no use for a dial, and no other word fits.
+
+If settling it would take a guess, it is not settled.
+
+Never correct a number, a unit, a time, or a negation, because a wrong guess changes the record, so flag those instead.
+
+Report every change in one line naming the entry heading, the old word and the new word, after the run's own output, so a wrong guess is visible.
+
+Say nothing when no word was changed.
+
+When a word looks wrong but the context does not settle it, leave it, and add it to the questions asked together at the end of the run rather than asking mid-run.
+
+Correct only the entries the run already reads or writes, and never sweep a bake log looking for mistakes.
+
 ## Entry Heading Level
 
 Inside a bake log, entries are H3 headings nested under the `## bake log` section.
