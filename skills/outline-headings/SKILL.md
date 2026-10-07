@@ -1,6 +1,6 @@
 ---
 name: outline-headings
-description: Reformat a vault note so every line sits under a short heading that Obsidian Outline (the outline sidebar, outline mode) can jump to. Removes any table-of-contents block, adds headings for text outside any section, shortens long headings that nothing links to, nests dated entries, and moves the abstract or motivating question to the first section so it is easy to jump to. Use when given a note and asked to fix its outline, make it outline-friendly or easier to navigate in the sidebar, get it ready for outline mode, remove its TOC, shorten headings that wrap, put everything under a section, or apply the outline policy or outline pass to it.
+description: Reformat a vault note so every line sits under a short heading that Obsidian Outline (the outline sidebar, outline mode) can jump to. Removes any table-of-contents block, adds headings for text outside any section, shortens long headings and rewrites the links that point at them, nests dated entries, and moves the abstract or motivating question to the first section so it is easy to jump to. Use when given a note and asked to fix its outline, make it outline-friendly or easier to navigate in the sidebar, get it ready for outline mode, remove its TOC, shorten headings that wrap, put everything under a section, or apply the outline policy or outline pass to it.
 ---
 
 ## Outline Headings
@@ -66,28 +66,34 @@ Dated and repeated entries:
 
 Shortening existing headings:
 
-- Shorten a heading that would wrap in a narrow sidebar, but only after checking for links to it, as described below.
+- Shorten a heading that would wrap in a narrow sidebar, and rewrite every link to it, as described below.
 - A question used as a heading becomes a short heading, with the original question as the sentence beneath.
 - A qualifier like `(152g starter instance)` moves under the heading only when the shortened heading is still unique among its siblings.
 - If the shortened heading would match a sibling, keep the qualifier in the heading, abbreviated, for example `Ingredients 152g`.
 - Put the moved qualifier in a plain sentence directly under the heading.
 
-## Checking for links before renaming a heading
+## Rewriting links when renaming a heading
 
-Renaming a heading breaks any link that points at it.
+Renaming a heading breaks any link that points at it, so every link is rewritten to the new heading text in the same step.
 
 Before renaming any existing heading, search the whole vault at /Users/mtm/Documents/Obsidian Vault for references to it.
 
-If any reference exists, leave the heading exactly as it is.
+Rename the heading, then rewrite every reference found so it carries the new text.
 
-If none exists, shorten it.
+A heading nothing links to is simply renamed.
 
-Every kind of reference blocks a rename:
+Every kind of reference is rewritten:
 
 - wikilinks from other notes, such as `[[note#Heading]]`
 - links within the same note, such as `[[#Heading]]`
 - embeds, such as `![[note#Heading]]`
-- markdown-style links, such as `[text](note.md#Heading%20with%20spaces)`
+- markdown-style links, such as `[text](note.md#Heading%20with%20spaces)`, where spaces in the new text are written as `%20`
+
+Keep any alias after the pipe unchanged, so `[[note#Old|shown text]]` becomes `[[note#New|shown text]]`.
+
+Rewrite only links that point at the renamed note, because another note may have a heading with the same text.
+
+For a link in another note, the part before `#` must name the renamed note.
 
 Search once for all of them with a single `rg` invocation per heading, case-insensitive and fixed-string.
 
@@ -95,7 +101,11 @@ Search for `#` followed by the heading text, and again for the same text with sp
 
 Obsidian matches heading links case-insensitively, so the search must be case-insensitive too.
 
-A nested reference such as `[[note#Parent#Child]]` still contains `#Child`, so it is caught.
+A nested reference such as `[[note#Parent#Child]]` still contains `#Child`, so it is caught, and only the renamed segment changes.
+
+When two headings in one note share the same text, a link cannot tell them apart, so give them distinct new text and point the link at the first.
+
+Every note edited to fix a link is committed on its own with `git commit -- <path>`.
 
 Headings are matched on their text, not their level, so demoting a heading to nest it does not break links.
 
@@ -109,9 +119,9 @@ Adding a new heading breaks nothing.
 4. Add short headings for text outside any section.
 5. Move the abstract to the first section.
 6. Nest dated and repeated entries under one parent heading.
-7. For each long existing heading, run the link search, then shorten it only if no reference exists.
-8. Re-read the note and confirm that no body text sits above the first heading and that no heading change broke a link.
-9. Commit only that note with `git commit -- <path>`, because background processes also commit to the vault.
+7. For each long existing heading, run the link search, shorten the heading, and rewrite every reference found.
+8. Re-read the note and confirm that no body text sits above the first heading and that no link still points at an old heading text.
+9. Commit that note, and each other note whose links were rewritten, with `git commit -- <path>`, because background processes also commit to the vault.
 
 ## Note conventions that still apply
 
@@ -123,4 +133,4 @@ Each sentence is its own paragraph.
 
 Do not reformat anything else in the note.
 
-If a heading blocks a rename because of a link, report that heading in the final summary so the user can decide.
+In the final summary, list each note whose links were rewritten in addition to the note itself.
