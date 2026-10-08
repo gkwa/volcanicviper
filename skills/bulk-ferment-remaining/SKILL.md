@@ -188,6 +188,24 @@ Do append a run the user approved with "run anyway".
 
 Nothing prunes the directory, and at roughly 300 bytes a run it stays small.
 
+### Drift in the total
+
+The expected total shifts from run to run as the average dough temperature changes, and the output line reports how far it has moved since the first call on that bake.
+
+Read the history file for the key before appending the current run, so the current run is never its own baseline.
+
+Take the earliest line whose `start` equals the current START, and call its `reference_duration_minutes` the first total.
+
+The drift is the current `reference_duration_minutes` minus the first total.
+
+Write it as a span in the same form as the elapsed span, followed by `shorter` when negative and `longer` when positive, then `than at` and the 12-hour clock time of that earliest line's `run_at`.
+
+Put the day name before that clock time only when the first run was on a different day than today.
+
+When the drift is zero, write `same as at` followed by that clock time.
+
+When no earlier line has the current START, leave the drift out, because this run is the first call.
+
 ### Showing the history
 
 Print the history table only when the user asks for it, such as "show the history", "table of runs", "how has the estimate changed", or "is it linear".
@@ -219,7 +237,7 @@ At 5 or under, continue without asking.
 On success print exactly one plain line, with no code fence so it wraps, and the Zephyr key followed by a colon, because the fields describe the state of that bake. The fields after the colon are separated by a semicolon and a space.
 
 ```
-Zephyr 2: 6h09m remaining at 8:51 PM; 5h04m elapsed; 11h13m total; 1,000mL → 1,711mL; 32% of 72% rise; 71°F avg
+Zephyr 2: 6h09m remaining at 8:51 PM; 5h04m elapsed; 11h13m total, 40m shorter than at 1:31 PM; 1,000mL → 1,711mL; 32% of 72% rise; 71°F avg
 ```
 
 The fields, in order:
@@ -227,7 +245,7 @@ The fields, in order:
 - the Zephyr key as given, followed by a colon
 - `reference_offset_minutes` as the remaining span, then the target clock time, which is the start plus `reference_duration_minutes`
 - `elapsed_minutes` as a span, such as 5h04m, or 42m under an hour
-- `reference_duration_minutes` as the expected total span, in the same form as the elapsed span, followed by the word total
+- `reference_duration_minutes` as the expected total span, in the same form as the elapsed span, followed by the word total, then a comma and the drift from Drift in the total when there is one
 - the confirmed initial volume, an arrow, and the target volume, which is `(1 + target_rise_pct / 100)` times the initial volume rounded to whole mL
 - `estimated_rise_pct` of `target_rise_pct`, each rounded up to a whole percent, followed by the word rise
 - `avg_temp_f` rounded up to a whole degree, followed by avg
