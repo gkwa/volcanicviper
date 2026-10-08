@@ -1,6 +1,6 @@
 ---
 name: bulk-ferment-remaining
-description: "Report the bulk fermentation status of a Zephyr bake as one terse line, by reading the bake log and running chargingcheetah and ferment.py. The line carries elapsed time, time remaining and the expected finish time, the initial and target dough volume, the estimated and target rise, and the average dough temperature. Use when asked about any one of those for a Zephyr key, such as how long is left on bulk, when the bulk will be done, how long it has been, what volume or rise to expect, how far along the rise is, what the dough temperature is, or how the bulk ferment is going."
+description: "Report the bulk fermentation status of a Zephyr bake as one terse line, by reading the bake log and running chargingcheetah and ferment.py. The line carries elapsed time, expected total time, time remaining and the expected finish time, the initial and target dough volume, the estimated and target rise, and the average dough temperature. Use when asked about any one of those for a Zephyr key, such as how long is left on bulk, when the bulk will be done, how long it has been, what volume or rise to expect, how far along the rise is, what the dough temperature is, or how the bulk ferment is going."
 ---
 
 ## Bulk ferment remaining
@@ -219,7 +219,7 @@ At 5 or under, continue without asking.
 On success print exactly one plain line, with no code fence so it wraps, and the Zephyr key followed by a colon, because the fields describe the state of that bake. The fields after the colon are separated by a semicolon and a space.
 
 ```
-Zephyr 2: 6h09m remaining at 8:51 PM; 5h04m elapsed; 1,000mL → 1,711mL; 32% of 72% rise; 71°F avg
+Zephyr 2: 6h09m remaining at 8:51 PM; 5h04m elapsed; 11h13m total; 1,000mL → 1,711mL; 32% of 72% rise; 71°F avg
 ```
 
 The fields, in order:
@@ -227,6 +227,7 @@ The fields, in order:
 - the Zephyr key as given, followed by a colon
 - `reference_offset_minutes` as the remaining span, then the target clock time, which is the start plus `reference_duration_minutes`
 - `elapsed_minutes` as a span, such as 5h04m, or 42m under an hour
+- `reference_duration_minutes` as the expected total span, in the same form as the elapsed span, followed by the word total
 - the confirmed initial volume, an arrow, and the target volume, which is `(1 + target_rise_pct / 100)` times the initial volume rounded to whole mL
 - `estimated_rise_pct` of `target_rise_pct`, each rounded up to a whole percent, followed by the word rise
 - `avg_temp_f` rounded up to a whole degree, followed by avg
@@ -256,7 +257,7 @@ When the skill must ask a question and the result line can already be computed o
 
 Prefix the line with `Provisional:` so it is clear the line is not final until the user answers.
 
-Provisional: Zephyr 2: 4h49m remaining at 8:44 PM; 6h17m elapsed; 1,000mL → 1,705mL; 40% of 71% rise; 71°F avg
+Provisional: Zephyr 2: 4h49m remaining at 8:44 PM; 6h17m elapsed; 11h06m total; 1,000mL → 1,705mL; 40% of 71% rise; 71°F avg
 
 Run anyway? The last probe reading is 7m old.
 
