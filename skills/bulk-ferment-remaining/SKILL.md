@@ -198,11 +198,11 @@ Take the earliest line whose `start` equals the current START, and call its `ref
 
 The drift is the current `reference_duration_minutes` minus the first total.
 
-Write it as a span in the same form as the elapsed span, followed by `shorter` when negative and `longer` when positive, then `than at` and the 12-hour clock time of that earliest line's `run_at`.
+Write it as a span in the same form as the elapsed span, followed by `shorter` when negative and `longer` when positive, then `than the first estimate which was at` and the 12-hour clock time of that earliest line's `run_at`.
 
 Put the day name before that clock time only when the first run was on a different day than today.
 
-When the drift is zero, write `same as at` followed by that clock time.
+When the drift is zero, write `same as the first estimate which was at` followed by that clock time.
 
 When no earlier line has the current START, leave the drift out, because this run is the first call.
 
@@ -237,7 +237,7 @@ At 5 or under, continue without asking.
 On success print exactly one plain line, with no code fence so it wraps, and the Zephyr key followed by a colon, because the fields describe the state of that bake. The fields after the colon are separated by a semicolon and a space.
 
 ```
-Zephyr 2: 6h09m remaining at 8:51 PM; 5h04m elapsed; 11h13m total, 40m shorter than at 1:31 PM; 1,000mL → 1,711mL; 32% of 72% rise; 71°F avg
+Zephyr 2: 6h09m remaining at 8:51 PM; 5h04m elapsed; 11h13m total, 40m shorter than the first estimate which was at 1:31 PM; 1,000mL → 1,711mL; 32% of 72% rise; 71°F avg
 ```
 
 The fields, in order:
