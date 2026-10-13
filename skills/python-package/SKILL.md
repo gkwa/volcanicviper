@@ -47,6 +47,24 @@ extend-select = ["I"]
 extend-safe-fixes = ["F401", "F841"]
 ```
 
+## Lint and Format
+
+Run both ruff checks before the first commit and again after every later edit to a Python file.
+
+`ruff check` and `ruff format` are separate tools, and a project can pass one while failing the other.
+
+```
+uv tool run ruff check /absolute/path/to/<package>
+```
+
+```
+uv tool run ruff format /absolute/path/to/<package>
+```
+
+Confirm with `uv tool run ruff format --check /absolute/path/to/<package>`, which exits 1 when any file would change.
+
+Run each as its own Bash call.
+
 ## Show Version
 
 Support `--version` using `importlib.metadata` so the version is not duplicated:
