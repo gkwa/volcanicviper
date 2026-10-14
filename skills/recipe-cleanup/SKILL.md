@@ -150,6 +150,8 @@ cook until edges begin to set
 8. For URL mode: display the formatted recipe in the chat, then immediately write it to a file without asking — derive the filename from the recipe title using spaces (not hyphens) with a `.md` extension; when the creator is known, prefix the filename with the creator name to avoid collisions between recipes with the same dish name (e.g., `Fast Easy Recipes crepes.md`); save to the same directory as other recipe files in the vault
 9. After writing the file, check whether the creator's page exists in the same directory — if not, create a stub page named `<page name>.md` containing just `# <page name>` (using the resolved page name from the frontmatter rules above)
 10. After writing the file, resolve unresolved ingredient wikilinks by delegating to the `resolve-recipe-ingredient-link` skill — see the "Resolving ingredient wikilinks" formatting rule above
+11. Invoke the `outline-headings` skill on the written note — it is required, not optional, because the source URL, servings, caption and hero image otherwise sit above the first heading with no Outline entry
+12. Confirm the note has a non-empty `pic` frontmatter value and that the same image is embedded directly under the first heading — a recipe note without a hero image is incomplete
 
 ## Creator Namespace
 
