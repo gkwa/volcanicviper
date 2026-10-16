@@ -163,10 +163,18 @@ The ffmpeg on this machine is a Docker shim, so Docker Desktop must be running.
 Upload the cleaned file to Litterbox with a 72 hour expiry as the `upload` step, and then check the headers.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step upload -- curl --silent --show-error --max-time 600 --form reqtype=fileupload --form time=72h --form fileToUpload=@<run dir>/episode.clean.mp3 https://litterbox.catbox.moe/resources/internals/api.php
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step upload -- curl --silent --show-error --fail --max-time 600 --form reqtype=fileupload --form time=72h --form fileToUpload=@<run dir>/episode.clean.mp3 https://litterbox.catbox.moe/resources/internals/api.php
 ```
 
 The upload URL is printed by curl, so read it from the command output.
+
+The fail flag matters, because without it a 500 error page is saved as the result and the exit code is still zero.
+
+If the upload fails, retry once under the step name `upload retry`.
+
+If it fails again, stop and report that the host is erroring, give the path of the cleaned file, and let the user choose another host.
+
+Never switch to a different public host without asking.
 
 ```
 curl --silent --head --location https://litter.catbox.moe/<id>.mp3
