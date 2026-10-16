@@ -25,6 +25,26 @@ Each run gets its own directory under the project, named by show slug and episod
 
 Create it with mkdir, and never write into a directory that already holds another run.
 
+## Timing every step
+
+Every step is timed, because transcription time varies a lot with machine load and the durations are worth keeping.
+
+The recorder is /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py, and it appends to `timings.tsv` in the run directory.
+
+Wrap a command in the run subcommand, which records wall seconds and CPU seconds and passes the exit code through.
+
+```
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step <step name> -- <command>
+```
+
+For a step that is your own reading and not a command, bracket it with the begin and end subcommands using the same `--log` and `--step` flags.
+
+Use these step names so runs compare: `feed`, `episode`, `download`, `transcribe`, `find ads`, `place edges`, `cut`, `upload`.
+
+The `find ads` step covers reading the transcript and `place edges` covers the word-level windows.
+
+Begin the `feed` step before the iTunes lookup and end `episode` after the episode is chosen, so the lookup time is counted too.
+
 ## Step 1: Find the feed
 
 Look the show up with the iTunes search API.
@@ -57,7 +77,7 @@ Show the user the chosen title, date, and duration in one line before continuing
 
 ## Step 3: Download
 
-Download the item enclosure with curl and the location flag, because the URL often goes through tracking redirects.
+Download the item enclosure with curl and the location flag, because the URL often goes through tracking redirects, and wrap it as the `download` step.
 
 Compare the downloaded size with the enclosure `length` attribute when the feed provides one, and confirm with `file` that the result is audio and not an error page.
 
@@ -65,11 +85,13 @@ Stop on a mismatch.
 
 ## Step 4: Transcribe
 
-Run the transcription in the background, because it takes a while on this machine.
+Run the transcription in the background as the `transcribe` step, because it takes a while on this machine.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/transcribe.py <run dir>/episode.mp3 <run dir>/transcript.json
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step transcribe -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/transcribe.py <run dir>/episode.mp3 <run dir>/transcript.json
 ```
+
+Compare the recorded wall time with the episode duration and report the ratio, such as 2.2x faster than real time or 1.3x slower than real time.
 
 The defaults are the small.en model with greedy decoding, which is about twice as fast as beam search for 98.8% text similarity.
 
@@ -126,10 +148,10 @@ Place the cut start just after the last content word, and the cut end before the
 
 ## Step 7: Cut
 
-Pass each verified block as a `--range START:END` flag, where END can be `end` for a post-roll.
+Pass each verified block as a `--range START:END` flag, where END can be `end` for a post-roll, and wrap it as the `cut` step.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/remove_ads.py <run dir>/transcript.json --audio <run dir>/episode.mp3 --output <run dir>/episode.clean.mp3 --range 35.2:76.3 --range 752.2:923.4
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step cut -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/remove_ads.py <run dir>/transcript.json --audio <run dir>/episode.mp3 --output <run dir>/episode.clean.mp3 --range 35.2:76.3 --range 752.2:923.4
 ```
 
 Then probe both durations with ffprobe and confirm the difference equals the total of the ranges.
@@ -138,11 +160,13 @@ The ffmpeg on this machine is a Docker shim, so Docker Desktop must be running.
 
 ## Step 8: Post
 
-Upload the cleaned file to Litterbox with a 72 hour expiry, and then check the headers.
+Upload the cleaned file to Litterbox with a 72 hour expiry as the `upload` step, and then check the headers.
 
 ```
-curl --silent --show-error --max-time 600 --form reqtype=fileupload --form time=72h --form fileToUpload=@<run dir>/episode.clean.mp3 https://litterbox.catbox.moe/resources/internals/api.php
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step upload -- curl --silent --show-error --max-time 600 --form reqtype=fileupload --form time=72h --form fileToUpload=@<run dir>/episode.clean.mp3 https://litterbox.catbox.moe/resources/internals/api.php
 ```
+
+The upload URL is printed by curl, so read it from the command output.
 
 ```
 curl --silent --head --location https://litter.catbox.moe/<id>.mp3
@@ -163,6 +187,7 @@ Then report:
 - The episode title and publication date
 - Duration before and after, and the total removed
 - Each cut range as clock times
+- The output of the report subcommand, which lists every step with wall and CPU time, and the real-time ratio for transcription
 - That the cut points were not listened to, and which joins are worth checking
 
 To listen in Voice, tell the user to open the link in Chrome, download it, move it into the Audiobooks folder with the Files app, and open that folder in Voice.
