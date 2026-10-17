@@ -1,6 +1,6 @@
 ---
 name: podcast-ad-removal
-description: Download a podcast episode, transcribe it, find the sponsor and ad blocks by reading the transcript, cut them out, and post the ad-free MP3 to a temporary host for playback in the Voice app. Takes the podcast name, and the most recent episode unless the user names a particular one. Use when asked to remove ads from a podcast, clean today's episode of a show, pre-download a podcast without ads, or run the ad cleaning for a named show.
+description: Download a podcast episode, transcribe it, find the sponsor and ad blocks by reading the transcript, cut them out, and push the ad-free MP3 to the Pixel's Audiobooks folder over adb for playback in the Voice app. Takes the podcast name, and the most recent episode unless the user names a particular one. Use when asked to remove ads from a podcast, clean today's episode of a show, pre-download a podcast without ads, or run the ad cleaning for a named show.
 ---
 
 ## Podcast Ad Removal
@@ -19,9 +19,11 @@ Carry outputs forward and do not prompt the user between steps unless a step fai
 
 The project is steamysquirrel at /Users/mtm/pdev/taylormonacelli/steamysquirrel
 
-It holds `transcribe.py` and `remove_ads.py`, and a uv environment with faster-whisper installed.
+It holds `transcribe.py`, `remove_ads.py`, `words.py` and `steptime.py`, and a uv environment with faster-whisper installed.
 
 Each run gets its own directory under the project, named by show slug and episode date, such as /Users/mtm/pdev/taylormonacelli/steamysquirrel/aidailybrief-2026-10-15
+
+The date is the episode publication date, which is not always today.
 
 Create it with mkdir, and never write into a directory that already holds another run.
 
@@ -39,11 +41,15 @@ uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel pyth
 
 For a step that is your own reading and not a command, bracket it with the begin and end subcommands using the same `--log` and `--step` flags.
 
-Use these step names so runs compare: `feed`, `episode`, `download`, `transcribe`, `find ads`, `place edges`, `cut`, `upload`.
+Use these step names so runs compare: `feed`, `episode`, `download`, `transcribe`, `find ads`, `place edges`, `cut`, `push`.
 
 The `find ads` step covers reading the transcript and `place edges` covers the word-level windows.
 
-Begin the `feed` step before the iTunes lookup and end `episode` after the episode is chosen, so the lookup time is counted too.
+The run directory needs the episode date, so the first lookup happens before the directory exists.
+
+Do the iTunes search and a scratch download of the feed into $CLAUDE_JOB_DIR/tmp, read the date from it, create the run directory, and then record `feed` by downloading the feed again into the run directory under the run subcommand.
+
+The `episode` step is then skipped, because the choice was already made during the lookup, and the report says so.
 
 ## Step 1: Find the feed
 
@@ -56,6 +62,8 @@ curl --silent "https://itunes.apple.com/search?term=<url encoded name>&entity=po
 Pick the result whose `collectionName` and `artistName` match the requested show.
 
 Several unrelated shows often share a similar name, so check the artist and the genre before choosing.
+
+A show can also have a second feed for Patreon early releases.
 
 Never use a feed URL that carries an `auth=` token, which is a private Patreon feed.
 
@@ -73,15 +81,25 @@ For the default case take the newest item.
 
 For a named episode match on title, episode number, or publication date against every item.
 
+The title can carry the number, as in `#69 Tamara`, and the `itunes:episode` tag can disagree with it, so match on the title first.
+
 Show the user the chosen title, date, and duration in one line before continuing.
 
 ## Step 3: Download
 
 Download the item enclosure with curl and the location flag, because the URL often goes through tracking redirects, and wrap it as the `download` step.
 
-Compare the downloaded size with the enclosure `length` attribute when the feed provides one, and confirm with `file` that the result is audio and not an error page.
+Confirm with `file` that the result is audio and not an error page, and probe the duration with ffprobe.
 
-Stop on a mismatch.
+Compare the downloaded size with the enclosure `length` attribute when the feed provides one, and skip the comparison when the length is 0.
+
+Stop when the file is smaller than the feed length or is not audio.
+
+A file larger than the feed length is expected when the host stitches ads in at download time, which Omny and Audioboom feeds do.
+
+In that case the ffprobe duration exceeds the feed duration by roughly the length of the ads, which is the content this skill removes.
+
+Continue, and say in the final report that the size did not match and why.
 
 ## Step 4: Transcribe
 
@@ -106,25 +124,32 @@ Detection is reading the timestamped transcript, because pattern matching alone 
 Search the transcript for ad-like lines to find where to look.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python -I -c "import json,re; d=json.load(open('<run dir>/transcript.json')); p=re.compile(r'sponsor|brought to you|promo code|use code|\.com|\.ai|patreon|ad-free|free at|slash|offer', re.I); [print(round(s['start'],1), round(s['end'],1), s['text']) for s in d if p.search(s['text'])]"
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python -I -c "import json,re; d=json.load(open('<run dir>/transcript.json')); p=re.compile(r'sponsor|brought to you|promo code|use code|\.com|\.ai|patreon|ad-free|free at|slash|offer|iheart|learn more|terms|wherever you get|free trial|visit', re.I); [print(round(s['start'],1), round(s['end'],1), s['text']) for s in d if p.search(s['text'])]"
 ```
 
-Then print the segments around each cluster and read them to decide the start and end of each block.
+The hits cluster, and each cluster is one pod, so print the segments around each cluster and read them to decide the start and end of each block.
+
+Repeated lines are a strong signal, because the same read often appears in several pods of one episode.
+
+Some ads carry no keyword, such as a podcast promo or a story told in the host's voice, so read the whole gap between the keyword hits and the content on both sides.
 
 What an ad block looks like:
 
 - Ads are back to back with no speech gap between them, so a gap is not an edge.
 - The edge is a topic change, such as a read that begins mid-sentence in content that was about something else.
-- A block can start immediately after a host line like "Next up, the main episode".
+- A block can start immediately after a host line like "Next up, the main episode" or "words from our sponsors".
 - Content often resumes mid-sentence after dynamically inserted ads.
 - The same read can appear more than once in one pod.
 - A pod can also sit before the show starts and after the sign-off.
 - A sponsor thanks, Patreon plug, or house promo in the intro counts as an ad block.
+- A network tag such as "This is an iHeart podcast" belongs to the pod around it.
 
 What is not an ad:
 
 - A joke in the content that uses ad words, such as "Brought to you by Shopify" after a cash register sound.
 - The host discussing a company in the story.
+- The host's own lead-in before a break, such as "Right after the break", and a teaser line after it.
+- The host's sign-off, including a social handle and "back in two weeks", which is the show and not a read.
 
 Keep the host's "Welcome back" line when it follows the ads.
 
@@ -138,13 +163,27 @@ Its ranges can swallow real content or run to the end of the file, so never cut 
 
 ## Step 6: Place the edges precisely
 
-Transcript timestamps are per segment, and a long segment can hold both content and ad.
+Transcript timestamps are per segment, and a long segment can hold both content and ad, or a few words and a long stretch of music.
 
-When an edge falls inside a segment, get word-level timing for only that window of about 15 seconds.
+Get word-level timing for every edge that falls inside a segment, and for any edge where an ad ends in the same second a content line begins.
 
-Decode the audio with PyAV, slice the window, and transcribe it with `word_timestamps=True`.
+Pass all the windows of about 15 to 30 seconds to one invocation, so the model loads once.
+
+```
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/words.py <run dir>/episode.mp3 68:92 1930:1972
+```
+
+The helper is /Users/mtm/pdev/taylormonacelli/steamysquirrel/words.py, and it prints a start, an end, and a word per line in episode seconds.
+
+Run it as a script and not with `-I`, because it imports `transcribe` from its own directory.
 
 Place the cut start just after the last content word, and the cut end before the first content word that follows.
+
+When there is silence or music between the ad and the content, put the edge inside that gap with about a second of margin on each side, and do not cut right against a word.
+
+A pre-roll starts at 0 and ends before the first content word.
+
+A post-roll starts after the sign-off, and its END is `end`.
 
 ## Step 7: Cut
 
@@ -158,9 +197,47 @@ Then probe both durations with ffprobe and confirm the difference equals the tot
 
 The ffmpeg on this machine is a Docker shim, so Docker Desktop must be running.
 
-## Step 8: Post
+## Step 8: Push to the Pixel
 
-Upload the cleaned file to Litterbox with a 72 hour expiry as the `upload` step, and then check the headers.
+Push the cleaned file to the Audiobooks folder on the Pixel 9a over wireless adb, as the `push` step.
+
+adb is not on PATH, and it lives at /Users/mtm/Library/Android/sdk/platform-tools/adb
+
+List the devices and take the serial from the output, which is an mDNS name such as adb-4B111JEBF04582-vqjkZV._adb-tls-connect._tcp, and use it with the `-s` flag instead of a typed IP and port.
+
+```
+/Users/mtm/Library/Android/sdk/platform-tools/adb devices -l
+```
+
+Name the file by show slug and episode date so episodes sort and never collide.
+
+```
+/Users/mtm/Library/Android/sdk/platform-tools/adb -s <serial> push <run dir>/episode.clean.mp3 /sdcard/Audiobooks/<slug>-<date>.mp3
+```
+
+Verify by comparing the size on the phone with the local size.
+
+```
+/Users/mtm/Library/Android/sdk/platform-tools/adb -s <serial> shell stat -c %s /sdcard/Audiobooks/<slug>-<date>.mp3
+```
+
+```
+stat --format %s <run dir>/episode.clean.mp3
+```
+
+The `stat` on the Mac is the GNU one, so the BSD `-f %z` form fails.
+
+If the phone is not listed, or is offline, read the reference note on Pixel wireless adb in the memory directory, because the fix is usually a pairing code that only the user can read off the phone, and ask for it.
+
+The pairing and the reboot cases are described there, so do not rediscover them.
+
+Do not use `monkey` or open apps on the phone, because this step only copies a file.
+
+## Fallback host
+
+Use a temporary host only when the user asks for a link, or when adb cannot be made to work and the user chooses a host.
+
+The default host is Litterbox with a 72 hour expiry, as the `upload` step.
 
 ```
 uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step upload -- curl --silent --show-error --fail --max-time 600 --form reqtype=fileupload --form time=72h --form fileToUpload=@<run dir>/episode.clean.mp3 https://litterbox.catbox.moe/resources/internals/api.php
@@ -170,11 +247,7 @@ The upload URL is printed by curl, so read it from the command output.
 
 The fail flag matters, because without it a 500 error page is saved as the result and the exit code is still zero.
 
-If the upload fails, retry once under the step name `upload retry`.
-
-If it fails again, stop and report that the host is erroring, give the path of the cleaned file, and let the user choose another host.
-
-Never switch to a different public host without asking.
+Litterbox has returned a 500 on every attempt for hours at a time, so retry once under the step name `upload retry`, and then stop and offer the adb push.
 
 ```
 curl --silent --head --location https://litter.catbox.moe/<id>.mp3
@@ -182,13 +255,13 @@ curl --silent --head --location https://litter.catbox.moe/<id>.mp3
 
 Confirm `content-type: audio/mpeg`, a `content-length` equal to the local file size, and `accept-ranges: bytes`.
 
-The file is someone else's copyrighted audio, so use only this expiring link and never a permanent public host.
+Never use an ad-supported file host such as tmpfiles.org, because its download page redirected the user's phone to a scam page that asked them to install a VPN profile.
 
-Skip the upload only when the user says not to post.
+Never switch to a different public host without asking, and never use a permanent one, because the file is someone else's copyrighted audio.
 
 ## Final report
 
-Lead with the link on its own line, bare so it is clickable.
+Lead with where the file is, which is the path on the phone for an adb push, or a bare link for a fallback host.
 
 Then report:
 
@@ -196,8 +269,11 @@ Then report:
 - Duration before and after, and the total removed
 - Each cut range as clock times
 - The output of the report subcommand, which lists every step with wall and CPU time, and the real-time ratio for transcription
-- That the cut points were not listened to, and which joins are worth checking
+- Whether the download size matched the feed, and why not when it did not
+- That the cut points were not listened to, and which joins are worth checking, such as an edge placed inside silence or music
 
-To listen in Voice, tell the user to open the link in Chrome, download it, move it into the Audiobooks folder with the Files app, and open that folder in Voice.
+To listen in Voice, tell the user to open the Audiobooks folder in Voice, where the episode appears.
 
 The Download folder cannot be picked as a library folder.
+
+For a fallback link, tell the user to open it in Chrome, download it, move it into the Audiobooks folder with the Files app, and open that folder in Voice.
