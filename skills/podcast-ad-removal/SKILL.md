@@ -19,7 +19,7 @@ Carry outputs forward and do not prompt the user between steps unless a step fai
 
 The project is steamysquirrel at /Users/mtm/pdev/taylormonacelli/steamysquirrel
 
-It holds `transcribe.py`, `remove_ads.py`, `words.py` and `steptime.py`, and a uv environment with faster-whisper installed.
+It holds `transcribe.py`, `remove_ads.py`, `words.py`, `episode_meta.py` and `steptime.py`, and a uv environment with faster-whisper installed.
 
 Each run gets its own directory under the project, named by show slug and episode date, such as /Users/mtm/pdev/taylormonacelli/steamysquirrel/aidailybrief-2026-10-15
 
@@ -41,7 +41,7 @@ uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel pyth
 
 For a step that is your own reading and not a command, bracket it with the begin and end subcommands using the same `--log` and `--step` flags.
 
-Use these step names so runs compare: `feed`, `episode`, `download`, `transcribe`, `find ads`, `place edges`, `cut`, `push`.
+Use these step names so runs compare: `feed`, `episode`, `download`, `metadata`, `transcribe`, `find ads`, `place edges`, `cut`, `name`, `push`.
 
 The `find ads` step covers reading the transcript and `place edges` covers the word-level windows.
 
@@ -100,6 +100,24 @@ A file larger than the feed length is expected when the host stitches ads in at 
 In that case the ffprobe duration exceeds the feed duration by roughly the length of the ads, which is the content this skill removes.
 
 Continue, and say in the final report that the size did not match and why.
+
+## Step 3b: Write the episode metadata
+
+The Voice app on the Pixel reads the title, artist and album from ID3 tags embedded in the MP3, and it falls back to the filename when there are none.
+
+ffmpeg copies the source tags through the cut, so a feed that ships tagged files, such as Audioboom, keeps them, and a feed that ships untagged files, such as anchor.fm, produces a file that Voice shows under a random name.
+
+Always write the tags from the feed item, which is the one source every feed has, and wrap it as the `metadata` step.
+
+```
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step metadata -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episode_meta.py <run dir>/feed.xml <run dir>/meta.json --slug <show slug>
+```
+
+Add `--title <substring>` when the user named an episode, so the item matches the one chosen in step 2.
+
+`meta.json` holds the show, title, artist, date, a cleaned description, the feed duration, the guid, the link, the copyright and a `filename` stem such as `aidailybrief-2026-10-18-a-potentially-historic-ai-breakthrough`.
+
+The `filename` stem contains only lowercase letters, digits and hyphens, because Android rejects `? " : * < > | \` in names.
 
 ## Step 4: Transcribe
 
@@ -190,12 +208,30 @@ A post-roll starts after the sign-off, and its END is `end`.
 Pass each verified block as a `--range START:END` flag, where END can be `end` for a post-roll, and wrap it as the `cut` step.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step cut -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/remove_ads.py <run dir>/transcript.json --audio <run dir>/episode.mp3 --output <run dir>/episode.clean.mp3 --range 35.2:76.3 --range 752.2:923.4
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step cut -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/remove_ads.py <run dir>/transcript.json --audio <run dir>/episode.mp3 --output <run dir>/episode.clean.mp3 --metadata <run dir>/meta.json --range 35.2:76.3 --range 752.2:923.4
 ```
 
 Then probe both durations with ffprobe and confirm the difference equals the total of the ranges.
 
 The ffmpeg on this machine is a Docker shim, so Docker Desktop must be running.
+
+Start it with `open -a Docker` when ffprobe or ffmpeg reports that it cannot connect to the Docker daemon.
+
+Probe the tags on the output with `ffprobe -v error -show_entries format_tags -of default=noprint_wrappers=1` and confirm the title, artist and album are present.
+
+## Step 7b: Name the deliverable and write the sidecar
+
+Give the cleaned file its descriptive name, so a player that ignores ID3 tags still shows something readable, as the `name` step.
+
+Take the `filename` stem from `meta.json`, copy `episode.clean.mp3` to `<run dir>/<filename>.mp3`, and write the sidecar next to it by running `episode_meta.py` again with the cuts recorded.
+
+```
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episode_meta.py <run dir>/feed.xml <run dir>/<filename>.json --slug <show slug> --range 35.2:76.3 --range 752.2:923.4
+```
+
+The sidecar is JSON with the same stem as the MP3, and it adds a `cuts` list of the START:END ranges removed, which another application can process.
+
+Use the sidecar and the descriptive MP3 name for every later step, and keep `episode.clean.mp3` as the working copy.
 
 ## Step 8: Push to the Pixel
 
@@ -209,20 +245,26 @@ List the devices and take the serial from the output, which is an mDNS name such
 /Users/mtm/Library/Android/sdk/platform-tools/adb devices -l
 ```
 
-Name the file by show slug and episode date so episodes sort and never collide.
+Name the file with the `filename` stem from step 7b, which starts with the show slug and episode date so episodes sort and never collide.
+
+Push the sidecar next to it, since Voice ignores files that are not audio.
 
 ```
-/Users/mtm/Library/Android/sdk/platform-tools/adb -s <serial> push <run dir>/episode.clean.mp3 /sdcard/Audiobooks/<slug>-<date>.mp3
+/Users/mtm/Library/Android/sdk/platform-tools/adb -s <serial> push <run dir>/<filename>.mp3 /sdcard/Audiobooks/<filename>.mp3
+```
+
+```
+/Users/mtm/Library/Android/sdk/platform-tools/adb -s <serial> push <run dir>/<filename>.json /sdcard/Audiobooks/<filename>.json
 ```
 
 Verify by comparing the size on the phone with the local size.
 
 ```
-/Users/mtm/Library/Android/sdk/platform-tools/adb -s <serial> shell stat -c %s /sdcard/Audiobooks/<slug>-<date>.mp3
+/Users/mtm/Library/Android/sdk/platform-tools/adb -s <serial> shell stat -c %s /sdcard/Audiobooks/<filename>.mp3
 ```
 
 ```
-stat --format %s <run dir>/episode.clean.mp3
+stat --format %s <run dir>/<filename>.mp3
 ```
 
 The `stat` on the Mac is the GNU one, so the BSD `-f %z` form fails.
@@ -240,10 +282,14 @@ Use a temporary host only when the user asks for a link, or when adb cannot be m
 The default host is Litterbox with a 72 hour expiry, as the `upload` step.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step upload -- curl --silent --show-error --fail --max-time 600 --form reqtype=fileupload --form time=72h --form fileToUpload=@<run dir>/episode.clean.mp3 https://litterbox.catbox.moe/resources/internals/api.php
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step upload -- curl --silent --show-error --fail --max-time 600 --form reqtype=fileupload --form time=72h --form fileToUpload=@<run dir>/<filename>.mp3 https://litterbox.catbox.moe/resources/internals/api.php
 ```
 
 The upload URL is printed by curl, so read it from the command output.
+
+Litterbox replaces the filename with a random id, so the downloaded file is named after the id and Voice shows the ID3 title and artist from step 3b instead.
+
+Tell the user the filename to give it when moving it into the Audiobooks folder, which is the `filename` stem from step 7b.
 
 The fail flag matters, because without it a 500 error page is saved as the result and the exit code is still zero.
 
@@ -270,6 +316,7 @@ Then report:
 - Each cut range as clock times
 - The output of the report subcommand, which lists every step with wall and CPU time, and the real-time ratio for transcription
 - Whether the download size matched the feed, and why not when it did not
+- The ID3 tags written and the path of the sidecar JSON
 - That the cut points were not listened to, and which joins are worth checking, such as an edge placed inside silence or music
 
 To listen in Voice, tell the user to open the Audiobooks folder in Voice, where the episode appears.
