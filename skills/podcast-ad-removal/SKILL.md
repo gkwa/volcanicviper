@@ -85,6 +85,22 @@ The title can carry the number, as in `#69 Tamara`, and the `itunes:episode` tag
 
 Show the user the chosen title, date, and duration in one line before continuing.
 
+## Step 2b: Stop when the episode was already done
+
+Check the chosen episode against the episodes database before creating the run directory, using the scratch feed from the lookup.
+
+```
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episodes_db.py check <scratch feed> --slug <show slug>
+```
+
+Add `--title <substring>` when the user named an episode, so the check matches the one chosen in step 2.
+
+The command prints nothing and exits 0 for a new episode, and it exits 3 with the earlier run directory and output path when the episode was already processed.
+
+On exit 3 stop, report the earlier run directory and output path, do not create a run directory, and ask the user before redoing the episode.
+
+The database is /Users/mtm/.local/state/steamysquirrel/episodes.db, or under the directory in `XDG_STATE_HOME` when that variable is set.
+
 ## Step 3: Download
 
 Download the item enclosure with curl and the location flag, because the URL often goes through tracking redirects, and wrap it as the `download` step.
@@ -266,6 +282,12 @@ stat --format %s /Users/mtm/podcasts/<filename>.mp3
 ```
 
 The `stat` on the Mac is the GNU one, so the BSD `-f %z` form fails.
+
+Record the episode in the database only after the sizes match, so a failed run is never counted as done.
+
+```
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episodes_db.py record <run dir>/<filename>.json --slug <show slug> --run-dir <run dir> --output /Users/mtm/podcasts/<filename>.mp3
+```
 
 Syncthing notices the new files within about 10 seconds and sends them when the phone is reachable, so delivery is asynchronous and the step does not wait for it.
 
