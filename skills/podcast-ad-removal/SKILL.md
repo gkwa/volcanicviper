@@ -1,6 +1,6 @@
 ---
 name: podcast-ad-removal
-description: Download a podcast episode, transcribe it, find the sponsor and ad blocks by reading the transcript, cut them out, and push the ad-free MP3 to the Pixel's Audiobooks folder over adb for playback in the Voice app. Takes the podcast name, and the most recent episode unless the user names a particular one. Use when asked to remove ads from a podcast, clean today's episode of a show, pre-download a podcast without ads, or run the ad cleaning for a named show.
+description: Download a podcast episode, transcribe it, find the sponsor and ad blocks by reading the transcript, cut them out, and copy the ad-free MP3 into the Syncthing podcasts folder, which syncs to the Pixel's Audiobooks folder for playback in the Voice app. Takes the podcast name, and the most recent episode unless the user names a particular one. Use when asked to remove ads from a podcast, clean today's episode of a show, pre-download a podcast without ads, or run the ad cleaning for a named show.
 ---
 
 ## Podcast Ad Removal
@@ -41,7 +41,7 @@ uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel pyth
 
 For a step that is your own reading and not a command, bracket it with the begin and end subcommands using the same `--log` and `--step` flags.
 
-Use these step names so runs compare: `feed`, `episode`, `download`, `metadata`, `transcribe`, `find ads`, `place edges`, `cut`, `name`, `push`.
+Use these step names so runs compare: `feed`, `episode`, `download`, `metadata`, `transcribe`, `find ads`, `place edges`, `cut`, `name`, `sync`.
 
 The `find ads` step covers reading the transcript and `place edges` covers the word-level windows.
 
@@ -233,51 +233,59 @@ The sidecar is JSON with the same stem as the MP3, and it adds a `cuts` list of 
 
 Use the sidecar and the descriptive MP3 name for every later step, and keep `episode.clean.mp3` as the working copy.
 
-## Step 8: Push to the Pixel
+## Step 8: Copy into the Syncthing folder
 
-Push the cleaned file to the Audiobooks folder on the Pixel 9a over wireless adb, as the `push` step.
+Copy the cleaned file and its sidecar into /Users/mtm/podcasts, as the `sync` step, and let Syncthing carry them to the phone.
 
-adb is not on PATH, and it lives at /Users/mtm/Library/Android/sdk/platform-tools/adb
+Never push over adb, because Syncthing replaces it and needs no pairing code.
 
-List the devices and take the serial from the output, which is an mDNS name such as adb-4B111JEBF04582-vqjkZV._adb-tls-connect._tcp, and use it with the `-s` flag instead of a typed IP and port.
-
-```
-/Users/mtm/Library/Android/sdk/platform-tools/adb devices -l
-```
+The Syncthing folder with id `podcasts` is send only on the Mac at /Users/mtm/podcasts, and receive only on the Pixel 9a at /sdcard/Audiobooks.
 
 Name the file with the `filename` stem from step 7b, which starts with the show slug and episode date so episodes sort and never collide.
 
-Push the sidecar next to it, since Voice ignores files that are not audio.
+Copy the sidecar next to it, since Voice ignores files that are not audio.
 
 ```
-/Users/mtm/Library/Android/sdk/platform-tools/adb -s <serial> push <run dir>/<filename>.mp3 /sdcard/Audiobooks/<filename>.mp3
+cp <run dir>/<filename>.mp3 /Users/mtm/podcasts/<filename>.mp3
 ```
 
 ```
-/Users/mtm/Library/Android/sdk/platform-tools/adb -s <serial> push <run dir>/<filename>.json /sdcard/Audiobooks/<filename>.json
+cp <run dir>/<filename>.json /Users/mtm/podcasts/<filename>.json
 ```
 
-Verify by comparing the size on the phone with the local size.
-
-```
-/Users/mtm/Library/Android/sdk/platform-tools/adb -s <serial> shell stat -c %s /sdcard/Audiobooks/<filename>.mp3
-```
+Verify the copy by comparing the sizes of the two files on the Mac.
 
 ```
 stat --format %s <run dir>/<filename>.mp3
 ```
 
+```
+stat --format %s /Users/mtm/podcasts/<filename>.mp3
+```
+
 The `stat` on the Mac is the GNU one, so the BSD `-f %z` form fails.
 
-If the phone is not listed, or is offline, read the reference note on Pixel wireless adb in the memory directory, because the fix is usually a pairing code that only the user can read off the phone, and ask for it.
+Syncthing notices the new files within about 10 seconds and sends them when the phone is reachable, so delivery is asynchronous and the step does not wait for it.
 
-The pairing and the reboot cases are described there, so do not rediscover them.
+Check whether the phone is reachable now with the connections listing, and look for the Pixel 9a device id XEEMPOJ-KBKPGKD-QO6MHQ7-MSSHV24-JN6MCSU-O6VFGFR-JSD5FIO-QD36LQS with `connected` true.
 
-Do not use `monkey` or open apps on the phone, because this step only copies a file.
+```
+syncthing cli --home "/Users/mtm/Library/Application Support/Syncthing" show connections
+```
+
+If it is not connected, the files stay in /Users/mtm/podcasts and arrive when the phone is on the home Wi-Fi with Syncthing-Fork running, so say that in the report and do not retry.
+
+Do not tell the user the file is on the phone, because nothing here confirms arrival.
+
+The phone folder is receive only and shows Local Additions for files the Mac does not have, such as episodes pushed earlier.
+
+Never tap Revert Local Changes on the phone and never ask the user to, because it deletes those files.
+
+Do not use adb or open apps on the phone for this step.
 
 ## Fallback host
 
-Use a temporary host only when the user asks for a link, or when adb cannot be made to work and the user chooses a host.
+Use a temporary host only when the user asks for a link, or when Syncthing cannot be used and the user chooses a host.
 
 The default host is Litterbox with a 72 hour expiry, as the `upload` step.
 
@@ -293,7 +301,7 @@ Tell the user the filename to give it when moving it into the Audiobooks folder,
 
 The fail flag matters, because without it a 500 error page is saved as the result and the exit code is still zero.
 
-Litterbox has returned a 500 on every attempt for hours at a time, so retry once under the step name `upload retry`, and then stop and offer the adb push.
+Litterbox has returned a 500 on every attempt for hours at a time, so retry once under the step name `upload retry`, and then stop and say the Syncthing copy is already the delivery path.
 
 ```
 curl --silent --head --location https://litter.catbox.moe/<id>.mp3
@@ -307,7 +315,9 @@ Never switch to a different public host without asking, and never use a permanen
 
 ## Final report
 
-Lead with where the file is, which is the path on the phone for an adb push, or a bare link for a fallback host.
+Lead with where the file is, which is the path under /Users/mtm/podcasts that Syncthing syncs to the Audiobooks folder on the phone, or a bare link for a fallback host.
+
+Say whether the phone was connected at the time of the copy, and that arrival on the phone is not confirmed.
 
 Then report:
 
