@@ -113,9 +113,11 @@ Always write the tags from the feed item, which is the one source every feed has
 uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step metadata -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episode_meta.py <run dir>/feed.xml <run dir>/meta.json --slug <show slug>
 ```
 
+Voice shows the album tag as the episode name, so `episode_meta.py` writes the album as a short date and the title, such as `10-19-26 The AI Wealth Problem`, which tells episodes of one show apart.
+
 Add `--title <substring>` when the user named an episode, so the item matches the one chosen in step 2.
 
-`meta.json` holds the show, title, artist, date, a cleaned description, the feed duration, the guid, the link, the copyright and a `filename` stem such as `aidailybrief-2026-10-18-a-potentially-historic-ai-breakthrough`.
+`meta.json` holds the show, title, artist, album, date, a cleaned description, the feed duration, the guid, the link, the copyright and a `filename` stem such as `aidailybrief-2026-10-18-a-potentially-historic-ai-breakthrough`.
 
 The `filename` stem contains only lowercase letters, digits and hyphens, because Android rejects `? " : * < > | \` in names.
 
