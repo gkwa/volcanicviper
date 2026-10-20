@@ -19,7 +19,9 @@ Carry outputs forward and do not prompt the user between steps unless a step fai
 
 The project is steamysquirrel at /Users/mtm/pdev/taylormonacelli/steamysquirrel
 
-It holds `transcribe.py`, `remove_ads.py`, `words.py`, `episode_meta.py` and `steptime.py`, and a uv environment with faster-whisper installed.
+It holds `transcribe.py`, `remove_ads.py`, `words.py`, `episodes_db.py`, `steptime.py` and `paths.py`, and a uv environment with faster-whisper installed.
+
+Everything recorded about an episode lives in the SQLite database /Users/mtm/.local/state/steamysquirrel/episodes.db, in an `episodes` table with the feed metadata and cuts and a `step_events` table with the timings, so no run writes metadata or timing files.
 
 Each run gets its own directory under the XDG cache at /Users/mtm/.cache/steamysquirrel/runs, named by show slug and episode date, such as /Users/mtm/.cache/steamysquirrel/runs/aidailybrief-2026-10-15
 
@@ -39,15 +41,15 @@ Use the printed path as `<run dir>` in every later step.
 
 Every step is timed, because transcription time varies a lot with machine load and the durations are worth keeping.
 
-The recorder is /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py, and it appends to `timings.tsv` in the run directory.
+The recorder is /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py, and it appends the step events to the `step_events` table of the database.
 
 Wrap a command in the run subcommand, which records wall seconds and CPU seconds and passes the exit code through.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step <step name> -- <command>
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --run-dir <run dir> --step <step name> -- <command>
 ```
 
-For a step that is your own reading and not a command, bracket it with the begin and end subcommands using the same `--log` and `--step` flags.
+For a step that is your own reading and not a command, bracket it with the begin and end subcommands using the same `--run-dir` and `--step` flags.
 
 Use these step names so runs compare: `feed`, `episode`, `download`, `metadata`, `transcribe`, `find ads`, `place edges`, `cut`, `name`, `sync`.
 
@@ -134,14 +136,20 @@ ffmpeg copies the source tags through the cut, so a feed that ships tagged files
 Always write the tags from the feed item, which is the one source every feed has, and wrap it as the `metadata` step.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step metadata -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episode_meta.py <run dir>/feed.xml <run dir>/meta.json --slug <show slug>
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --run-dir <run dir> --step metadata -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episodes_db.py begin <run dir>/feed.xml --slug <show slug> --run-dir <run dir>
 ```
 
-Voice shows the album tag as the episode name, so `episode_meta.py` writes the album as a short date and the title, such as `10-19-26 The AI Wealth Problem`, which tells episodes of one show apart.
+Voice shows the album tag as the episode name, so the stored album is a short date and the title, such as `10-19-26 The AI Wealth Problem`, which tells episodes of one show apart.
 
 Add `--title <substring>` when the user named an episode, so the item matches the one chosen in step 2.
 
-`meta.json` holds the show, title, artist, album, date, a cleaned description, the feed duration, the guid, the link, the copyright and a `filename` stem such as `aidailybrief-2026-10-18-a-potentially-historic-ai-breakthrough`.
+The `episodes` row for the run holds the show name, title, artist, album, date, a cleaned description, the feed duration, the guid, the link, the copyright, the artwork URL and a `filename` stem such as `aidailybrief-2026-10-18-a-potentially-historic-ai-breakthrough`.
+
+Read one stored field when a later step needs it, such as `filename` or `artwork`.
+
+```
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episodes_db.py get <run dir> <field>
+```
 
 The `filename` stem contains only lowercase letters, digits and hyphens, because Android rejects `? " : * < > | \` in names.
 
@@ -149,7 +157,7 @@ The `filename` stem contains only lowercase letters, digits and hyphens, because
 
 Voice shows the embedded cover picture beside each episode, and it shows a placeholder disc when there is none.
 
-`meta.json` holds the artwork URL in `artwork`, which is the episode's own image or else the show's image.
+The `artwork` field of the stored row holds the artwork URL, which is the episode's own image or else the show's image, and `get <run dir> artwork` prints it.
 
 Download it into the run directory as `cover`, with no extension, because ffmpeg reads the type from the content.
 
@@ -166,7 +174,7 @@ Skip the step and say so in the report when `artwork` is empty.
 Run the transcription in the background as the `transcribe` step, because it takes a while on this machine.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step transcribe -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/transcribe.py <run dir>/episode.mp3 <run dir>/transcript.json
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --run-dir <run dir> --step transcribe -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/transcribe.py <run dir>/episode.mp3 <run dir>/transcript.json
 ```
 
 Compare the recorded wall time with the episode duration and report the ratio, such as 2.2x faster than real time or 1.3x slower than real time.
@@ -250,7 +258,7 @@ A post-roll starts after the sign-off, and its END is `end`.
 Pass each verified block as a `--range START:END` flag, where END can be `end` for a post-roll, and wrap it as the `cut` step.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step cut -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/remove_ads.py <run dir>/transcript.json --audio <run dir>/episode.mp3 --output <run dir>/episode.clean.mp3 --metadata <run dir>/meta.json --cover <run dir>/cover --range 35.2:76.3 --range 752.2:923.4
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --run-dir <run dir> --step cut -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/remove_ads.py <run dir>/transcript.json --audio <run dir>/episode.mp3 --output <run dir>/episode.clean.mp3 --run-dir <run dir> --cover <run dir>/cover --range 35.2:76.3 --range 752.2:923.4
 ```
 
 Then probe both durations with ffprobe and confirm the difference equals the total of the ranges.
@@ -263,25 +271,21 @@ Pass `--cover` only when step 3c produced a cover, and then confirm with `ffprob
 
 Probe the tags on the output with `ffprobe -v error -show_entries format_tags -of default=noprint_wrappers=1` and confirm the title, artist and album are present.
 
-## Step 7b: Name the deliverable and write the sidecar
+## Step 7b: Name the deliverable
 
 Give the cleaned file its descriptive name, so a player that ignores ID3 tags still shows something readable, as the `name` step.
 
-Take the `filename` stem from `meta.json`, copy `episode.clean.mp3` to `<run dir>/<filename>.mp3`, and write the sidecar next to it by running `episode_meta.py` again with the cuts recorded.
+Read the `filename` stem with `episodes_db.py get <run dir> filename`, and copy `episode.clean.mp3` to `<run dir>/<filename>.mp3`.
 
-```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episode_meta.py <run dir>/feed.xml <run dir>/<filename>.json --slug <show slug> --range 35.2:76.3 --range 752.2:923.4
-```
+The cuts are recorded in the database by the `finish` command in step 8, so no file is written for them.
 
-The sidecar is JSON with the same stem as the MP3, and it adds a `cuts` list of the START:END ranges removed, which another application can process.
-
-Use the sidecar and the descriptive MP3 name for every later step, and keep `episode.clean.mp3` as the working copy.
+Use the descriptive MP3 name for every later step, and keep `episode.clean.mp3` as the working copy.
 
 Voice caches an episode's tags and cover by filename, so a re-cut of an episode already on the phone needs a new filename, such as a `-v2` suffix, in /Users/mtm/podcasts.
 
 ## Step 8: Copy into the Syncthing folder
 
-Copy the cleaned file and its sidecar into /Users/mtm/podcasts, as the `sync` step, and let Syncthing carry them to the phone.
+Copy the cleaned file into /Users/mtm/podcasts, as the `sync` step, and let Syncthing carry them to the phone.
 
 Never push over adb, because Syncthing replaces it and needs no pairing code.
 
@@ -289,14 +293,8 @@ The Syncthing folder with id `podcasts` is send only on the Mac at /Users/mtm/po
 
 Name the file with the `filename` stem from step 7b, which starts with the show slug and episode date so episodes sort and never collide.
 
-Copy the sidecar next to it, since Voice ignores files that are not audio.
-
 ```
 cp <run dir>/<filename>.mp3 /Users/mtm/podcasts/<filename>.mp3
-```
-
-```
-cp <run dir>/<filename>.json /Users/mtm/podcasts/<filename>.json
 ```
 
 Verify the copy by comparing the sizes of the two files on the Mac.
@@ -311,10 +309,10 @@ stat --format %s /Users/mtm/podcasts/<filename>.mp3
 
 The `stat` on the Mac is the GNU one, so the BSD `-f %z` form fails.
 
-Record the episode in the database only after the sizes match, so a failed run is never counted as done.
+Mark the run finished in the database only after the sizes match, so a failed run is never counted as done, and pass every cut range so they are stored with the episode.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episodes_db.py record <run dir>/<filename>.json --slug <show slug> --run-dir <run dir> --output /Users/mtm/podcasts/<filename>.mp3
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episodes_db.py finish --run-dir <run dir> --output /Users/mtm/podcasts/<filename>.mp3 --range 35.2:76.3 --range 752.2:923.4
 ```
 
 Syncthing notices the new files within about 10 seconds and sends them when the phone is reachable, so delivery is asynchronous and the step does not wait for it.
@@ -342,7 +340,7 @@ Use a temporary host only when the user asks for a link, or when Syncthing canno
 The default host is Litterbox with a 72 hour expiry, as the `upload` step.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step upload -- curl --silent --show-error --fail --max-time 600 --form reqtype=fileupload --form time=72h --form fileToUpload=@<run dir>/<filename>.mp3 https://litterbox.catbox.moe/resources/internals/api.php
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --run-dir <run dir> --step upload -- curl --silent --show-error --fail --max-time 600 --form reqtype=fileupload --form time=72h --form fileToUpload=@<run dir>/<filename>.mp3 https://litterbox.catbox.moe/resources/internals/api.php
 ```
 
 The upload URL is printed by curl, so read it from the command output.
@@ -376,9 +374,9 @@ Then report:
 - The episode title and publication date
 - Duration before and after, and the total removed
 - Each cut range as clock times
-- The output of the report subcommand, which lists every step with wall and CPU time, and the real-time ratio for transcription
+- The output of `steptime.py report --run-dir <run dir>`, which lists every step with wall and CPU time, and the real-time ratio for transcription
 - Whether the download size matched the feed, and why not when it did not
-- The ID3 tags written and the path of the sidecar JSON
+- The ID3 tags written and the cover that was embedded, if any
 - That the cut points were not listened to, and which joins are worth checking, such as an edge placed inside silence or music
 
 To listen in Voice, tell the user to open the Audiobooks folder in Voice, where the episode appears.
