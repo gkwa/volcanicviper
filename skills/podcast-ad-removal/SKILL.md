@@ -145,6 +145,22 @@ Add `--title <substring>` when the user named an episode, so the item matches th
 
 The `filename` stem contains only lowercase letters, digits and hyphens, because Android rejects `? " : * < > | \` in names.
 
+## Step 3c: Fetch the cover art
+
+Voice shows the embedded cover picture beside each episode, and it shows a placeholder disc when there is none.
+
+`meta.json` holds the artwork URL in `artwork`, which is the episode's own image or else the show's image.
+
+Download it into the run directory as `cover`, with no extension, because ffmpeg reads the type from the content.
+
+```
+curl --silent --show-error --fail --location --output <run dir>/cover <artwork url>
+```
+
+Confirm with `file` that the result is an image.
+
+Skip the step and say so in the report when `artwork` is empty.
+
 ## Step 4: Transcribe
 
 Run the transcription in the background as the `transcribe` step, because it takes a while on this machine.
@@ -234,7 +250,7 @@ A post-roll starts after the sign-off, and its END is `end`.
 Pass each verified block as a `--range START:END` flag, where END can be `end` for a post-roll, and wrap it as the `cut` step.
 
 ```
-uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step cut -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/remove_ads.py <run dir>/transcript.json --audio <run dir>/episode.mp3 --output <run dir>/episode.clean.mp3 --metadata <run dir>/meta.json --range 35.2:76.3 --range 752.2:923.4
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --log <run dir>/timings.tsv --step cut -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/remove_ads.py <run dir>/transcript.json --audio <run dir>/episode.mp3 --output <run dir>/episode.clean.mp3 --metadata <run dir>/meta.json --cover <run dir>/cover --range 35.2:76.3 --range 752.2:923.4
 ```
 
 Then probe both durations with ffprobe and confirm the difference equals the total of the ranges.
@@ -242,6 +258,8 @@ Then probe both durations with ffprobe and confirm the difference equals the tot
 The ffmpeg on this machine is a Docker shim, so Docker Desktop must be running.
 
 Start it with `open -a Docker` when ffprobe or ffmpeg reports that it cannot connect to the Docker daemon.
+
+Pass `--cover` only when step 3c produced a cover, and then confirm with `ffprobe -v error -show_entries stream=codec_type,codec_name` that the output has a video stream, which is the embedded picture.
 
 Probe the tags on the output with `ffprobe -v error -show_entries format_tags -of default=noprint_wrappers=1` and confirm the title, artist and album are present.
 
@@ -258,6 +276,8 @@ uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel pyth
 The sidecar is JSON with the same stem as the MP3, and it adds a `cuts` list of the START:END ranges removed, which another application can process.
 
 Use the sidecar and the descriptive MP3 name for every later step, and keep `episode.clean.mp3` as the working copy.
+
+Voice caches an episode's tags and cover by filename, so a re-cut of an episode already on the phone needs a new filename, such as a `-v2` suffix, in /Users/mtm/podcasts.
 
 ## Step 8: Copy into the Syncthing folder
 
