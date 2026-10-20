@@ -21,11 +21,19 @@ The project is steamysquirrel at /Users/mtm/pdev/taylormonacelli/steamysquirrel
 
 It holds `transcribe.py`, `remove_ads.py`, `words.py`, `episode_meta.py` and `steptime.py`, and a uv environment with faster-whisper installed.
 
-Each run gets its own directory under the project, named by show slug and episode date, such as /Users/mtm/pdev/taylormonacelli/steamysquirrel/aidailybrief-2026-10-15
+Each run gets its own directory under the XDG cache at /Users/mtm/.cache/steamysquirrel/runs, named by show slug and episode date, such as /Users/mtm/.cache/steamysquirrel/runs/aidailybrief-2026-10-15
+
+The directory moves to the `XDG_CACHE_HOME` directory when that variable is set, and everything in it can be recreated, which is why it is cache and not part of the project.
 
 The date is the episode publication date, which is not always today.
 
-Create it with mkdir, and never write into a directory that already holds another run.
+Create it with `paths.py`, which prints the new path and exits 1 when the directory already exists, and never write into a directory that already holds another run.
+
+```
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/paths.py --slug <show slug> --date <episode date>
+```
+
+Use the printed path as `<run dir>` in every later step.
 
 ## Timing every step
 
