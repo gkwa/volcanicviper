@@ -23,6 +23,8 @@ It holds `transcribe.py`, `remove_ads.py`, `words.py`, `episodes_db.py`, `stepti
 
 Everything recorded about an episode lives in the SQLite database /Users/mtm/.local/state/steamysquirrel/episodes.db, in an `episodes` table with the feed metadata and cuts and a `step_events` table with the timings, so no run writes metadata or timing files.
 
+The `finish` command also copies the database into /Users/mtm/.local/share/steamysquirrel/backups, which honors `XDG_DATA_HOME` and keeps the newest 14 copies, and `episodes_db.py backup` makes one on demand.
+
 Each run gets its own directory under the XDG cache at /Users/mtm/.cache/steamysquirrel/runs, named by show slug and episode date, such as /Users/mtm/.cache/steamysquirrel/runs/aidailybrief-2026-10-15
 
 The directory moves to the `XDG_CACHE_HOME` directory when that variable is set, and everything in it can be recreated, which is why it is cache and not part of the project.
