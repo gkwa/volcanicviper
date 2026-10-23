@@ -1,6 +1,6 @@
 ---
 name: store-review-fix
-description: Fix the next vault note that carries the storereview tag by applying the outline-headings skill to it, then report the changes, commit the note, open it in a new Obsidian tab, and report how many storereview notes remain. Use when asked to fix another store review note, work through the storereview queue, or find the next note with the store review tag.
+description: Fix the next vault note that carries the storereview tag. Reads the note's store review section for context, applies the outline-headings skill, reports every change, then removes the store review section and the storereview tag, commits, opens the note in a new Obsidian tab, and reports how many storereview notes remain. Use when asked to fix another store review note, work through the storereview queue, or find the next note with the store review tag.
 ---
 
 ## Store Review Fix
@@ -9,19 +9,27 @@ A note tagged `storereview` has a "store review" section that records headings m
 
 The queue is every note carrying that tag.
 
-Each run clears one note from the queue, except for the final deletion of the section and tag, which the user does afterwards.
+Each run clears one note from the queue, including removing its section and tag.
 
 ## Steps
 
 1. Find the notes that carry the `storereview` tag, using the islandiguana skill or the vault MCP tag search, and pick one that has not been fixed yet.
-2. Read the note.
-3. Apply the outline-headings skill to it and follow that skill for every rule about headings, links and nesting.
-4. Leave the "store review" section and the `storereview` tag in place, because the user deletes them after reviewing the fix.
-5. Update any heading quoted inside the "store review" section so it matches the renamed heading.
-6. Tell the user each change made, as a short list.
-7. Commit the note with `git commit -- <path>` and a message in the standard style.
-8. Open the note in a new Obsidian tab with obsidian-cli.
-9. Search the tag again and tell the user how many notes still carry `storereview`.
+2. Read the note and read its "store review" section first, because it names the headings that were moved and so gives the context for the fix.
+3. Make the edits that context calls for, applying the outline-headings skill for every rule about headings, links and nesting.
+4. Update any heading quoted inside the "store review" section so it matches the renamed heading, before the section is removed.
+5. Commit the fix with `git commit -- <path>`.
+6. Tell the user each change made, as a short list, so the user can judge whether the changes are accurate.
+7. Remove the "store review" section and remove `storereview` from the `tags` list in the front matter.
+8. Commit the removal on its own with `git commit -- <path>`, so it can be reverted separately from the fix.
+9. Open the note in a new Obsidian tab with obsidian-cli.
+10. Search the tag again and tell the user how many notes still carry `storereview`.
+
+## Removing the section
+
+- The section is the `## store review` heading and everything under it up to the next heading.
+- Leave no run of more than one blank line behind.
+- Remove only the `storereview` entry from `tags`, and keep every other tag.
+- If the user objects to a change in the report, restore the previous state from git and adjust it, since the fix and the removal are separate commits.
 
 ## Gotchas
 
@@ -35,6 +43,7 @@ Each run clears one note from the queue, except for the final deletion of the se
 
 - Count notes that carry the tag in their front matter, not notes that merely mention the words.
 - Report one number for the tag, since "review" and "store review" are the same `storereview` tag.
+- The note just fixed no longer counts, because its tag is gone.
 
 ## Note conventions that still apply
 
