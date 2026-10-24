@@ -1,6 +1,6 @@
 ---
 name: bake-calendar-add
-description: "Turn a short bake utterance such as 'bake two for Dana on Tuesday' into two all-day entries on the Google bake calendar, a start entry two days before the bake day and a bake entry on the bake day. Use when the user says to bake some number of loaves for a person on a weekday, asks to put a bake on the bake calendar, or dictates a bake order with a count, a name and a day."
+description: "Turn a short bake utterance such as 'bake two for Dana' into two all-day entries on the Google bake calendar, a start entry on the start day and a bake entry two days later. The start day defaults to today and can be overridden, as in 'bake two for Dana starting Sunday'. Use when the user says to bake some number of loaves for a person, asks to put a bake on the bake calendar, or dictates a bake order with a count and a name."
 ---
 
 ## Adding a bake to the bake calendar
@@ -17,9 +17,13 @@ So the start entry falls two days before the bake entry.
 
 ### Step 1 — parse the utterance
 
-Pull three things from the utterance: the loaf count, the person, and the bake weekday.
+Pull three parameters from the utterance: the loaf count, the person, and the start day.
 
-Example: "bake two for Dana on Tuesday" is count 2, person dana, bake day Tuesday.
+The start day is optional and defaults to today.
+
+Example: "bake two for Dana" is count 2, person dana, start day today.
+
+Example: "bake two for Dana starting Sunday" is count 2, person dana, start day Sunday.
 
 The count may be a digit or a spelled-out number.
 
@@ -31,15 +35,17 @@ Never correct a person's name on a guess; use it as given, and if it looks like 
 
 ### Step 2 — resolve the dates
 
-Take the bake day as the next occurrence of the named weekday after today.
+With no start day named, the start day is today.
 
-If today is that weekday, use the same weekday one week later.
+A named weekday means the next occurrence of that weekday, counting today if today is that weekday.
 
-If the user said "start" with a weekday instead, for example "start two for Dana on Sunday", take that as the start day and put the bake day two days after it.
+"Tomorrow" and a calendar date are fine as start days too.
 
-The start day is the bake day minus two days.
+The bake day is the start day plus two days.
 
-When the start day would fall before today, create both entries anyway and say in the report that the start day has already passed.
+If the user names a bake day instead of a start day, for example "bake two for Dana on Tuesday", take it as the bake day and set the start day to two days before it.
+
+When that start day would fall before today, create both entries anyway and say in the report that the start day has already passed.
 
 ### Step 3 — create the entries
 
