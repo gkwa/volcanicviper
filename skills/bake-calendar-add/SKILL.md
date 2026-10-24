@@ -1,6 +1,6 @@
 ---
 name: bake-calendar-add
-description: "Turn a short bake utterance such as 'bake two for Dana' into two all-day entries on the Google bake calendar, a start entry on the start day and a bake entry two days later. The start day defaults to today and can be overridden, as in 'bake two for Dana starting Sunday'. Also removes a bake, deleting both of its coupled entries, as in 'delete the bake for Dana'. Use when the user says to bake some number of loaves for a person, asks to put a bake on the bake calendar, dictates a bake order with a count and a name, or asks to delete, undo or cancel a bake."
+description: "Turn a short bake utterance such as 'bake two for Dana' into two all-day entries on the Google bake calendar, a start entry on the start day and a bake entry two days later. The day named is the handoff day, which is the bake day, as in 'bake two for Dana on Tuesday', and the start entry is computed two days earlier. A day after 'starting' sets the start day instead, and with no day the start is today. Also removes a bake, deleting both of its coupled entries, as in 'delete the bake for Dana'. Use when the user says to bake some number of loaves for a person, asks to put a bake on the bake calendar, dictates a bake order with a count and a name, or asks to delete, undo or cancel a bake."
 ---
 
 ## Adding a bake to the bake calendar
@@ -17,13 +17,21 @@ So the start entry falls two days before the bake entry.
 
 ### Step 1 — parse the utterance
 
-Pull three parameters from the utterance: the loaf count, the person, and the start day.
+Pull three parameters from the utterance: the loaf count, the person, and a day.
 
-The start day is optional and defaults to today.
+The day the user names is normally the handoff day, the day the baked goods go to the person, which is the bake day.
+
+A day introduced by "start" or "starting" is the start day instead.
+
+With no day named, the start day is today.
+
+Example: "bake two for Dana on Tuesday" is count 2, person dana, bake day Tuesday, so the start day is Sunday.
+
+Example: "bake two for Dana for Tuesday" and "bake two for Dana Tuesday" mean the same as the first example.
+
+Example: "bake two for Dana starting Sunday" is count 2, person dana, start day Sunday, so the bake day is Tuesday.
 
 Example: "bake two for Dana" is count 2, person dana, start day today.
-
-Example: "bake two for Dana starting Sunday" is count 2, person dana, start day Sunday.
 
 The count may be a digit or a spelled-out number.
 
@@ -35,17 +43,21 @@ Never correct a person's name on a guess; use it as given, and if it looks like 
 
 ### Step 2 — resolve the dates
 
-With no start day named, the start day is today.
-
 A named weekday means the next occurrence of that weekday, counting today if today is that weekday.
 
-"Tomorrow" and a calendar date are fine as start days too.
+"Tomorrow" and a calendar date are fine as days too.
 
-The bake day is the start day plus two days.
+The days run start, middle, bake, so the bake day is the start day plus two days, and the start day is the bake day minus two days.
 
-If the user names a bake day instead of a start day, for example "bake two for Dana on Tuesday", take it as the bake day and set the start day to two days before it.
+Never make the user count the two days; compute the other day from the one they gave.
 
-When that start day would fall before today, create both entries anyway and say in the report that the start day has already passed.
+When a bake day was named, the start day is two days before it.
+
+When a start day was named, the bake day is two days after it.
+
+With no day named, the start day is today.
+
+When the start day would fall before today, create both entries anyway and say in the report that the start day has already passed.
 
 ### Step 3 — create the entries
 
