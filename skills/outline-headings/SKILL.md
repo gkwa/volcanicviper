@@ -58,6 +58,16 @@ First section:
 - Give the moved text a short heading that names what it pitches, such as `## Why bake in a Dutch oven`, not `## Pitch`.
 - If a note has no motivating text, do not invent any.
 
+Section ownership:
+
+- Each heading owns everything beneath it until the next heading of the same or higher level.
+- Text belongs to the nearest heading above it.
+- A heading describes all of the text it owns, including the sections nested under it.
+- A nested heading must name a part of its parent, otherwise it moves up a level.
+- If text under a heading has a different subject from the heading, give it its own heading.
+- A link to another note is its own subject, so it gets its own heading named for what the link is, such as `Daily note`.
+- A two-way link added between two notes gets its own heading in each note.
+
 Dated and repeated entries:
 
 - Dated or repeated entries nest under one parent heading, one level down.
@@ -121,7 +131,10 @@ Adding a new heading breaks nothing.
 6. Nest dated and repeated entries under one parent heading.
 7. For each long existing heading, run the link search, shorten the heading, and rewrite every reference found.
 8. Re-read the note and confirm that no body text sits above the first heading and that no link still points at an old heading text.
-9. Commit that note, and each other note whose links were rewritten, with `git commit -- <path>`, because background processes also commit to the vault.
+9. Read each heading together with everything it owns, and confirm the heading describes all of it.
+10. Read each nested heading with its parent, and confirm the child is a part of the parent.
+11. Fix any mismatch by renaming, splitting or moving the section.
+12. Commit that note, and each other note whose links were rewritten, with `git commit -- <path>`, because background processes also commit to the vault.
 
 ## Note conventions that still apply
 
