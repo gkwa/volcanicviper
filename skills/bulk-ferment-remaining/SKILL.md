@@ -261,7 +261,9 @@ The rounding is for display only.
 
 Compute the target volume from the unrounded `target_rise_pct`, not from the rounded figure shown in the line.
 
-Spans never zero-pad the minutes, so write 8h4m and 16h0m, never 8h04m or 16h00m.
+Spans never zero-pad the minutes, so write 8h4m, never 8h04m.
+
+Spans drop the minutes when they are zero, so write 16h, never 16h0m or 16h00m.
 
 This applies to every span in the line, including the drift and the first estimate, and clock times are unaffected.
 
