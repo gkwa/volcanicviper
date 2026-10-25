@@ -237,14 +237,14 @@ At 5 or under, continue without asking.
 On success print exactly one plain line, with no code fence so it wraps, and the Zephyr key followed by a colon, because the fields describe the state of that bake. The fields after the colon are separated by a semicolon and a space.
 
 ```
-Zephyr 2: 6h09m remaining at 8:51 PM; 5h04m elapsed; 11h13m total, 40m shorter than the first estimate of 11h53m at 1:31 PM; 1,000mL → 1,711mL; 32% of 72% rise; 71°F avg
+Zephyr 2: 6h9m remaining at 8:51 PM; 5h4m elapsed; 11h13m total, 40m shorter than the first estimate of 11h53m at 1:31 PM; 1,000mL → 1,711mL; 32% of 72% rise; 71°F avg
 ```
 
 The fields, in order:
 
 - the Zephyr key as given, followed by a colon
 - `reference_offset_minutes` as the remaining span, then the target clock time, which is the start plus `reference_duration_minutes`
-- `elapsed_minutes` as a span, such as 5h04m, or 42m under an hour
+- `elapsed_minutes` as a span, such as 5h4m, or 42m under an hour
 - `reference_duration_minutes` as the expected total span, in the same form as the elapsed span, followed by the word total, then a comma and the drift from Drift in the total when there is one
 - the confirmed initial volume, an arrow, and the target volume, which is `(1 + target_rise_pct / 100)` times the initial volume rounded to whole mL
 - `estimated_rise_pct` of `target_rise_pct`, each rounded up to a whole percent, followed by the word rise
@@ -261,6 +261,10 @@ The rounding is for display only.
 
 Compute the target volume from the unrounded `target_rise_pct`, not from the rounded figure shown in the line.
 
+Spans never zero-pad the minutes, so write 8h4m and 16h0m, never 8h04m or 16h00m.
+
+This applies to every span in the line, including the drift and the first estimate, and clock times are unaffected.
+
 Clock times are 12-hour with AM or PM.
 
 Put the day name before the target clock time only when the target falls on a different day than today.
@@ -275,7 +279,7 @@ When the skill must ask a question and the result line can already be computed o
 
 Prefix the line with `Provisional:` so it is clear the line is not final until the user answers.
 
-Provisional: Zephyr 2: 4h49m remaining at 8:44 PM; 6h17m elapsed; 11h06m total; 1,000mL → 1,705mL; 40% of 71% rise; 71°F avg
+Provisional: Zephyr 2: 4h49m remaining at 8:44 PM; 6h17m elapsed; 11h6m total; 1,000mL → 1,705mL; 40% of 71% rise; 71°F avg
 
 Run anyway? The last probe reading is 7m old.
 
