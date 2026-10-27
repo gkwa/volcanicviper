@@ -35,9 +35,11 @@ Also open the Expired tab, because a listing that already expired drops out of S
 
 The account home page lists every posting with its status, renewed date, and days left in the exp. column.
 
-An Active posting with days left needs nothing.
+Always renew with the renew all link rather than renewing postings one at a time.
 
-An expiring or expired posting that is still unsold gets its renew link from the manage column.
+Before clicking it, check that every Active posting is an unsold item, because renew all renews them all; if a sold item is still Active, report it and do not click.
+
+Afterwards, confirm every Active posting shows today's renewed date.
 
 ## Facebook Marketplace
 
