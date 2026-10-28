@@ -141,7 +141,9 @@ Always write the tags from the feed item, which is the one source every feed has
 uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/steptime.py run --run-dir <run dir> --step metadata -- uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/episodes_db.py begin <run dir>/feed.xml --slug <show slug> --run-dir <run dir>
 ```
 
-Voice shows the album tag as the episode name, so the stored album is a short date and the title, such as `10-19-26 The AI Wealth Problem`, which tells episodes of one show apart.
+Voice shows the album tag as the episode name, so the stored album is the date with a four-digit year and the title, such as `10-19-2026 The AI Wealth Problem`, which tells episodes of one show apart.
+
+The year has four digits because a two-digit year such as 26 reads as a day of the month.
 
 Add `--title <substring>` when the user named an episode, so the item matches the one chosen in step 2.
 
