@@ -21,7 +21,8 @@ Read it before every run, because it is the source of truth for the format and m
 
 Top section:
 
-- The first section is the method, with a short heading naming the food and the method, such as `## Boiling sweet potatoes`.
+- Section headings are all lowercase.
+- The first section is the method, with a short heading naming the food and the method, such as `## boiling sweet potatoes`.
 - It holds a bulleted ingredient list, then the steps.
 - Give quantities only when the note states them, and never invent one.
 - Link an ingredient to its product note when one exists in the vault.
@@ -37,7 +38,7 @@ Nothing is deleted:
 - Keep the original wording when moving text, apart from removing bold, italics, or emphasis.
 - A line that only restates the note's title, such as `how to boil sweet potatoes`, may be dropped because the heading replaces it.
 - When moved text applies more broadly than the note's food, such as general potato times in a sweet potato note, say so in one sentence under its heading.
-- Bare wikilinks to related notes go last, under a heading such as `## Related notes`.
+- Bare wikilinks to related notes go last, under a heading such as `## related notes`.
 
 Conflicts:
 
