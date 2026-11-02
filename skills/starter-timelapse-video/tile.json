@@ -1,0 +1,11 @@
+{
+  "name": "gkwa/starter-timelapse-video",
+  "version": "0.1.0",
+  "private": false,
+  "summary": "Build an annotated, seamlessly looping time-lapse video of a sourdough starter since its Zephyr feed, with time since feed, running average probe temperature, and an hourly border colour, then send it to the Pixel and play it in VLC. Trigger terms: starter video, starter time-lapse, loop the starter video, last N hours of the starter, starter movie on the phone.",
+  "skills": {
+    "starter-timelapse-video": {
+      "path": "SKILL.md"
+    }
+  }
+}
