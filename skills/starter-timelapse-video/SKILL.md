@@ -149,7 +149,7 @@ cp SCRATCH/loop.mp4 /Users/mtm/pixel-sync/NAME
 Read its size with `ls -l`, then wait in the background until the phone's copy has the same size.
 
 ```sh
-until /Users/mtm/Library/Android/sdk/platform-tools/adb -s 192.168.1.223:45147 shell ls -l /storage/emulated/0/Sync/NAME 2>/dev/null | grep -q SIZE; do sleep 5; done
+until /Users/mtm/Library/Android/sdk/platform-tools/adb -s SERIAL shell ls -l /storage/emulated/0/Sync/NAME 2>/dev/null | grep -q SIZE; do sleep 5; done
 ```
 
 Get the adb serial from `adb devices` first, because the IP and port change, and see the pixel9a-wireless-adb memory when the phone is offline.
