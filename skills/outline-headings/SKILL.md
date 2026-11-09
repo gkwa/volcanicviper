@@ -35,7 +35,7 @@ Text outside any section:
 - Give each distinct topic its own heading, in the original order, and do not reorder or merge text to fit a heading.
 - One heading is right only when the text is a single topic.
 - A daily note's opening block is usually several topics, so expect several headings there.
-- When the purpose of an item is unknown, name it by what it is, such as `First secret link`, and do not guess a purpose.
+- When the purpose of an item is unknown, name it by what it is, such as `first secret link`, and do not guess a purpose.
 - Give it a short heading that names the subject or problem of the note, not the genre of the text.
 - A reader scanning the sidebar should learn what the note is about without seeing the filename.
 - Take the subject from the filename and the opening sentences.
@@ -44,9 +44,9 @@ Text outside any section:
 - Specificity comes from choosing the right words, not from adding more of them.
 - Check the result: if the heading would suit most notes in the vault, rewrite it.
 - Examples of the swap, generic heading first:
-  - `## Question` becomes `## Unwanted tags on scan`.
-  - `## Source` becomes `## Video and recipe`.
-  - `## Overview` becomes `## Sourdough starter feeding`.
+  - `## Question` becomes `## unwanted tags on scan`.
+  - `## Source` becomes `## video and recipe`.
+  - `## Overview` becomes `## sourdough starter feeding`.
 - If the short heading is too terse to explain the section, add a sentence directly under it.
 - Never add a heading above the front matter.
 
@@ -55,7 +55,7 @@ First section:
 - The first section holds the reason to open the note, such as the motivating question or the abstract.
 - If the note carries an abstract, pitch, or summary of the subject lower down, move it up to become the first section, directly after any section created for text outside any section.
 - Move whole paragraphs only, and keep their wording.
-- Give the moved text a short heading that names what it pitches, such as `## Why bake in a Dutch oven`, not `## Pitch`.
+- Give the moved text a short heading that names what it pitches, such as `## why bake in a dutch oven`, not `## pitch`.
 - If a note has no motivating text, do not invent any.
 
 Section ownership:
@@ -65,7 +65,7 @@ Section ownership:
 - A heading describes all of the text it owns, including the sections nested under it.
 - A nested heading must name a part of its parent, otherwise it moves up a level.
 - If text under a heading has a different subject from the heading, give it its own heading.
-- A link to another note is its own subject, so it gets its own heading named for what the link is, such as `Daily note`.
+- A link to another note is its own subject, so it gets its own heading named for what the link is, such as `daily note`.
 - A two-way link added between two notes gets its own heading in each note.
 
 Dated and repeated entries:
@@ -79,8 +79,16 @@ Shortening existing headings:
 - Shorten a heading that would wrap in a narrow sidebar, and rewrite every link to it, as described below.
 - A question used as a heading becomes a short heading, with the original question as the sentence beneath.
 - A qualifier like `(152g starter instance)` moves under the heading only when the shortened heading is still unique among its siblings.
-- If the shortened heading would match a sibling, keep the qualifier in the heading, abbreviated, for example `Ingredients 152g`.
+- If the shortened heading would match a sibling, keep the qualifier in the heading, abbreviated, for example `ingredients 152g`.
 - Put the moved qualifier in a plain sentence directly under the heading.
+
+Lowercase headings:
+
+- Every heading is written in lowercase, including the first word, proper nouns, brand names and acronyms, so `## Video and Recipe from King Arthur` becomes `## video and recipe from king arthur`.
+- This covers headings the pass adds and every existing heading in the note.
+- A wikilink inside a heading keeps the linked note's own spelling, so `### [[Amazon Fresh]]` is left as written.
+- A date inside a heading keeps its capitalised month abbreviation, so `## Prices Aug 1, 2026` becomes `## prices Aug 1, 2026`, matching the date formats other vault specs define and link to.
+- Obsidian matches heading links case-insensitively, so a change of case alone breaks no link and needs no link search.
 
 ## Rewriting links when renaming a heading
 
@@ -130,11 +138,12 @@ Adding a new heading breaks nothing.
 5. Move the abstract to the first section.
 6. Nest dated and repeated entries under one parent heading.
 7. For each long existing heading, run the link search, shorten the heading, and rewrite every reference found.
-8. Re-read the note and confirm that no body text sits above the first heading and that no link still points at an old heading text.
-9. Read each heading together with everything it owns, and confirm the heading describes all of it.
-10. Read each nested heading with its parent, and confirm the child is a part of the parent.
-11. Fix any mismatch by renaming, splitting or moving the section.
-12. Commit that note, and each other note whose links were rewritten, with `git commit -- <path>`, because background processes also commit to the vault.
+8. Lowercase every heading, leaving wikilinks and month abbreviations as written.
+9. Re-read the note and confirm that no body text sits above the first heading and that no link still points at an old heading text.
+10. Read each heading together with everything it owns, and confirm the heading describes all of it.
+11. Read each nested heading with its parent, and confirm the child is a part of the parent.
+12. Fix any mismatch by renaming, splitting or moving the section.
+13. Commit that note, and each other note whose links were rewritten, with `git commit -- <path>`, because background processes also commit to the vault.
 
 ## Note conventions that still apply
 
