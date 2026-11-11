@@ -43,9 +43,17 @@ Afterwards, confirm every Active posting shows today's renewed date.
 
 ## Facebook Marketplace
 
-The selling URL redirects to the seller listings table.
+The selling URL may no longer redirect to the seller listings table; it can land on the Your listings cards, which carry no Renew control.
 
-A listing that can be renewed shows Renew in its Actions column instead of Promote or View messages.
+The reliable check is the Seller dashboard at https://www.facebook.com/marketplace/you/dashboard, whose Your listings panel shows a To renew count.
+
+A To renew count of 0 means Facebook needs nothing, so move on without hunting for Renew buttons.
+
+When the count is above 0, open the To renew link, which goes to https://www.facebook.com/marketplace/selling/renew_listings/
+
+There, or in the seller listings table, a listing that can be renewed shows Renew in its Actions column instead of Promote or View messages.
+
+Do not use Relist this item, which appears only on sold listings and is not a renewal.
 
 Click each Renew, which raises no dialog and confirms with a Your listing has been renewed toast, and the button then turns into Promote.
 
@@ -53,7 +61,7 @@ A Messenger chat popup can open in the lower right and cover the Renew buttons, 
 
 Clicking a covered button can hit a link inside the chat and open a stray tab; close that tab and retry.
 
-Confirm afterwards with find that no Renew buttons remain.
+Confirm afterwards that the dashboard's To renew count reads 0.
 
 ## eBay
 
