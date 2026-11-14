@@ -80,6 +80,14 @@ Upload with the Imgur steps in the [[social-to-imgur]] skill, using the local fi
 
 The Client ID is in the keychain under `imgur-api`, and it is never rotated.
 
+Tag every upload with its local filename, so the Imgur side maps back to the file as well as the bake log doing so.
+
+Add `-F name=<bare filename>` and `-F title=<bare filename>` to the upload `curl`, where the bare filename is the basename such as `PXL_20261111_173547356.jpg`.
+
+The upload response echoes `name` and `title` in its `data` object.
+
+Check that both match the filename before writing the URL into the log, and treat a mismatch as a failed upload.
+
 Upload serially with a gap of about 5 seconds, because Imgur throttles bursts.
 
 A 429 or 503 means the egress IP is blocked or throttled.
