@@ -36,9 +36,21 @@ A photo belongs to the bake log whose bake was in progress at the photo time.
 
 Read the log's `## bake log` entries and use the event timestamps in the body rather than the header timestamps, as the [[zephyr]] skill requires.
 
-When two bakes overlap, pick by what the photo shows.
+Deduce the log from two timestamps together: the converted photo time, and the event times of the memo entries in each candidate log.
 
-When no log fits the photo time, skip the photo and put it in the one round of questions at the end.
+A photo fits a log when its time falls between that log's first and last event times, or within a short gap of an entry it plainly illustrates.
+
+Gotcha: a photo can show a previous bake, such as a loaf or starter from the last Zephyr, and still be taken during a newer bake's window.
+
+The timestamp alone then points at the wrong log.
+
+Compare what the photo shows with what the candidate logs say was happening, such as its flour, its pans, its loaf count, and its stage.
+
+Ask the user about a photo whenever more than one log could claim it, when its content does not fit the log its time points to, or when no log fits its time.
+
+Name the photo, its converted time, and the candidate logs in the question, and never guess.
+
+Ask these together in the one round of questions at the end, and leave the photo out of every log until it is answered.
 
 ## Insert inline
 
