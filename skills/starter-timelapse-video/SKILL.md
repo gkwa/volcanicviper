@@ -1,11 +1,13 @@
 ---
 name: starter-timelapse-video
-description: Build an annotated, seamlessly looping time-lapse video of a sourdough starter from the photos in /Users/mtm/dcim2/OpenCamera, measured from the feed in the Zephyr bake log, then send it to the Pixel through Syncthing and play it in VLC. Each frame shows the time since the feed, the clock time, the running average probe temperature since the feed, and a full-frame border whose colour changes every elapsed hour. Covers the whole time since the feed unless a number of hours is given. Use when asked to make, refresh or loop a starter time-lapse video, a starter movie, the last N hours of the starter, a reversed starter video, or to put the starter video on the phone.
+description: Build an annotated time-lapse video of a sourdough starter from the photos in /Users/mtm/dcim2/OpenCamera, measured from the feed in the Zephyr bake log, then send it to the Pixel through Syncthing and play it in VLC. It is one pass by default, and repeats seamlessly inside one file only when a loop is asked for. Each frame shows the time since the feed, the clock time, the running average probe temperature since the feed, and a full-frame border whose colour changes every elapsed hour. Covers the whole time since the feed unless a number of hours is given. Use when asked to make, refresh or loop a starter time-lapse video, a starter movie, the last N hours of the starter, a reversed starter video, or to put the starter video on the phone.
 ---
 
 ## Starter time-lapse video
 
-This skill turns the starter photos since a feed into one looping video on the Pixel, playing in VLC without the screen shifting between passes.
+This skill turns the starter photos since a feed into one video on the Pixel, playing in VLC.
+
+The video is a single pass unless the user asks for a loop, in which case the pass repeats inside the file so the screen does not shift between passes.
 
 Read the zephyr skill first for the key scheme, the bake log filenames, and the event_time tags.
 
@@ -26,6 +28,10 @@ When given, such as "the last 3 hours", keep only the photos within that many ho
 `reverse` plays newest first, as in "play it backwards".
 
 `probe` defaults to `2`.
+
+`loop` defaults to off.
+
+Turn it on only when the user asks for a loop, as in "loop it" or "make it repeat", and then follow the section on repeating the pass.
 
 The feed time is never typed by default.
 
@@ -65,6 +71,12 @@ uv run --no-active --directory /Users/mtm/pdev/taylormonacelli/chargingcheetah m
 
 The probes are the diminutivedragon hardware, and the parquet holds one reading about every 30 seconds in UTC.
 
+When the probe went into the starter after the feed, pass the event_time of the entry that inserted it as `--start` instead of FEED, because readings before it belong to whatever the probe was in.
+
+Frames taken before the first reading then show no average line.
+
+The banner still reads since feed, though the average runs from that insertion.
+
 ## Annotate the frames
 
 Clear the frame directory first with `find SCRATCH/frames -mindepth 1 -delete` when it already exists.
@@ -102,6 +114,8 @@ Do not add chapters unless asked.
 
 ## Repeat the pass inside one file
 
+Skip this whole section unless loop is on, and send `pass.mp4` as the video.
+
 VLC's own repeat reloads the file at every end, and each reload drops out of full screen so the status and navigation bars flash and the picture shifts.
 
 Repeating the pass inside the file makes each restart just the next frame, so VLC only reloads once per file.
@@ -126,24 +140,28 @@ The copy is not re-encoded, so the file grows in step with the count, at roughly
 
 ## Check before sending
 
-Cut the first frame, the last frame of the first pass, and the first frame of the second pass, cropped to the banner, and read the image.
+VIDEO is `loop.mp4` when loop is on and `pass.mp4` otherwise.
+
+Cut the first frame, the last frame of the first pass, and, when looping, the first frame of the second pass, cropped to the banner, and read the image.
+
+Without a loop, drop `+eq(n,FIRST2)` and use `tile=1x2`.
 
 ```sh
-docker run --pull never --rm --entrypoint /usr/local/bin/ffmpeg --volume SCRATCH:/work lscr.io/linuxserver/ffmpeg:latest -loglevel error -y -i /work/loop.mp4 -vf "select='eq(n,0)+eq(n,LAST)+eq(n,FIRST2)',crop=720:210:0:0,tile=1x3" -frames:v 1 /work/check.png
+docker run --pull never --rm --entrypoint /usr/local/bin/ffmpeg --volume SCRATCH:/work lscr.io/linuxserver/ffmpeg:latest -loglevel error -y -i /work/VIDEO -vf "select='eq(n,0)+eq(n,LAST)+eq(n,FIRST2)',crop=720:210:0:0,tile=1x3" -frames:v 1 /work/check.png
 ```
 
 LAST is the frame count minus one and FIRST2 is the frame count.
 
-The banners should run from the first window time to the newest photo time and straight back, with the average line present.
+The banners should run from the first window time to the newest photo time, and straight back when looping, with the average line present once readings exist.
 
 ## Send it to the Pixel
 
-The file name is `zephyr<KEY>-starter-loop.mp4`, with `-<N>h` before `-loop` when hours was given and `-reversed` before `-loop` for reverse, such as `zephyr1-starter-3h-loop.mp4`.
+The file name is `zephyr<KEY>-starter.mp4`, with `-<N>h` after `starter` when hours was given, `-reversed` after that for reverse, and `-loop` last when loop is on, such as `zephyr1-starter-3h-loop.mp4` looped or `zephyr1-starter-3h.mp4` as one pass.
 
 Copy it into the Syncthing drop folder.
 
 ```sh
-cp SCRATCH/loop.mp4 /Users/mtm/pixel-sync/NAME
+cp SCRATCH/VIDEO /Users/mtm/pixel-sync/NAME
 ```
 
 Read its size with `ls -l`, then wait in the background until the phone's copy has the same size.
@@ -184,7 +202,9 @@ Google Photos and Files by Google both loop videos with no way to stop it, which
 
 VLC's "Video screen orientation" must be Portrait, under More, Settings, Video, because the default "Automatic (sensor)" ignores the phone's rotation lock.
 
-The player's repeat mode should be repeat one, set in the player's "…" menu under "Repeat mode" until its icon shows a 1, so the file also restarts after its own 10 minutes.
+When looping, the player's repeat mode should be repeat one, set in the player's "…" menu under "Repeat mode" until its icon shows a 1, so the file also restarts after its own 10 minutes.
+
+A single pass needs no repeat mode.
 
 VLC needs only `android.permission.READ_MEDIA_VIDEO`, granted with `pm grant org.videolan.vlc android.permission.READ_MEDIA_VIDEO`, and never all-files access.
 
@@ -206,7 +226,7 @@ When done, post the Ping notification described in the return-to-claude-app memo
 
 ## Output
 
-Report in a few lines what was made and verified: the window as clock times, the photo count, the pass length, the repeat count and total length, the file size, the file name, and that it is playing in VLC.
+Report in a few lines what was made and verified: the window as clock times, the photo count, the pass length, the repeat count and total length when looping, the file size, the file name, and that it is playing in VLC.
 
 Say plainly when a step was not verified, such as a screenshot that was not taken.
 
