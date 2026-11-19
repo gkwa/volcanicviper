@@ -189,6 +189,24 @@ Do not poll or sleep while waiting, and continue when the completion notice arri
 
 Wall time stretches a lot when the machine is loaded, so expect roughly 24 CPU minutes for a 30 minute episode and report that if the user asks.
 
+## Step 4b: Fill the transcript gaps
+
+The greedy transcription can drop a stretch of speech entirely, so the transcript has no segment for it, and a gap hides whatever was said there.
+
+On 2026-11-18 it dropped the 23 seconds holding the AI Daily Brief intro, with the sponsor thanks and the Patreon plug, so no ad was found there.
+
+List every stretch of 5 seconds or more that no segment covers, including the stretch before the first segment.
+
+```
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python -I -c "import json; d=json.load(open('<run dir>/transcript.json')); p=0.0; [(print(f'{p:.0f}:{s[\"start\"]:.0f}') if s['start']-p>=5 else None, globals().__setitem__('p', s['end'])) for s in d]"
+```
+
+Pass every gap to `words.py` as a `START:END` window, in one invocation, the same way step 6 does, and read the words as part of the transcript.
+
+Read a little past each gap edge, because the dropped speech can run on into a segment whose timestamps are wrong.
+
+A segment whose text does not match the words at its stated time has a wrong start, so trust the word-level timing.
+
 ## Step 5: Find the ad blocks by reading
 
 Detection is reading the timestamped transcript, because pattern matching alone was wrong on two of three shows tried.
@@ -214,6 +232,9 @@ What an ad block looks like:
 - The same read can appear more than once in one pod.
 - A pod can also sit before the show starts and after the sign-off.
 - A sponsor thanks, Patreon plug, or house promo in the intro counts as an ad block.
+- An intro that thanks today's sponsors by name, plugs an ad-free Patreon or Apple Podcasts subscription, or invites sponsor inquiries, such as "thank you to today's sponsors" or "if you want to learn more about sponsoring the show", is one ad block, and it ends where the story content begins.
+- The host line that introduces such an intro, such as "quick announcements before we dive in", belongs to the block, because nothing is left for it to introduce once the block is cut.
+- The show's own tagline, such as "The AI Daily Brief is a daily podcast and video about the most important news", is not part of the block, so keep it.
 - A network tag such as "This is an iHeart podcast" belongs to the pod around it.
 
 What is not an ad:
