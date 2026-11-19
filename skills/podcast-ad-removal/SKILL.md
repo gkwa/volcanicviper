@@ -193,7 +193,7 @@ Wall time stretches a lot when the machine is loaded, so expect roughly 24 CPU m
 
 The greedy transcription can drop a stretch of speech entirely, so the transcript has no segment for it, and a gap hides whatever was said there.
 
-On 2026-11-18 it dropped the 23 seconds holding the AI Daily Brief intro, with the sponsor thanks and the Patreon plug, so no ad was found there.
+On one run it dropped a 23 second intro holding the sponsor thanks and the Patreon plug, so no ad was found there.
 
 List every stretch of 5 seconds or more that no segment covers, including the stretch before the first segment.
 
@@ -211,7 +211,27 @@ A segment whose text does not match the words at its stated time has a wrong sta
 
 Detection is reading the timestamped transcript, because pattern matching alone was wrong on two of three shows tried.
 
-Search the transcript for ad-like lines to find where to look.
+Rules come in two layers, the generic rules in this skill and the show's own rules, and the show's rules win when they disagree.
+
+The show's rules live in /Users/mtm/pdev/taylormonacelli/steamysquirrel/shows/<show slug>.toml, with sponsors and phrases to remove, phrases to keep even though they look like ads, and quirks of the feed or the show.
+
+Print them first, and the helper says so when the show has none, in which case the generic rules apply alone.
+
+```
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/show_rules.py show <show slug>
+```
+
+Then mark the transcript segments the show's rules say to remove or keep, and treat the marks as hints to read around, not as cut ranges.
+
+```
+uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python /Users/mtm/pdev/taylormonacelli/steamysquirrel/show_rules.py hints <show slug> <run dir>/transcript.json
+```
+
+Put a rule that is true of one show in its file and a rule that is true of every show in this skill.
+
+When a run finds a sponsor, phrase or tagline the show's file lacks, add it to the file in the same run, and commit it in /Users/mtm/pdev/taylormonacelli/steamysquirrel.
+
+Then search the transcript for ad-like lines to find where to look.
 
 ```
 uv run --no-active --project /Users/mtm/pdev/taylormonacelli/steamysquirrel python -I -c "import json,re; d=json.load(open('<run dir>/transcript.json')); p=re.compile(r'sponsor|brought to you|promo code|use code|\.com|\.ai|patreon|ad-free|free at|slash|offer|iheart|learn more|terms|wherever you get|free trial|visit', re.I); [print(round(s['start'],1), round(s['end'],1), s['text']) for s in d if p.search(s['text'])]"
@@ -232,9 +252,9 @@ What an ad block looks like:
 - The same read can appear more than once in one pod.
 - A pod can also sit before the show starts and after the sign-off.
 - A sponsor thanks, Patreon plug, or house promo in the intro counts as an ad block.
-- An intro that thanks today's sponsors by name, plugs an ad-free Patreon or Apple Podcasts subscription, or invites sponsor inquiries, such as "thank you to today's sponsors" or "if you want to learn more about sponsoring the show", is one ad block, and it ends where the story content begins.
+- An intro that thanks the sponsors by name, plugs an ad-free subscription, or invites sponsor inquiries is one ad block, and it ends where the story content begins.
 - The host line that introduces such an intro, such as "quick announcements before we dive in", belongs to the block, because nothing is left for it to introduce once the block is cut.
-- The show's own tagline, such as "The AI Daily Brief is a daily podcast and video about the most important news", is not part of the block, so keep it.
+- The show's own tagline is not part of the block, so keep it.
 - A network tag such as "This is an iHeart podcast" belongs to the pod around it.
 
 What is not an ad:
