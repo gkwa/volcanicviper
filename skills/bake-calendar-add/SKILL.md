@@ -83,7 +83,7 @@ bake <count> loaves for <name>
 
 For a count of 1, write `loaf` in place of `loaves`.
 
-Write the count as a digit or word the way the user said it; "two" stays "two".
+Always write the count as a digit, however the user said it, so "two" becomes `2` and "a single one" becomes `1`.
 
 Give the event a `description`, a bake id that identifies it so it can be removed later:
 
